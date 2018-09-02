@@ -5,11 +5,18 @@ using System.Text;
 
 namespace Assets.Scripts.Controllers.Atmos
 {
-    public struct GasInfo
+    public struct GasInfo : IComparable
     {
         private float _pressure;
         private readonly int _gasId;
         private float _temperature;
+
+        public GasInfo(int gasId)
+        {
+            _pressure = 0;
+            _gasId = gasId;
+            _temperature = 0;
+        }
 
         public GasInfo(float pressure, int gasId)
         {
@@ -45,6 +52,13 @@ namespace Assets.Scripts.Controllers.Atmos
         public float TemperatureCelsium
         {
             get { return _temperature + 274.15f; }
+        }
+
+
+        public int CompareTo(object obj)
+        {
+            GasInfo other = (GasInfo) obj;
+            return _gasId - other._gasId;
         }
     }
 }
