@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags: []
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - VisionMasks
+  - EditorOnly
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 1958908893
+    locked: 0
+  - name: Plating
+    uniqueID: 2558885651
+    locked: 0
+  - name: Underturf
+    uniqueID: 848762179
+    locked: 0
+  - name: Turf
+    uniqueID: 2834020523
+    locked: 0
+  - name: Wall
+    uniqueID: 795202559
+    locked: 0
+  - name: Equipment
+    uniqueID: 897063405
+    locked: 0
+  - name: Item
+    uniqueID: 1109985509
+    locked: 0
+  - name: Mob
+    uniqueID: 1340292915
+    locked: 0
+  - name: UnderCeiling
+    uniqueID: 3288666509
+    locked: 0
+  - name: Effects
+    uniqueID: 2978412289
+    locked: 0
+  - name: Vision mask
+    uniqueID: 1268185651
+    locked: 0

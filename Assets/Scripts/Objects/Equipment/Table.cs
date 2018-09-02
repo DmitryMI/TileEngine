@@ -1,0 +1,32 @@
+﻿using Assets.Scripts.Controllers;
+using Assets.Scripts.Objects.Mob;
+using UnityEngine;
+
+namespace Assets.Scripts.Objects.Equipment
+{
+    public class Table : Turf.Turf, IPlayerInteractable
+    {
+        public void ApplyItemClient(Item.Item item)
+        {
+            //Debug.Log("Table was clicked!");
+
+            PlayerActionController controller = PlayerActionController.Current;
+            Player localPlayer = controller.LocalPlayer;
+            Item.Item heldItem = localPlayer.GetItemBySlot(controller.ActiveHand);
+
+            if (heldItem == item)
+            {
+                // Calculating item offset
+                Vector2 mousePosition = controller.MouseWorldPosition;
+                Vector2 tablePosition = transform.position;
+                Vector2 offset = mousePosition - tablePosition;
+                localPlayer.DropItem(controller.ActiveHand, Cell, offset);
+            }
+        }
+
+        public void ApplyItemServer(Item.Item item)
+        {
+            
+        }
+    }
+}

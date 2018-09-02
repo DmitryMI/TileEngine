@@ -1,0 +1,51 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Unity.Collections;
+
+namespace Assets.Scripts.Controllers.Atmos
+{
+    public struct GasInfoValue
+    {
+        private float _pressure;
+        private readonly int _gasId;
+        private float _temperature;
+
+        public GasInfoValue(float pressure, int gasId)
+        {
+            _pressure = pressure;
+            _gasId = gasId;
+            _temperature = 0;
+        }
+
+        public GasInfoValue(float pressure, int gasId, float temperature)
+        {
+            _pressure = pressure;
+            _gasId = gasId;
+            _temperature = temperature;
+        }
+
+        public float Pressure
+        {
+            get { return _pressure; }
+            set { _pressure = value; }
+        }
+
+        public int GasId
+        {
+            get { return _gasId; }
+        }
+
+        public float Temperature
+        {
+            get { return _temperature; }
+            set { _temperature = value; }
+        }
+
+        public float TemperatureCelsium
+        {
+            get { return _temperature + 274.15f; }
+        }
+    }
+}
