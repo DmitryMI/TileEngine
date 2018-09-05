@@ -19,8 +19,7 @@ namespace Assets.Scripts.Objects.Mob
         private bool _canContainGas;
 
         private string _descriptiveName = "Unnamed human";
-
-        
+        private bool _spawned;
 
         // Carried Items
         [SerializeField] [SyncVar]
@@ -28,6 +27,11 @@ namespace Assets.Scripts.Objects.Mob
 
         [SerializeField] [SyncVar]
         private GameObject _rightHandItem;
+
+        [SerializeField]
+        [SyncVar]
+        private GameObject _costumeItem;
+
 
         protected override bool Transperent
         {
@@ -51,7 +55,17 @@ namespace Assets.Scripts.Objects.Mob
 
         protected override void Update()
         {
-            base.Update();
+            if (isServer)
+            {
+                base.Update();
+            }
+            else
+            {
+                if (isLocalPlayer && _spawned)
+                {
+                    base.Update();
+                }
+            }
 
             if (isLocalPlayer)
             {
@@ -88,6 +102,13 @@ namespace Assets.Scripts.Objects.Mob
                 DoMove(Direction.Left, _moveSpeed);
             }
         }
+
+        public bool Spawned
+        {
+            get { return _spawned; }
+            set { _spawned = value; }
+        }
+
         public Item.Item GetItemBySlot(SlotEnum slot)
         {
             Item.Item item = null;
@@ -109,11 +130,54 @@ namespace Assets.Scripts.Objects.Mob
                     throw new NotImplementedException();
                 case SlotEnum.Belt:
                     throw new NotImplementedException();
+                case SlotEnum.Costume:
+                    if(_costumeItem != null)
+                        item = _costumeItem.GetComponent<Item.Item>();
+                    break;
+                case SlotEnum.Hardsuit:
+                    break;
+                case SlotEnum.Gloves:
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException("slot", slot, null);
             }
 
             return item;
+        }
+
+        [Server]
+        private void SetItemBySlot(Item.Item item, SlotEnum slot)
+        {
+            GameObject itemGo = null;
+            if (item != null)
+                itemGo = item.gameObject;
+
+            switch (slot)
+            {
+                case SlotEnum.LeftHand:
+                    _leftHandItem = itemGo;
+                    break;
+
+                case SlotEnum.RightHand:
+                    _rightHandItem = itemGo;
+                    break;
+
+                case SlotEnum.Back:
+                    throw new NotImplementedException();
+                case SlotEnum.Belt:
+                    throw new NotImplementedException();
+
+                case SlotEnum.Costume:
+                    _costumeItem = itemGo;
+                    break;
+
+                case SlotEnum.Hardsuit:
+                    break;
+                case SlotEnum.Gloves:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("slot", slot, null);
+            }
         }
 
         public int HairSetId
@@ -148,7 +212,7 @@ namespace Assets.Scripts.Objects.Mob
 
         public void MoveItem(SlotEnum source, SlotEnum destination)
         {
-            throw new NotImplementedException();
+            CmdExchangeItem(source, destination);
         }
 
         public void ApplyItem(SlotEnum activeHand, IPlayerInteractable interactable)
@@ -164,6 +228,20 @@ namespace Assets.Scripts.Objects.Mob
         // TODO Act on equipment
 
         // Server side of interaction
+
+        [Command]
+        private void CmdExchangeItem(SlotEnum source, SlotEnum dest)
+        {
+            Item.Item sourceItem = GetItemBySlot(source);
+            Item.Item destItem = GetItemBySlot(dest);
+
+            if (Item.Item.CanBePlaced(sourceItem, dest) && Item.Item.CanBePlaced(destItem, source))
+            {
+
+                SetItemBySlot(destItem, source);
+                SetItemBySlot(sourceItem, dest);
+            }
+        }
 
         [Command]
         private void CmdApplyItemSlot(SlotEnum activeHand, GameObject interactableGo)

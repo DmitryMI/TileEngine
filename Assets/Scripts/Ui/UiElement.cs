@@ -26,7 +26,7 @@ namespace Assets.Scripts.Ui
 
         public virtual void Click()
         {
-            Debug.Log("Ui element was clicked!");
+            Debug.Log("Ui element was clicked: " + gameObject.name);
         }
     }
 }

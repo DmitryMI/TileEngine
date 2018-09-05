@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Assets.Scripts.Controllers;
+using Assets.Scripts.HumanAppearance;
 using Assets.Scripts.Objects.Mob;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -142,6 +143,19 @@ namespace Assets.Scripts.Objects.Item
             int dy = Mathf.Abs(cellA.y - cellB.y);
 
             return dx <= 1 && dy <= 1;
+        }
+
+        public static bool CanBePlaced(Item item, SlotEnum slot)
+        {
+            // Empty space can be placed anywhere :)
+            if (item == null)
+                return true;
+
+            if (slot == SlotEnum.LeftHand || slot == SlotEnum.RightHand)
+                return true;
+
+            var wearable = item as IWearable;
+            return wearable?.AppropriateSlot == slot;
         }
     }
 }
