@@ -6,6 +6,7 @@ namespace Assets.Scripts.Controllers
 {
     public class VisionController : Controller
     {
+        [SerializeField] private int _maxSpawnPerFrame = 64;
         [SerializeField] private VisionMask _maskPrefab;
         [SerializeField] private bool _enableVisionMasks = true;
         [SerializeField] private int _sightRange;
@@ -56,7 +57,7 @@ namespace Assets.Scripts.Controllers
 
         private void SpawnVisionMasks()
         {
-            StartCoroutine(SpawnMasksFpsFriendly(32));
+            StartCoroutine(SpawnMasksFpsFriendly(_maxSpawnPerFrame));
         }
 
         private IEnumerator SpawnMasksFpsFriendly(int perFrameMaximum)
