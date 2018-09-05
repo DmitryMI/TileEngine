@@ -19,14 +19,26 @@ namespace Assets.Scripts.Controllers
         private bool _allocationFinished;
         private Task _allocationTask;
 
+        private static TileController _instance;
+
+        public static TileController Current
+        {
+            get { return _instance; }
+            set { _instance = value; }
+        } 
+
         public override void OnGameLoaded(ServerController controller)
         {
             //WasLoaded = true;
             ServerController = controller;
             _mapSize = ServerController.MapSize;
 
+            _instance = this;
+
             AllocateMemory();
         }
+
+        
 
         [Server]
         public void AddObject(int x, int y, TileObject obj)

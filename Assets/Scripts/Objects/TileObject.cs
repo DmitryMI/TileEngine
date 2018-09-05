@@ -131,7 +131,8 @@ namespace Assets.Scripts.Objects
             }
             if (!PassesGas)
             {
-                AtmosController.SetBlock(_cell.x, _cell.y);
+                if(isServer)
+                    AtmosController.SetBlock(_cell.x, _cell.y);
             }
         }
 
@@ -160,8 +161,8 @@ namespace Assets.Scripts.Objects
 
                 if (isServer)
                 {
-                    TileController.RemoveObject(oldCell.x, oldCell.y, this);
-                    TileController.AddObject(_cell.x, _cell.y, this);
+                    TileController.Current.RemoveObject(oldCell.x, oldCell.y, this);
+                    TileController.Current.AddObject(_cell.x, _cell.y, this);
                 }
             }
         }

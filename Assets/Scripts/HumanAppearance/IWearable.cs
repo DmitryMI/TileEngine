@@ -6,6 +6,8 @@ namespace Assets.Scripts.HumanAppearance
     {
         GameObject gameObject { get; }
 
+        SlotEnum AppropriateSlot { get; }
+
         Sprite Front { get; }
         Sprite Back { get; }
         Sprite Left { get; }

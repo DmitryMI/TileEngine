@@ -22,6 +22,8 @@ namespace Assets.Scripts.Objects.Item
         [SerializeField] private Vector2 _leftOffset;
         [SerializeField] private Vector2 _rightOffset;
 
+        public SlotEnum AppropriateSlot => SlotEnum.Costume;
+
         public Sprite Front { get { return _frontSprite; } }
         public Sprite Back { get { return _backSprite; } }
         public Sprite Left { get { return _leftSprite; } }

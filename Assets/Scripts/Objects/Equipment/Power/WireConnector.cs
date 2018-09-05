@@ -77,6 +77,9 @@ namespace Assets.Scripts.Objects.Equipment.Power
         {
             TileObject[] objects = TileController.GetObjects(x, y);
 
+            if (objects == null)
+                return null;
+
             foreach (var obj in objects)
             {
                 if(obj is Wire)
