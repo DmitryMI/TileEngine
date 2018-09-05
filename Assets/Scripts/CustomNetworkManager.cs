@@ -21,6 +21,8 @@ namespace Assets.Scripts
 
         public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
         {
+            Debug.Log("Server is starting to add players: ");
+
             base.OnServerAddPlayer(conn, playerControllerId);
 
             PlayerController playerController = conn.playerControllers[0];

@@ -20,6 +20,8 @@ namespace Assets.Scripts.Controllers.Atmos
         #endregion
 
 
+        [SerializeField] private bool _atmosProcessingEnabled = true;
+
         [SerializeField] private bool _visualizeGas = false;
         [SerializeField] private Gas[] _gasList;
 
@@ -30,7 +32,6 @@ namespace Assets.Scripts.Controllers.Atmos
         private List<BlockAdderData> _blockAdderDatas;
         private Vector2Int _mapSize;
         private Task _atmosTask;
-        private bool _loopStarted = false;
 
         private Task _allocationTask;
 
@@ -58,8 +59,6 @@ namespace Assets.Scripts.Controllers.Atmos
 
                 _gasAdderDatas = new List<GasAdderData>(capacity);
                 _blockAdderDatas = new List<BlockAdderData>(capacity);
-
-                ResetGasBlockers();
             }
         }
 
@@ -71,6 +70,8 @@ namespace Assets.Scripts.Controllers.Atmos
             }
 
             Debug.Log("Atmos: Matrixes initiated");
+
+            ResetGasBlockers();
 
             WasLoaded = true;
         }
@@ -139,6 +140,8 @@ namespace Assets.Scripts.Controllers.Atmos
 
             _gasAdderDatas.Add(new GasAdderData(){GasId = gasId, Pressure = pressure, Temperature =  temperature, X = x, Y = y, Volume = volume});
         }
+
+        public bool AtmosProcessingEnabled => _atmosProcessingEnabled;
 
         private void AddGasAfterJob()
         {
@@ -221,7 +224,7 @@ namespace Assets.Scripts.Controllers.Atmos
             if (isServer)
             {
                 //if (_atmosJobThread == null || !_atmosJobThread.IsAlive)
-                if(!_loopStarted || _atmosTask.Status != TaskStatus.Running)
+                if(_atmosTask == null || (_atmosTask != null &&_atmosTask.Status != TaskStatus.Running))
                 {
                     for (int i = 0; i < _gasBlockers.GetLength(0); i++)
                     for (int j = 0; j < _gasBlockers.GetLength(1); j++)
@@ -373,8 +376,8 @@ namespace Assets.Scripts.Controllers.Atmos
         {
             if (WasLoaded && isServer)
             {
-                //if (_atmosJobThread == null || !_atmosJobThread.IsAlive)
-                if(!_loopStarted || _atmosTask.Status != TaskStatus.Running)
+
+                if(_atmosTask == null || (_atmosTask != null && _atmosTask.Status != TaskStatus.Running))
                 {
                     AddBlocksAfterJob();
                     AddGasAfterJob();
@@ -382,9 +385,11 @@ namespace Assets.Scripts.Controllers.Atmos
                     if (_visualizeGas)
                         VisualizeGas();
 
-                    _atmosTask = new Task(ProcessAtmos, TaskCreationOptions.LongRunning);
-                    _atmosTask.Start();
-                    _loopStarted = true;
+                    if (_atmosProcessingEnabled)
+                    {
+                        _atmosTask = new Task(ProcessAtmos, TaskCreationOptions.LongRunning);
+                        _atmosTask.Start();
+                    }
                 }
             }
         }        

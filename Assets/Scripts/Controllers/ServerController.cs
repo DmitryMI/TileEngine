@@ -3,6 +3,7 @@ using Assets.Scripts.Objects;
 using Assets.Scripts.Objects.Mob;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.Controllers
 {
@@ -30,10 +31,10 @@ namespace Assets.Scripts.Controllers
 
                 _mapManager = new MapManager();
 
-                ApplyFixers();
-
-                if (_debugSaveScene)
+                
+                if (Application.isEditor && _debugSaveScene)
                 {
+                    ApplyFixers();
                     _mapManager.SaveScene("SavedScene.temap");
                     Debug.Log("Scene saved!");
                 }
@@ -45,6 +46,11 @@ namespace Assets.Scripts.Controllers
                 {
                     Debug.LogError("Map was not loaded correctly!");
                 }
+                else
+                {
+                    Debug.Log("Map loaded successfully: ");
+                }
+
             }
             else
             {
@@ -75,6 +81,8 @@ namespace Assets.Scripts.Controllers
         [Server]
         private void ApplyFixers()
         {
+            TileController.Current = GameObject.FindObjectOfType<TileController>();
+
             TileObject[] tos = FindObjectsOfType<TileObject>();
 
             foreach (var to in tos)
@@ -109,23 +117,38 @@ namespace Assets.Scripts.Controllers
         [Server]
         public void SpawnPlayer(Player player)
         {
-            //player.Cell = new Vector2Int(5, 5);
+            Text output = GameObject.Find("OutputText").GetComponent<Text>();
+
             SpawnPoint[] spawners = FindObjectsOfType<SpawnPoint>();
+
+            output.text += "\nSpawners count: " + spawners.Length;
+
             int rand = Random.Range(0, spawners.Length);
+            output.text += "\nChosen spawner: " + rand;
 
             if (spawners.Length == 0)
             {
-                Debug.LogWarning("No spawners found!");
+                output.text += "\nNO SPAWNERS FOUND!";
                 Vector2Int cell = Vector2Int.zero;
-                player.RpcForceTransformation(cell.x, cell.y, Vector2.zero);
+                //player.RpcForceTransformation(cell.x, cell.y, Vector2.zero);
+                RpcSetPlayerSpawned(player.gameObject, cell.x, cell.y, Vector2.zero);
             }
             else
             {
                 Vector2Int cell = spawners[rand].Cell;
-                player.RpcForceTransformation(cell.x, cell.y, Vector2.zero);
+                RpcSetPlayerSpawned(player.gameObject, cell.x, cell.y, Vector2.zero);
 
-                Debug.Log("Player spawned: " + cell);
+                output.text += "\nPlayer spawned on point: " + cell.x + " " + cell.y;
             }
+        }
+
+        [ClientRpc]
+        private void RpcSetPlayerSpawned(GameObject playerGo, int x, int y, Vector2 ofset)
+        {
+            Player player = playerGo.GetComponent<Player>();
+            player.Cell = new Vector2Int(x, y);
+            player.CellOffset = ofset;
+            player.Spawned = true;
         }
 
         [Command]

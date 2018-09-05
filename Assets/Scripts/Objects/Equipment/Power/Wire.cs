@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts.Objects.Equipment.Power
 {
@@ -20,9 +21,13 @@ namespace Assets.Scripts.Objects.Equipment.Power
         [SerializeField] private Sprite _wes;
         [SerializeField] private Sprite _nesw;
 
+        [SyncVar]
         [SerializeField] private bool _connectsNorth;
+        [SyncVar]
         [SerializeField] private bool _connectsEast;
+        [SyncVar]
         [SerializeField] private bool _connectsSouth;
+        [SyncVar]
         [SerializeField] private bool _connectsWest;
 
         private SpriteRenderer _spriteRenderer;

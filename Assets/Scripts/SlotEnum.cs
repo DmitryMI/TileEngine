@@ -7,6 +7,6 @@ namespace Assets.Scripts
 {
     public enum SlotEnum
     {
-        LeftHand, RightHand, Back, Belt
+        LeftHand, RightHand, Back, Belt, Costume, Hardsuit, Gloves
     }
 }
