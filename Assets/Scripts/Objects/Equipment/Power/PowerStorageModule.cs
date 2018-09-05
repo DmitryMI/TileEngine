@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts.Objects.Equipment.Power
 {
@@ -30,9 +31,11 @@ namespace Assets.Scripts.Objects.Equipment.Power
         {
             base.Update();
             
-            SendPower(_maximumOutput);
+            if(isServer)
+                SendPower(_maximumOutput);
         }
 
+        [Server]
         private void SendPower(float watts)
         {
             WireConnector connector = TileController.Find<WireConnector>(Cell.x, Cell.y);
