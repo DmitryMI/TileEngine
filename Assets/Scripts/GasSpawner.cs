@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using Assets.Scripts.Controllers.Atmos;
 using Assets.Scripts.Objects;
 using UnityEngine;
@@ -87,7 +88,7 @@ namespace Assets.Scripts
             }
             catch (Exception ex)
             {
-                Debug.Log(ex.Message);
+                Debug.LogWarning(ex.Message);
             }
         }
 
@@ -101,7 +102,7 @@ namespace Assets.Scripts
             {
                 string[] namePart = gasSet.Split('-');
                 string name = namePart[0];
-                float part = float.Parse(namePart[1]);
+                float part = float.Parse(namePart[1], CultureInfo.InvariantCulture);
                 Gas gas = AtmosController.GetGasByName(name);
                 int id = gas.Id;
 

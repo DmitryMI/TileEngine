@@ -5,7 +5,18 @@ namespace Assets.Scripts.Controllers
 {
     public abstract class Controller : NetworkBehaviour
     {
-        protected bool WasLoaded = false;
+        private bool _wasLoaded;
+        protected bool WasLoaded
+        {
+            get { return _wasLoaded; }
+            set
+            {
+                _wasLoaded = value;
+                if(_wasLoaded)
+                    ServerController.Current.RequestLoadingFinished();
+            }
+        }
+
         protected ServerController ServerController;
 
         public abstract void OnGameLoaded(ServerController controller);

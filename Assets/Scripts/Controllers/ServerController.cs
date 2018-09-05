@@ -14,11 +14,20 @@ namespace Assets.Scripts.Controllers
         [SerializeField] private bool _debugSaveScene;
 
         private MapManager _mapManager;
+        private int _notFinished;
+
+        private static ServerController _instance;
+
+        public static ServerController Current => _instance;
 
         private void Start()
         {
+            _instance = this;
+
             if (isServer)
             {
+                _notFinished = 0;
+
                 _mapManager = new MapManager();
 
                 ApplyFixers();
@@ -82,7 +91,19 @@ namespace Assets.Scripts.Controllers
             foreach (var controller in controllers)
             {
                 controller.OnGameLoaded(this);
+                Debug.Log("Controller loading started: " + controller.name);
+                _notFinished++;
             }
+        }
+
+        public void RequestLoadingFinished()
+        {
+            _notFinished--;
+        }
+
+        public bool GameReady
+        {
+            get { return _notFinished == 0; }
         }
 
         [Server]

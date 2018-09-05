@@ -39,7 +39,8 @@ namespace Assets.Scripts.Objects.Equipment.Power
 
             if (connector == null)
             {
-                Debug.LogWarning("PSM is not connected to a wire!");
+                if(TileController.IsReady)
+                    Debug.LogWarning("PSM is not connected to a wire!");
                 return;
             }
 

@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
@@ -8,32 +11,36 @@ namespace Assets.Scripts.Controllers.Atmos
 {
     public class AtmosController : Controller
     {
-        [SerializeField] private bool _visualizeGas = false;
-        [SerializeField] private Gas[] _gasList;
-
-
         #region Static access
-
-        private List<GasInfo>[,] _gasInfos;
-        private int[,] _gasBlockers;
-
         private static AtmosController _current;
         public static AtmosController Current
         {
             get { return _current; }
         }
         #endregion
-      
+
+
+        [SerializeField] private bool _visualizeGas = false;
+        [SerializeField] private Gas[] _gasList;
+
+        private List<GasInfo>[,] _gasInfos;
+        private int[,] _gasBlockers;
+
+        private List<GasAdderData> _gasAdderDatas;
+        private List<BlockAdderData> _blockAdderDatas;
+        private Vector2Int _mapSize;
+        private Task _atmosTask;
+        private bool _loopStarted = false;
+
+        private Task _allocationTask;
 
         public override void OnGameLoaded(ServerController controller)
         {
-            WasLoaded = true;
             ServerController = controller;
             _current = this;
+            _mapSize = ServerController.MapSize;
 
             InitiateMatrixes();
-
-            Debug.Log("Atmos: Matrixes initiated");
         }
 
         
@@ -42,21 +49,43 @@ namespace Assets.Scripts.Controllers.Atmos
         {
             if (isServer)
             {
+                _allocationTask = new Task(AllocateMemoryAsync, TaskCreationOptions.LongRunning);
+                _allocationTask.Start();
+            
+                StartCoroutine(WaitForCompletion());
 
-                Vector2Int mapSize = controller.MapSize;
+                int capacity = ServerController.MapSize.x * ServerController.MapSize.y - 1;
 
-                _gasInfos = new List<GasInfo>[mapSize.x, mapSize.y];
-                _gasBlockers = new int[mapSize.x, mapSize.y];
-
-                for (int i = 0; i < _gasInfos.GetLength(0); i++)
-                {
-                    for (int j = 0; j < _gasInfos.GetLength(1); j++)
-                    {
-                        _gasInfos[i, j] = new List<GasInfo>();
-                    }
-                }
+                _gasAdderDatas = new List<GasAdderData>(capacity);
+                _blockAdderDatas = new List<BlockAdderData>(capacity);
 
                 ResetGasBlockers();
+            }
+        }
+
+        private IEnumerator WaitForCompletion()
+        {
+            while (!_allocationTask.IsCompleted)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+
+            Debug.Log("Atmos: Matrixes initiated");
+
+            WasLoaded = true;
+        }
+
+        private void AllocateMemoryAsync()
+        {
+            _gasInfos = new List<GasInfo>[_mapSize.x, _mapSize.y];
+            _gasBlockers = new int[_mapSize.x, _mapSize.y];
+
+            for (int i = 0; i < _gasInfos.GetLength(0); i++)
+            {
+                for (int j = 0; j < _gasInfos.GetLength(1); j++)
+                {
+                    _gasInfos[i, j] = new List<GasInfo>();
+                }
             }
         }
 
@@ -78,9 +107,13 @@ namespace Assets.Scripts.Controllers.Atmos
             List<GasInfo> gases = _gasInfos[x, y];
 
             float summ = 0;
-            foreach (var gas in gases)
+
+            if (gases != null)
             {
-                summ += gas.Pressure;
+                foreach (var gas in gases)
+                {
+                    summ += gas.Pressure;
+                }
             }
 
             return summ;
@@ -89,31 +122,59 @@ namespace Assets.Scripts.Controllers.Atmos
         [Server]
         public void SetBlock(int x, int y)
         {
-
             if (!WasLoaded)
                 return;
 
             if (!ServerController.IsCellInBounds(new Vector2Int(x, y)))
                 return;
 
-            _gasBlockers[x, y]++;
+            _blockAdderDatas.Add(new BlockAdderData(){X = x, Y = y});
         }
 
         [Server]
-        public void AddGas(int x, int y, int gasId, float volume, float pressure,float temperature)
+        public void AddGas(int x, int y, int gasId, float volume, float pressure, float temperature)
         {
+            if (!ServerController.IsCellInBounds(new Vector2Int(x, y)))
+                return;
 
-            List<GasInfo> gasMixture = _gasInfos[x, y];
-            GasInfo gasInfo = FindGas(gasMixture, gasId);
+            _gasAdderDatas.Add(new GasAdderData(){GasId = gasId, Pressure = pressure, Temperature =  temperature, X = x, Y = y, Volume = volume});
+        }
 
-            if (gasInfo != null)
+        private void AddGasAfterJob()
+        {
+            foreach (var gasAdder in _gasAdderDatas)
             {
-                gasInfo.Pressure += pressure / volume; // TODO Volume?
+                int x = gasAdder.X;
+                int y = gasAdder.Y;
+                int gasId = gasAdder.GasId;
+                float pressure = gasAdder.Pressure;
+                float volume = gasAdder.Volume;
+                float temperature = gasAdder.Temperature;
+
+                List<GasInfo> gasMixture = _gasInfos[x, y];
+                GasInfo gasInfo = FindGas(gasMixture, gasId);
+
+                if (gasInfo != null)
+                {
+                    gasInfo.Pressure += pressure / volume; // TODO Volume?
+                }
+                else
+                {
+                    gasMixture.Add(new GasInfo(pressure / volume, gasId, temperature));
+                }
             }
-            else
+
+            _gasAdderDatas.Clear();
+        }
+
+        private void AddBlocksAfterJob()
+        {
+            foreach (var blockAdder in _blockAdderDatas)
             {
-                gasMixture.Add(new GasInfo(pressure / volume, gasId, temperature));
+                _gasBlockers[blockAdder.X, blockAdder.Y]++;
             }
+
+            _blockAdderDatas.Clear();
         }
 
         public Gas GetGasById(int gasId)
@@ -149,6 +210,7 @@ namespace Assets.Scripts.Controllers.Atmos
             }
         }
 
+
         private void Update()
         {
             if (!WasLoaded)
@@ -158,10 +220,14 @@ namespace Assets.Scripts.Controllers.Atmos
 
             if (isServer)
             {
-                for (int i = 0; i < _gasBlockers.GetLength(0); i++)
-                for (int j = 0; j < _gasBlockers.GetLength(1); j++)
+                //if (_atmosJobThread == null || !_atmosJobThread.IsAlive)
+                if(!_loopStarted || _atmosTask.Status != TaskStatus.Running)
                 {
-                    _gasBlockers[i, j] = 0;
+                    for (int i = 0; i < _gasBlockers.GetLength(0); i++)
+                    for (int j = 0; j < _gasBlockers.GetLength(1); j++)
+                    {
+                        _gasBlockers[i, j] = 0;
+                    }
                 }
             }
         }
@@ -178,9 +244,15 @@ namespace Assets.Scripts.Controllers.Atmos
                     for (int y = 0; y < _gasInfos.GetLength(1); y++)
                     {
                         VisionMask mask = visionController.GetMask(x, y);
-                        mask.SetVisible();
-
-                        float summPressure = GetPressure(x, y);
+                        float summPressure = 0;
+                        List<GasInfo> gases = _gasInfos[x, y];
+                        if (gases != null)
+                        {
+                            foreach (var gas in gases)
+                            {
+                                summPressure += gas.Pressure;
+                            }
+                        }
 
                         float brightness = (100 - summPressure) / 100;
 
@@ -193,7 +265,11 @@ namespace Assets.Scripts.Controllers.Atmos
                             color += gasColor * info.Pressure / summPressure;
                         }
 
-                        mask.SetLighting(brightness, color);
+                        if (mask != null)
+                        {
+                            mask.SetVisible();
+                            mask.SetLighting(brightness, color);
+                        }
                     }
                 }
             }
@@ -222,6 +298,14 @@ namespace Assets.Scripts.Controllers.Atmos
             }
         }
 
+        private void ProcessGasParallel(int index)
+        {
+            int x = index / _mapSize.x;
+            int y = index - x * _mapSize.x;
+
+            ProcessCell(x, y);
+        }
+
         private void ProcessCell(int x, int y)
         {
             List<Vector2Int> freeCells = new List<Vector2Int>(4);
@@ -239,14 +323,16 @@ namespace Assets.Scripts.Controllers.Atmos
                 freeCells.Add(new Vector2Int(x + 1, y));
 
             List<GasInfo> gasMixture = _gasInfos[x, y];
-            foreach (GasInfo gasInfo in gasMixture)
+            for (var i = 0; i < gasMixture.Count; i++)
             {
+                GasInfo gasInfo = gasMixture[i];
                 float summPressure = gasInfo.Pressure;
 
                 List<GasInfo> neighbourGasInfos = new List<GasInfo>(4);
 
-                foreach (var cell in freeCells)
+                for (var j = 0; j < freeCells.Count; j++)
                 {
+                    var cell = freeCells[j];
                     List<GasInfo> cellGasMixture = _gasInfos[cell.x, cell.y];
                     GasInfo cellGasInfo = FindGas(cellGasMixture, gasInfo.GasId);
 
@@ -275,8 +361,9 @@ namespace Assets.Scripts.Controllers.Atmos
                     gasInfo.Pressure = 0;
                 }
 
-                foreach (var cellGasInfo in neighbourGasInfos)
+                for (var k = 0; k < neighbourGasInfos.Count; k++)
                 {
+                    var cellGasInfo = neighbourGasInfos[k];
                     cellGasInfo.Pressure = average;
                 }
             }
@@ -286,11 +373,20 @@ namespace Assets.Scripts.Controllers.Atmos
         {
             if (WasLoaded && isServer)
             {
-                ProcessAtmos();
-            }
+                //if (_atmosJobThread == null || !_atmosJobThread.IsAlive)
+                if(!_loopStarted || _atmosTask.Status != TaskStatus.Running)
+                {
+                    AddBlocksAfterJob();
+                    AddGasAfterJob();
 
-            if (_visualizeGas)
-                VisualizeGas();
+                    if (_visualizeGas)
+                        VisualizeGas();
+
+                    _atmosTask = new Task(ProcessAtmos, TaskCreationOptions.LongRunning);
+                    _atmosTask.Start();
+                    _loopStarted = true;
+                }
+            }
         }        
         
     }
