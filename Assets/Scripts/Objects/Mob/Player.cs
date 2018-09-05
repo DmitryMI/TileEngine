@@ -55,17 +55,7 @@ namespace Assets.Scripts.Objects.Mob
 
         protected override void Update()
         {
-            if (isServer)
-            {
-                base.Update();
-            }
-            else
-            {
-                if (isLocalPlayer && _spawned)
-                {
-                    base.Update();
-                }
-            }
+            base.Update();
 
             if (isLocalPlayer)
             {

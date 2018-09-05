@@ -18555,10 +18555,10 @@ RectTransform:
   m_Father: {fileID: 1635574752}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.039476637}
-  m_AnchorMax: {x: 0.2988245, y: 0.5}
-  m_AnchoredPosition: {x: 656.2, y: 64.205}
-  m_SizeDelta: {x: 3, y: 1.3699951}
+  m_AnchorMin: {x: 0.763, y: 0.15978506}
+  m_AnchorMax: {x: 1, y: 0.625}
+  m_AnchoredPosition: {x: 0, y: -1}
+  m_SizeDelta: {x: 0, y: -2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &762405626
 MonoBehaviour:
@@ -52980,7 +52980,7 @@ MonoBehaviour:
   _maxSpawnPerFrame: 64
   _maskPrefab: {fileID: 114944299032662326, guid: aeb34f2de6606d243afccb2c80a66050,
     type: 2}
-  _enableVisionMasks: 0
+  _enableVisionMasks: 1
   _sightRange: 10
   _visionActive: 1
   _visionSourceCell: {x: 0, y: 0}

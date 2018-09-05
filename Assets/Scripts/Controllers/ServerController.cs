@@ -31,10 +31,10 @@ namespace Assets.Scripts.Controllers
 
                 _mapManager = new MapManager();
 
-                ApplyFixers();
-
-                if (_debugSaveScene)
+                
+                if (Application.isEditor && _debugSaveScene)
                 {
+                    ApplyFixers();
                     _mapManager.SaveScene("SavedScene.temap");
                     Debug.Log("Scene saved!");
                 }
@@ -42,15 +42,15 @@ namespace Assets.Scripts.Controllers
                 if (_shouldClearScene)
                     ClearScene();
 
-
-                Debug.Break();
-
                 if (!LoadMap())
                 {
                     Debug.LogError("Map was not loaded correctly!");
                 }
+                else
+                {
+                    Debug.Log("Map loaded successfully: ");
+                }
 
-                Debug.Break();
             }
             else
             {
@@ -138,7 +138,7 @@ namespace Assets.Scripts.Controllers
                 Vector2Int cell = spawners[rand].Cell;
                 RpcSetPlayerSpawned(player.gameObject, cell.x, cell.y, Vector2.zero);
 
-                output.text += "\nPlayer spawned on point: " + cell;
+                output.text += "\nPlayer spawned on point: " + cell.x + " " + cell.y;
             }
         }
 

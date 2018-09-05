@@ -19,17 +19,35 @@ namespace Assets.Scripts.Objects.Turf
         [SerializeField] [SyncVar] private float _initialIntensity = 1f;
         [SerializeField] [SyncVar] private float _intensityDecrement = 0.05f;
 
-        [SerializeField]
         private float _power;
+
+        [SyncVar] private bool _isLighting;
 
         protected override void Update ()
         {
             base.Update();
 
-            if (_power > 0)
+            if (isServer)
             {
-                UpdateVisionController();
-                _power -= 25;
+                if (_power > 0)
+                {
+                    //UpdateVisionController();
+                    _isLighting = true;
+                    _power -= 25;
+                }
+                else
+                {
+                    _power = 0;
+                    _isLighting = false;
+                }
+            }
+
+            if (isClient)
+            {
+                if (_isLighting)
+                {
+                    UpdateVisionController();
+                }
             }
         }
 
