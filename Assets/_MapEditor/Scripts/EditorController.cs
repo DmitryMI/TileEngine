@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Assets.Scripts;
 using Assets.Scripts.Controllers;
 using Assets.Scripts.Objects;
@@ -49,6 +50,7 @@ namespace Assets._MapEditor.Scripts
             UpdateObjectUnderCursor();
             UpdateMouseCell();
             UpdateUiElementUnderCursor();
+            UpdateMouseScreen();
         }
 
         private void LateUpdate()
@@ -60,6 +62,12 @@ namespace Assets._MapEditor.Scripts
         {
             Vector2 mousePos = Input.mousePosition;
             _mouseWorldPosition = Camera.main.ScreenToWorldPoint(mousePos);
+        }
+
+        public void UpdateMouseScreen()
+        {
+            MouseScreenDelta = MouseScreenPosition - _mousePrevScreenPosition;
+            _mousePrevScreenPosition = MouseScreenPosition;
         }
 
         private void UpdateMouseCell()
@@ -85,9 +93,6 @@ namespace Assets._MapEditor.Scripts
             {
                 cellY += 1;
             }
-
-            Debug.DrawRay(Vector2.zero, mousePos, Color.blue);
-            Debug.DrawRay(Vector2.zero, _grid.CellToWorld(new Vector3Int(cellX, cellY, 0)), Color.red);
 
             _mouseCell = new Vector2Int(cellX, cellY);
         }
@@ -180,35 +185,38 @@ namespace Assets._MapEditor.Scripts
         public Vector2 MouseScreenDelta { get; private set; }
 
         public bool PrevLmbState { get { return _prevLmbPressed; } }
-        public bool CurrentLmbState { get { return Input.GetMouseButton(0); } }
+        public bool CurrentLmbState { get { return Input.GetAxis("Fire1") > 0; } }
 
         private void ProcessMouseState()
         {
-            bool currentMouseState = Input.GetMouseButton(0);
-            
 
-            if (!_prevLmbPressed && currentMouseState)
+            if (CurrentLmbState && !PrevLmbState)
             {
-                _pressFrame = Time.frameCount;
+                StartCoroutine(WaitForMouse(MouseScreenPosition));
             }
 
-            //MouseScreenDelta = MouseScreenPosition - _mousePrevScreenPosition;
-            CustomInputModule module = EventSystem.current.currentInputModule as CustomInputModule;
-            if (module != null)
+            _prevLmbPressed = CurrentLmbState;
+        }
+
+        IEnumerator WaitForMouse(Vector2 curMousePos)
+        {
+            bool noClick = false;
+            while (CurrentLmbState)
             {
-                PointerEventData data = module.GetPointerData();
-                if(data != null)
-                    MouseScreenDelta = module.GetPointerData().delta;
+                if (Vector2.Distance(curMousePos, Input.mousePosition) >= _maxClickDelta)
+                {
+                    noClick = true;
+                    break;
+                }
+
+                yield return new WaitForEndOfFrame();
             }
 
-            if (_prevLmbPressed && !currentMouseState && MouseScreenDelta.magnitude < _maxClickDelta )
+            if (!noClick)
             {
-                DoUiElementClick();
                 DoObjectClick();
+                DoUiElementClick();
             }
-
-            _prevLmbPressed = currentMouseState;
-            _mousePrevScreenPosition = MouseScreenPosition;
         }
 
         private void DoUiElementClick()

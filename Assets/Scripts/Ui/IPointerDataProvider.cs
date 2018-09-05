@@ -18,7 +18,6 @@ namespace Assets.Scripts.Ui
 
         Vector2 MouseWorldPosition { get; }
         Vector2 MouseScreenPosition { get; }
-        Vector2 MouseScreenDelta { get; }
 
         bool PrevLmbState { get; }
         bool CurrentLmbState { get; }

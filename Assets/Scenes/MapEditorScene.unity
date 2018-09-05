@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dce8101f017fbcd41ab31c5454d3532b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dragMouseDelta: 1
+  _minMouseOffset: 0.1
 --- !u!1 &438302414
 GameObject:
   m_ObjectHideFlags: 0
@@ -279,7 +279,7 @@ MonoBehaviour:
   _buttonPrefab: {fileID: 0}
   _mapSize: {x: 0, y: 0}
   _maxClickTime: 60
-  _maxClickDelta: 1
+  _maxClickDelta: 0.1
 --- !u!4 &453427590
 Transform:
   m_ObjectHideFlags: 0
@@ -422,7 +422,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []

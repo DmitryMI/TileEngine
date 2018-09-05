@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Objects;
 using Assets.Scripts.Objects.Item;
@@ -190,11 +191,8 @@ namespace Assets.Scripts.Controllers
             get { return Input.mousePosition; }
         }
 
-        public Vector2 MouseScreenDelta { get; private set; }
-
-
         public bool PrevLmbState { get { return _prevLmbPressed; } }
-        public bool CurrentLmbState { get { return Input.GetMouseButton(0); } }
+        public bool CurrentLmbState { get { return Input.GetAxis("Fire1") > 0; } }
 
         public SlotEnum ActiveHand
         {
@@ -256,8 +254,6 @@ namespace Assets.Scripts.Controllers
 
         private void ProcessMouseState()
         {
-            bool currentMouseState = Input.GetMouseButton(0);
-
             if (_localPlayer == null)
                 FindLocalPlayer();
 
@@ -267,17 +263,31 @@ namespace Assets.Scripts.Controllers
                 return;
             }
 
+            if(CurrentLmbState && !PrevLmbState)
+                StartCoroutine(WaitForMouse(MouseScreenPosition));
 
-            MouseScreenDelta = MouseScreenPosition - _mousePrevScreenPosition;
+            _prevLmbPressed = CurrentLmbState;
+        }
 
-            if (_prevLmbPressed && !currentMouseState && MouseScreenDelta.magnitude < _maxClickDelta)
+        IEnumerator WaitForMouse(Vector2 curMousePos)
+        {
+            bool noClick = false;
+            while (CurrentLmbState)
             {
-                ClickOnUiElement();
-                ClickOnTileObject();
+                if (Vector2.Distance(curMousePos, Input.mousePosition) >= _maxClickDelta)
+                {
+                    noClick = true;
+                    break;
+                }
+
+                yield return new WaitForEndOfFrame();
             }
 
-            _prevLmbPressed = currentMouseState;
-            _mousePrevScreenPosition = MouseScreenPosition;
+            if (!noClick)
+            {
+                ClickOnTileObject();
+                ClickOnUiElement();
+            }
         }
 
         private void ClickOnTileObject()

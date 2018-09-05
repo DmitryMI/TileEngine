@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,13 +12,11 @@ namespace Assets.Scripts.Ui
 {
     class DagAndDropManager : MonoBehaviour
     {
-        [SerializeField]
-        private float _dragMouseDelta;
+        [SerializeField] private float _minMouseOffset;
         private IDragable _currentDragable;
         private IPointerDataProvider _pointerDataProvider;
 
-        private Vector2 _prevMousePosition;
-        
+        private bool mousePressed;
 
         private void Start()
         {
@@ -36,57 +35,81 @@ namespace Assets.Scripts.Ui
             }
         }
 
-        private void FixedUpdate()
+        void Update()
         {
-            Vector2 mouseDelta = _pointerDataProvider.MouseScreenPosition - _prevMousePosition;
-            
+            mousePressed = _pointerDataProvider.CurrentLmbState;
+            bool prevMousePressed = _pointerDataProvider.PrevLmbState;
 
-            if (_pointerDataProvider.CurrentLmbState == true && _pointerDataProvider.PrevLmbState == false && mouseDelta.magnitude > _dragMouseDelta)
+            if (!prevMousePressed && mousePressed)
             {
-                OnMouseHoldStart();
+                StartCoroutine(WaitForMouse(Input.mousePosition));
             }
 
-            if (_pointerDataProvider.CurrentLmbState && _pointerDataProvider.PrevLmbState)
-            {
-                OnMouseHoldContinue();
-            }
+            if (!mousePressed && _currentDragable != null)
+                EndDrag();
 
-            if (_pointerDataProvider.CurrentLmbState == false && _pointerDataProvider.PrevLmbState)
+            if (mousePressed && _currentDragable != null && prevMousePressed)
             {
-                OnMouseHoldFinish();
-            }
-
-            _prevMousePosition = _pointerDataProvider.MouseScreenPosition;
-        }
-
-        private void OnMouseHoldStart()
-        {
-            Debug.Log("MouseHolding started");
-            UiElement underCursor = _pointerDataProvider.UnderCursorUiElement;
-            IDragable dragable = underCursor as IDragable;
-            if (dragable != null)
-            {
-                dragable.OnDragStart(_pointerDataProvider);
-                _currentDragable = dragable;
+                ContinueDrag();
             }
         }
 
-        private void OnMouseHoldContinue()
+        IEnumerator WaitForMouse(Vector2 curMousePos)
         {
-            _currentDragable?.OnDragContinue(_pointerDataProvider);
+            while (mousePressed)
+            {
+                if (Vector2.Distance(curMousePos, Input.mousePosition) >= _minMouseOffset)
+                {
+                    StartDrag();
+                    break;
+                }
+
+                yield return new WaitForEndOfFrame();
+            }
         }
 
-        private void OnMouseHoldFinish()
+        void StartDrag()
         {
-            UiElement underCursorUi = _pointerDataProvider.UnderCursorUiElement;
-            TileObject underCursorTileObject = _pointerDataProvider.UnderCursorTileObject;
+            _currentDragable = FindDragable();
+            _currentDragable?.OnDragStart(_pointerDataProvider);
+        }
 
-            IDropReceiver receiver = underCursorUi as IDropReceiver;
-            if(receiver == null)
-                receiver = underCursorTileObject as IDropReceiver;
+        void EndDrag()
+        {
+            if(_currentDragable != null)
+                _currentDragable.OnDragEnd(FindDropReceiver(), _pointerDataProvider);
+            _currentDragable = null;
+        }
 
-            if (receiver != null)
-                _currentDragable?.OnDragEnd(receiver, _pointerDataProvider);
+        void ContinueDrag()
+        {
+            _currentDragable.OnDragContinue(_pointerDataProvider);
+        }
+
+        IDropReceiver FindDropReceiver()
+        {
+            UiElement ui = _pointerDataProvider.UnderCursorUiElement;
+            IDropReceiver result = ui as IDropReceiver;
+            if (result != null)
+                return result;
+
+            TileObject to = _pointerDataProvider.UnderCursorTileObject;
+            result = to as IDropReceiver;
+
+            return result;
+        }
+
+        IDragable FindDragable()
+        {
+            UiElement ui = _pointerDataProvider.UnderCursorUiElement;
+            IDragable result = ui as IDragable;
+            if (result != null)
+                return result;
+
+            TileObject to = _pointerDataProvider.UnderCursorTileObject;
+            result = to as IDragable;
+
+            return result;
         }
     }
 }
