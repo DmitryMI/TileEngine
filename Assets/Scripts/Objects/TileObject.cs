@@ -131,7 +131,8 @@ namespace Assets.Scripts.Objects
             }
             if (!PassesGas)
             {
-                AtmosController.SetBlock(_cell.x, _cell.y);
+                if(isServer)
+                    AtmosController.SetBlock(_cell.x, _cell.y);
             }
         }
 
