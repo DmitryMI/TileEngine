@@ -9,12 +9,16 @@ namespace Assets.Scripts.HumanAppearance
     {
         private SpriteRenderer _spriteRenderer;
         private Player _player;
+
+        private IWearable _clothing;
         
 
         void Start ()
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _player = GetComponentInParent<Player>();
+
+            _clothing = GameObject.FindObjectOfType<GrayCostume>().GetComponent<IWearable>();
         }
 	
         void Update ()
@@ -25,7 +29,7 @@ namespace Assets.Scripts.HumanAppearance
         private IWearable GetClothing()
         {
             // TODO Get clothing from Player object
-            return GameObject.FindObjectOfType<GrayCostume>().GetComponent<IWearable>();
+            return _clothing;
         }
 
         private void UpdateSprite()
