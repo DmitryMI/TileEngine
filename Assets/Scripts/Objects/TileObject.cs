@@ -160,8 +160,8 @@ namespace Assets.Scripts.Objects
 
                 if (isServer)
                 {
-                    TileController.RemoveObject(oldCell.x, oldCell.y, this);
-                    TileController.AddObject(_cell.x, _cell.y, this);
+                    TileController.Current.RemoveObject(oldCell.x, oldCell.y, this);
+                    TileController.Current.AddObject(_cell.x, _cell.y, this);
                 }
             }
         }
