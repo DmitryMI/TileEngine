@@ -1161,8 +1161,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c70a8b5b8121a8e4e9c33a5993563e53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mapSizeX: 20
-  _mapSizeY: 20
+  _mapSizeX: 100
+  _mapSizeY: 100
   _shouldClearScene: 1
   _debugSaveScene: 1
 --- !u!114 &37809042
