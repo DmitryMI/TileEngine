@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 namespace Assets.Scripts
 {
-    class CustomImputModule : StandaloneInputModule
+    class CustomInputModule : StandaloneInputModule
     {
         public PointerEventData GetPointerData()
         {

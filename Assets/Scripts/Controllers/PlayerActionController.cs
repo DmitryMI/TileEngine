@@ -95,7 +95,7 @@ namespace Assets.Scripts.Controllers
 
         private void UpdateUiElementUnderCursor()
         {
-            PointerEventData pointerEventData = ((CustomImputModule) EventSystem.current.currentInputModule).GetPointerData();
+            PointerEventData pointerEventData = ((CustomInputModule) EventSystem.current.currentInputModule).GetPointerData();
 
             GameObject obj = pointerEventData.pointerCurrentRaycast.gameObject;
 
