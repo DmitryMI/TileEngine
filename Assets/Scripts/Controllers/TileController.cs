@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Assets.Scripts.Objects;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Assets.Scripts.Controllers
@@ -12,20 +15,17 @@ namespace Assets.Scripts.Controllers
 
         private List<TileObject>[,] _objects;
 
+        private Vector2Int _mapSize;
+        private bool _allocationFinished;
+        private Task _allocationTask;
+
         public override void OnGameLoaded(ServerController controller)
         {
-            WasLoaded = true;
+            //WasLoaded = true;
             ServerController = controller;
+            _mapSize = ServerController.MapSize;
 
-            _objects = new List<TileObject>[controller.MapSize.x, controller.MapSize.y];
-
-            for (int x = 0; x < controller.MapSize.x; x++)
-            {
-                for (int y = 0; y < controller.MapSize.x; y++)
-                {
-                    _objects[x, y] = new List<TileObject>(10);
-                }
-            }
+            AllocateMemory();
         }
 
         [Server]
@@ -66,6 +66,35 @@ namespace Assets.Scripts.Controllers
             }
 
             return null;
+        }
+
+        private IEnumerator WaitForAsyncAllocation()
+        {
+            while(_allocationTask.IsCompleted)
+                yield return new WaitForEndOfFrame();
+
+            WasLoaded = true;
+        }
+
+        private void AllocateMemory()
+        {
+            _allocationTask = new Task(AllocateMemoryAsync, TaskCreationOptions.LongRunning);
+            _allocationTask.Start();
+
+            StartCoroutine(WaitForAsyncAllocation());
+        }
+
+        private void AllocateMemoryAsync()
+        {
+            _objects = new List<TileObject>[_mapSize.x, _mapSize.y];
+
+            for (int x = 0; x < _mapSize.x; x++)
+            {
+                for (int y = 0; y < _mapSize.x; y++)
+                {
+                    _objects[x, y] = new List<TileObject>(10);
+                }
+            }
         }
     }
 }

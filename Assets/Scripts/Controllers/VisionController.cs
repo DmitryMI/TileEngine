@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Scripts.Controllers
 {
@@ -18,6 +20,7 @@ namespace Assets.Scripts.Controllers
         private Camera _camera;
         private Grid _grid;
         private bool _prevEnableVisionMasks = true;
+        private GameObject _visionMasksGroup;
 
         private static VisionController _current;
         public static VisionController Current
@@ -26,14 +29,14 @@ namespace Assets.Scripts.Controllers
         }
         public override void OnGameLoaded(ServerController controller)
         {
-            WasLoaded = true;
+            //WasLoaded = true;
             ServerController = controller;
 
             _current = this;
 
-            GameObject visionMasksGroup = GameObject.Find("VisionMasks");
+            _visionMasksGroup = GameObject.Find("VisionMasks");
 
-            if (visionMasksGroup == null)
+            if (_visionMasksGroup == null)
                 Debug.LogWarning("Grouper for vision masks was not found!");
 
             _blockersCount = new int[controller.MapSize.x, controller.MapSize.y];
@@ -45,20 +48,44 @@ namespace Assets.Scripts.Controllers
                 return;
             }
 
-            for (int x = 0; x < controller.MapSize.x; x++)
+            if (isClient)
             {
-                for (int y = 0; y < controller.MapSize.y; y++)
+                SpawnVisionMasks();
+            }
+        }
+
+        private void SpawnVisionMasks()
+        {
+            StartCoroutine(SpawnMasksFpsFriendly(32));
+        }
+
+        private IEnumerator SpawnMasksFpsFriendly(int perFrameMaximum)
+        {
+            int count = 0;
+            for (int x = 0; x < ServerController.MapSize.x; x++)
+            {
+                for (int y = 0; y < ServerController.MapSize.y; y++)
                 {
                     GameObject mask = Instantiate(_maskPrefab.gameObject);
-                    if (visionMasksGroup != null)
+                    if (_visionMasksGroup != null)
                     {
-                        mask.transform.parent = visionMasksGroup.transform;
+                        mask.transform.parent = _visionMasksGroup.transform;
                     }
                     _masks[x, y] = mask.GetComponent<VisionMask>();
                     _masks[x, y].SetCell(x, y);
                     _masks[x, y].SetInvisible();
+
+                    count++;
+
+                    if (count >= perFrameMaximum)
+                    {
+                        count = 0;
+                        yield return new WaitForEndOfFrame();
+                    }
                 }
             }
+
+            WasLoaded = true;
         }
 
         public bool VisionProcessingEnabled
