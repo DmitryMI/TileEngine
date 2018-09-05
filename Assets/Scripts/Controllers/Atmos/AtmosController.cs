@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
@@ -12,18 +11,19 @@ namespace Assets.Scripts.Controllers.Atmos
         [SerializeField] private bool _visualizeGas = false;
         [SerializeField] private Gas[] _gasList;
 
+
         #region Static access
+
+        private List<GasInfo>[,] _gasInfos;
+        private int[,] _gasBlockers;
+
         private static AtmosController _current;
         public static AtmosController Current
         {
             get { return _current; }
         }
         #endregion
-
-        private NativeArray<NativeArray<NativeList<GasInfo>>> _gasInfoMatrix;
-        private NativeArray<NativeArray<int>> _gasBlockerMatrix;
-
-        private JobHandle _jobHandle;
+      
 
         public override void OnGameLoaded(ServerController controller)
         {
@@ -36,75 +36,84 @@ namespace Assets.Scripts.Controllers.Atmos
             Debug.Log("Atmos: Matrixes initiated");
         }
 
-        private void TestNativeList()
-        {
-            NativeList<int> list = new NativeList<int>();
-
-            Debug.Log(list);
-            list.Add(1);
-            Debug.Log(list);
-            list.Add(2);
-            Debug.Log(list);
-            list.Add(3);
-            Debug.Log(list);
-            list.Add(4);
-            Debug.Log(list);
-            list.Add(5);
-            Debug.Log(list);
-            list.Add(6);
-            Debug.Log(list);
-            list.Remove(5);
-            Debug.Log(list);
-            list.Remove(6);
-            Debug.Log(list);
-            list.Remove(4);
-            Debug.Log(list);
-            list.Remove(5);
-            Debug.Log(list);
-            list.Remove(1);
-            Debug.Log(list);
-            list.Remove(3);
-            Debug.Log(list);
-            list.Remove(2);
-            Debug.Log(list);
-
-            list.Add(1);
-            Debug.Log(list);
-            list.Add(2);
-        }
+        
 
         private void InitiateMatrixes()
         {
-            _gasBlockerMatrix = new NativeArray<NativeArray<int>>(ServerController.MapSize.x, Allocator.Persistent);
-            _gasInfoMatrix = new NativeArray<NativeArray<NativeList<GasInfo>>>(ServerController.MapSize.x, Allocator.Persistent);
-            for (int x = 0; x < ServerController.MapSize.x; x++)
+            if (isServer)
             {
-                for (int y = 0; y < ServerController.MapSize.y; y++)
+
+                Vector2Int mapSize = controller.MapSize;
+
+                _gasInfos = new List<GasInfo>[mapSize.x, mapSize.y];
+                _gasBlockers = new int[mapSize.x, mapSize.y];
+
+                for (int i = 0; i < _gasInfos.GetLength(0); i++)
                 {
-                    _gasBlockerMatrix[x] = new NativeArray<int>(ServerController.MapSize.y, Allocator.Persistent);
-                    _gasInfoMatrix[x] = new NativeArray<NativeList<GasInfo>>();
+                    for (int j = 0; j < _gasInfos.GetLength(1); j++)
+                    {
+                        _gasInfos[i, j] = new List<GasInfo>();
+                    }
                 }
+
+                ResetGasBlockers();
             }
         }
 
         [Server]
         public GasInfo[] GetGases(int x, int y)
         {
-            //throw new NotImplementedException();
+            if (!WasLoaded)
+                return null;
+
+            if(ServerController.IsCellInBounds(x, y))
+                return _gasInfos[x, y].ToArray();
+
             return null;
         }
-        
+
+        [Server]
+        public float GetPressure(int x, int y)
+        {
+            List<GasInfo> gases = _gasInfos[x, y];
+
+            float summ = 0;
+            foreach (var gas in gases)
+            {
+                summ += gas.Pressure;
+            }
+
+            return summ;
+        }
 
         [Server]
         public void SetBlock(int x, int y)
         {
-            //throw new NotImplementedException();
+
+            if (!WasLoaded)
+                return;
+
+            if (!ServerController.IsCellInBounds(new Vector2Int(x, y)))
+                return;
+
+            _gasBlockers[x, y]++;
         }
 
         [Server]
         public void AddGas(int x, int y, int gasId, float volume, float pressure,float temperature)
         {
-            //throw new NotImplementedException();
+
+            List<GasInfo> gasMixture = _gasInfos[x, y];
+            GasInfo gasInfo = FindGas(gasMixture, gasId);
+
+            if (gasInfo != null)
+            {
+                gasInfo.Pressure += pressure / volume; // TODO Volume?
+            }
+            else
+            {
+                gasMixture.Add(new GasInfo(pressure / volume, gasId, temperature));
+            }
         }
 
         public Gas GetGasById(int gasId)
@@ -128,50 +137,161 @@ namespace Assets.Scripts.Controllers.Atmos
 
             return new Gas();
         }
-        
-        private void LateUpdate()
+
+        private void ResetGasBlockers()
         {
-            if (_jobHandle.IsCompleted)
+            for (int i = 0; i < _gasInfos.GetLength(0); i++)
             {
-                ProcessAtmos();
+                for (int j = 0; j < _gasInfos.GetLength(1); j++)
+                {
+                    _gasBlockers[i,j] = 0;
+                }
             }
         }
+
+        private void Update()
+        {
+            if (!WasLoaded)
+            {
+                return;
+            }
+
+            if (isServer)
+            {
+                for (int i = 0; i < _gasBlockers.GetLength(0); i++)
+                for (int j = 0; j < _gasBlockers.GetLength(1); j++)
+                {
+                    _gasBlockers[i, j] = 0;
+                }
+            }
+        }
+
+        private void VisualizeGas()
+        {
+            VisionController visionController = VisionController.Current;
+            if (visionController != null)
+            {
+                visionController.VisionProcessingEnabled = false;
+
+                for (int x = 0; x < _gasInfos.GetLength(0); x++)
+                {
+                    for (int y = 0; y < _gasInfos.GetLength(1); y++)
+                    {
+                        VisionMask mask = visionController.GetMask(x, y);
+                        mask.SetVisible();
+
+                        float summPressure = GetPressure(x, y);
+
+                        float brightness = (100 - summPressure) / 100;
+
+                        Color color = new Color(0, 0, 0, 1);
+                        List<GasInfo> mixture = _gasInfos[x, y];
+
+                        foreach (GasInfo info in mixture)
+                        {
+                            Color gasColor = GetGasById(info.GasId).Color;
+                            color += gasColor * info.Pressure / summPressure;
+                        }
+
+                        mask.SetLighting(brightness, color);
+                    }
+                }
+            }
+        }
+
+        private GasInfo FindGas(List<GasInfo> mixture, int gasId)
+        {
+            foreach (var gasInfo in mixture)
+            {
+                if (gasInfo.GasId == gasId)
+                    return gasInfo;
+            }
+            return null;
+        }
+
 
         private void ProcessAtmos()
         {
-            AtmosJob job = new AtmosJob()
+            
+            for (int x = 0; x < _gasInfos.GetLength(0); x++)
             {
-                GasInfoMatrix = _gasInfoMatrix,
-                MapWidth = ServerController.MapSize.x,
-                MapHeight = ServerController.MapSize.y,
-                GasBlockerMatrix = _gasBlockerMatrix
-            };
-
-            _jobHandle = job.Schedule(0, ServerController.MapSize.x * ServerController.MapSize.y);
+                for (int y = 0; y < _gasInfos.GetLength(1); y++)
+                {
+                   ProcessCell(x, y);
+                }
+            }
         }
 
-        struct AtmosJob : IJobParallelFor
+        private void ProcessCell(int x, int y)
         {
-            public int MapWidth;
-            public int MapHeight;
+            List<Vector2Int> freeCells = new List<Vector2Int>(4);
 
-            public NativeArray<NativeArray<NativeList<GasInfo>>> GasInfoMatrix;
-            public NativeArray<NativeArray<int>> GasBlockerMatrix;
+            if (ServerController.IsCellInBounds(x - 1, y) && _gasBlockers[x - 1, y] == 0)
+                freeCells.Add(new Vector2Int(x - 1, y));
 
-            public void Execute(int index)
+            if (ServerController.IsCellInBounds(x, y + 1) && _gasBlockers[x, y + 1] == 0)
+                freeCells.Add(new Vector2Int(x, y + 1));
+
+            if (ServerController.IsCellInBounds(x, y - 1) && _gasBlockers[x, y - 1] == 0)
+                freeCells.Add(new Vector2Int(x, y - 1));
+
+            if (ServerController.IsCellInBounds(x + 1, y) && _gasBlockers[x + 1, y] == 0)
+                freeCells.Add(new Vector2Int(x + 1, y));
+
+            List<GasInfo> gasMixture = _gasInfos[x, y];
+            foreach (GasInfo gasInfo in gasMixture)
             {
-                int x = index / MapWidth;
-                int y = index - x;
+                float summPressure = gasInfo.Pressure;
 
-                ProcessCell(x, y);
+                List<GasInfo> neighbourGasInfos = new List<GasInfo>(4);
+
+                foreach (var cell in freeCells)
+                {
+                    List<GasInfo> cellGasMixture = _gasInfos[cell.x, cell.y];
+                    GasInfo cellGasInfo = FindGas(cellGasMixture, gasInfo.GasId);
+
+                    if (cellGasInfo != null)
+                    {
+                        summPressure += cellGasInfo.Pressure;
+                        neighbourGasInfos.Add(cellGasInfo);
+                    }
+                    else
+                    {
+                        GasInfo info = new GasInfo(0, gasInfo.GasId);
+                        cellGasMixture.Add(info);
+                        neighbourGasInfos.Add(info);
+                    }
+                }
+
+                float average;
+                if (_gasBlockers[x, y] == 0)
+                {
+                    average = summPressure / (freeCells.Count + 1);
+                    gasInfo.Pressure = average;
+                }
+                else
+                {
+                    average = summPressure / (freeCells.Count);
+                    gasInfo.Pressure = 0;
+                }
+
+                foreach (var cellGasInfo in neighbourGasInfos)
+                {
+                    cellGasInfo.Pressure = average;
+                }
             }
-
-            private void ProcessCell(int x, int y)
-            {
-                
-            }
-
         }
+        
+        private void LateUpdate()
+        {
+            if (WasLoaded && isServer)
+            {
+                ProcessAtmos();
+            }
+
+            if (_visualizeGas)
+                VisualizeGas();
+        }        
         
     }
 }

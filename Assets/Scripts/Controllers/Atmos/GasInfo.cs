@@ -5,7 +5,8 @@ using System.Text;
 
 namespace Assets.Scripts.Controllers.Atmos
 {
-    public struct GasInfo : IComparable
+
+    public class GasInfo
     {
         private float _pressure;
         private readonly int _gasId;
