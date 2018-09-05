@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Assets.Scripts.Controllers;
+﻿using Assets.Scripts.Controllers;
 using Assets.Scripts.HumanAppearance;
-using Assets.Scripts.Objects.Mob;
+using Assets.Scripts.Ui;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -14,8 +10,6 @@ namespace Assets.Scripts.Objects.Item
     public class Item : TileObject, IPlayerInteractable, IDisplayable
     {
         [SerializeField] private string _descriptiveName;
-
-        //private SpriteRenderer _spriteRenderer;
 
         [SerializeField]
         protected GameObject ItemHolder;
