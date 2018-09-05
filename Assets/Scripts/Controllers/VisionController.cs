@@ -240,6 +240,9 @@ namespace Assets.Scripts.Controllers
 
         public VisionMask GetMask(int x, int y)
         {
+            if (!WasLoaded)
+                return null;
+
             if (!ServerController.IsCellInBounds(new Vector2Int(x, y)))
                 return null;
             return _masks[x, y];
