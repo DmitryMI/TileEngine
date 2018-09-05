@@ -32,6 +32,7 @@ namespace Assets.Scripts
             _prefabs = new List<KeyValuePair<int, GameObject>>();
 
             TileObject[] tos = Resources.FindObjectsOfTypeAll<TileObject>();
+
             foreach (var to in tos)
             {
                 GameObject go = to.gameObject;
@@ -236,6 +237,11 @@ namespace Assets.Scripts
             }
 
             return ok;
+        }
+
+        public List<KeyValuePair<int, GameObject>> GetPrefabList()
+        {
+            return _prefabs;
         }
     }
 }
