@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Assets.Scripts;
+using Assets.Scripts.Controllers;
 using Assets.Scripts.Objects;
 using Assets.Scripts.Ui;
 using UnityEngine;
@@ -8,10 +9,13 @@ using UnityEngine.UI;
 
 namespace Assets._MapEditor.Scripts
 {
-    public class EditorController : MonoBehaviour
+    public class EditorController : MonoBehaviour, IPointerDataProvider, IServerDataProvider
     {
         [SerializeField] private ScrollRect _scrollRect;
         [SerializeField] private ElementButton _buttonPrefab;
+        [SerializeField] private Vector2Int _mapSize;
+        [SerializeField] private float _maxClickTime;
+        [SerializeField] private float _maxClickDelta;
 
         private MapManager _mapManager;
         private List<PrefabData> _loadedPrefabs;
@@ -19,16 +23,24 @@ namespace Assets._MapEditor.Scripts
         private TileObject _objectUnderCursor;
         private UiElement _uiElementUnderCursor;
         private Vector2 _mouseWorldPosition;
+        private Vector2 _mousePrevScreenPosition;
         private Vector2Int _mouseCell;
 
         private bool _prevLmbPressed;
+        private int _pressFrame;
         private Grid _grid;
 
         void Start()
         {
             _mapManager = new MapManager();
+            _grid = FindObjectOfType<Grid>();
 
-
+            Controller[] controllers = FindObjectsOfType<Controller>();
+            foreach (Controller controller in controllers)
+            {
+                controller.RegistrateDataProvider(this);
+                controller.OnGameLoaded(this);
+            }
         }
 
         private void FixedUpdate()
@@ -41,7 +53,7 @@ namespace Assets._MapEditor.Scripts
 
         private void LateUpdate()
         {
-            ProcessMouseClick();
+            ProcessMouseState();
         }
 
         public void UpdateMouseWorldPosition()
@@ -82,7 +94,10 @@ namespace Assets._MapEditor.Scripts
 
         private void UpdateUiElementUnderCursor()
         {
-            PointerEventData pointerEventData = ((CustomInputModule)EventSystem.current.currentInputModule).GetPointerData();
+            PointerEventData pointerEventData = FindObjectOfType<CustomInputModule>().GetPointerData();
+
+            if(pointerEventData == null)
+                return;
 
             GameObject obj = pointerEventData.pointerCurrentRaycast.gameObject;
 
@@ -157,17 +172,43 @@ namespace Assets._MapEditor.Scripts
             get { return _mouseWorldPosition; }
         }
 
-        private void ProcessMouseClick()
+        public Vector2 MouseScreenPosition
+        {
+            get { return Input.mousePosition; }
+        }
+
+        public Vector2 MouseScreenDelta { get; private set; }
+
+        public bool PrevLmbState { get { return _prevLmbPressed; } }
+        public bool CurrentLmbState { get { return Input.GetMouseButton(0); } }
+
+        private void ProcessMouseState()
         {
             bool currentMouseState = Input.GetMouseButton(0);
+            
 
             if (!_prevLmbPressed && currentMouseState)
+            {
+                _pressFrame = Time.frameCount;
+            }
+
+            //MouseScreenDelta = MouseScreenPosition - _mousePrevScreenPosition;
+            CustomInputModule module = EventSystem.current.currentInputModule as CustomInputModule;
+            if (module != null)
+            {
+                PointerEventData data = module.GetPointerData();
+                if(data != null)
+                    MouseScreenDelta = module.GetPointerData().delta;
+            }
+
+            if (_prevLmbPressed && !currentMouseState && MouseScreenDelta.magnitude < _maxClickDelta )
             {
                 DoUiElementClick();
                 DoObjectClick();
             }
 
             _prevLmbPressed = currentMouseState;
+            _mousePrevScreenPosition = MouseScreenPosition;
         }
 
         private void DoUiElementClick()
@@ -184,6 +225,23 @@ namespace Assets._MapEditor.Scripts
             }
         }
 
+        public Vector2Int MapSize { get { return _mapSize; } }
+        public void RequestLoadingFinished()
+        {
+            //throw new System.NotImplementedException();
+        }
+
+        public bool Ready { get { return true; } }
+
+        public bool IsCellInBounds(Vector2Int cell)
+        {
+            return IsCellInBounds(cell.x, cell.y);
+        }
+
+        public bool IsCellInBounds(int x, int y)
+        {
+            return x >= 0 && y >= 0 && x < _mapSize.x && y < _mapSize.y;
+        }
     }
 }
 

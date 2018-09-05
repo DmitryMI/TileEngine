@@ -791,6 +791,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _descriptiveText: {fileID: 784937059}
+  _maxClickDelta: 1
   _activeHand: 0
 --- !u!1001 &36479169
 Prefab:
@@ -40979,11 +40980,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.0031948881, y: 0}
   m_AnchorMax: {x: 0.0031948881, y: 1}
-<<<<<<< HEAD
-  m_AnchoredPosition: {x: 33.77002, y: -0.1501503}
-=======
   m_AnchoredPosition: {x: 33.770004, y: -0.1501503}
->>>>>>> 721e086fadc3cd37e895a934372fac5f08721c5e
   m_SizeDelta: {x: 65, y: -0.30029908}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1644172479

@@ -28,7 +28,7 @@ namespace Assets.Scripts.Controllers
         {
             get { return _current; }
         }
-        public override void OnGameLoaded(ServerController controller)
+        public override void OnGameLoaded(IServerDataProvider controller)
         {
             //WasLoaded = true;
             ServerController = controller;

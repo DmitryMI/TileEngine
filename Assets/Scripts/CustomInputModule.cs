@@ -10,7 +10,12 @@ namespace Assets.Scripts
     {
         public PointerEventData GetPointerData()
         {
-            return m_PointerData[kMouseLeftId];
+            if (m_PointerData.ContainsKey(kMouseLeftId))
+            {
+                return m_PointerData[kMouseLeftId];
+            }
+            return null;
         }
+
     }
 }

@@ -35,7 +35,7 @@ namespace Assets.Scripts.Controllers.Atmos
 
         private Task _allocationTask;
 
-        public override void OnGameLoaded(ServerController controller)
+        public override void OnGameLoaded(IServerDataProvider controller)
         {
             ServerController = controller;
             _current = this;

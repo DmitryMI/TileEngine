@@ -10,9 +10,10 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.Controllers
 {
-    public class PlayerActionController : Controller
+    public class PlayerActionController : Controller, IPointerDataProvider
     {
         [SerializeField] private Text _descriptiveText;
+        [SerializeField] private float _maxClickDelta = 0.1f;
 
         private VisionController _visionController;
         private Grid _grid;
@@ -22,6 +23,7 @@ namespace Assets.Scripts.Controllers
         private Vector2 _mouseWorldPosition;
         private Vector2Int _mouseCell;
         private Player _localPlayer;
+        private Vector2 _mousePrevScreenPosition;
 
         [SerializeField]
         private SlotEnum _activeHand;
@@ -35,7 +37,7 @@ namespace Assets.Scripts.Controllers
             get { return _currentController; }
         }
 
-        public override void OnGameLoaded(ServerController controller)
+        public override void OnGameLoaded(IServerDataProvider controller)
         {
             WasLoaded = true;
 
@@ -183,6 +185,17 @@ namespace Assets.Scripts.Controllers
             get { return _mouseWorldPosition; }
         }
 
+        public Vector2 MouseScreenPosition
+        {
+            get { return Input.mousePosition; }
+        }
+
+        public Vector2 MouseScreenDelta { get; private set; }
+
+
+        public bool PrevLmbState { get { return _prevLmbPressed; } }
+        public bool CurrentLmbState { get { return Input.GetMouseButton(0); } }
+
         public SlotEnum ActiveHand
         {
             get { return _activeHand; }
@@ -237,30 +250,34 @@ namespace Assets.Scripts.Controllers
             if (WasLoaded)
             {
                 PrintDescriptiveText();
-                ProcessMouseClick();
+                ProcessMouseState();
             }
         }
 
-        private void ProcessMouseClick()
+        private void ProcessMouseState()
         {
             bool currentMouseState = Input.GetMouseButton(0);
-            if (!_prevLmbPressed && currentMouseState)
+
+            if (_localPlayer == null)
+                FindLocalPlayer();
+
+            if (_localPlayer == null)
             {
+                Debug.LogError("Local player was not found!");
+                return;
+            }
 
-                if (_localPlayer == null)
-                    FindLocalPlayer();
 
-                if (_localPlayer == null)
-                {
-                    Debug.LogError("Local player was not found!");
-                    return;
-                }
+            MouseScreenDelta = MouseScreenPosition - _mousePrevScreenPosition;
 
-                ClickOnTileObject();
+            if (_prevLmbPressed && !currentMouseState && MouseScreenDelta.magnitude < _maxClickDelta)
+            {
                 ClickOnUiElement();
+                ClickOnTileObject();
             }
 
             _prevLmbPressed = currentMouseState;
+            _mousePrevScreenPosition = MouseScreenPosition;
         }
 
         private void ClickOnTileObject()

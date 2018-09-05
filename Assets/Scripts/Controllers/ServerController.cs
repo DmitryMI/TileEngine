@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.Controllers
 {
-    public class ServerController : NetworkBehaviour
+    public class ServerController : NetworkBehaviour, IServerDataProvider
     {
         [SerializeField] [SyncVar] private int _mapSizeX;
         [SerializeField] [SyncVar] private int _mapSizeY;
@@ -98,6 +98,7 @@ namespace Assets.Scripts.Controllers
             Controller[] controllers = FindObjectsOfType<Controller>();
             foreach (var controller in controllers)
             {
+                controller.RegistrateDataProvider(this);
                 controller.OnGameLoaded(this);
                 Debug.Log("Controller loading started: " + controller.name);
                 _notFinished++;
@@ -109,7 +110,7 @@ namespace Assets.Scripts.Controllers
             _notFinished--;
         }
 
-        public bool GameReady
+        public bool Ready
         {
             get { return _notFinished == 0; }
         }

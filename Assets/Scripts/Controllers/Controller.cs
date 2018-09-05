@@ -3,7 +3,7 @@ using UnityEngine.Networking;
 
 namespace Assets.Scripts.Controllers
 {
-    public abstract class Controller : NetworkBehaviour
+    public abstract class Controller : NetworkBehaviour, ILoadable
     {
         private bool _wasLoaded;
         protected bool WasLoaded
@@ -13,13 +13,18 @@ namespace Assets.Scripts.Controllers
             {
                 _wasLoaded = value;
                 if(_wasLoaded)
-                    ServerController.Current.RequestLoadingFinished();
+                    ServerController.RequestLoadingFinished();
             }
         }
 
-        protected ServerController ServerController;
+        protected IServerDataProvider ServerController;
 
-        public abstract void OnGameLoaded(ServerController controller);
+        public void RegistrateDataProvider(IServerDataProvider provider)
+        {
+            ServerController = provider;
+        }
+
+        public abstract void OnGameLoaded(IServerDataProvider controller);
 
         public virtual bool IsReady
         {

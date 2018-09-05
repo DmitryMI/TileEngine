@@ -10,7 +10,7 @@ namespace Assets.Scripts.Controllers
         private VisionController _visionController;
         
 
-        public override void OnGameLoaded(ServerController controller)
+        public override void OnGameLoaded(IServerDataProvider controller)
         {
             WasLoaded = true;
             ServerController = controller;

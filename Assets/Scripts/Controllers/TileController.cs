@@ -27,7 +27,7 @@ namespace Assets.Scripts.Controllers
             set { _instance = value; }
         } 
 
-        public override void OnGameLoaded(ServerController controller)
+        public override void OnGameLoaded(IServerDataProvider controller)
         {
             //WasLoaded = true;
             ServerController = controller;
