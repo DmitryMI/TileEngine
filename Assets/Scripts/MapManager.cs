@@ -39,6 +39,7 @@ namespace Assets.Scripts
                 if (!go.activeInHierarchy && go.activeSelf)
                 {
                     _prefabs.Add(new KeyValuePair<int, GameObject>(to.Id, go));
+                    Debug.Log("Prefab loaded: " + go.name + ", ID: " + to.Id);
                 }
             }
 
