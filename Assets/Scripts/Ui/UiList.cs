@@ -124,7 +124,7 @@ namespace Assets.Scripts.Ui
             if (_scrollInverse)
                 scrollerValue = 1 - scrollerValue;
 
-            float hight = scrollerValue * (highestPos - lowestPos) / 2;
+            float hight = scrollerValue * (highestPos - lowestPos - _rectTransform.rect.height);
             
             for (int i = 0; i < _elementList.Count; i++)
             {
