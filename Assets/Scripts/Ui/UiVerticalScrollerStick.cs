@@ -16,7 +16,7 @@ namespace Assets.Scripts.Ui
         private UiVerticalScroller _parentScroller;
         private RectTransform _rectTransform;
         private RectTransform _parentRectTransform;
-
+        
         private float _currentY;
         private float _halfHeight;
         private float _maxY;
@@ -30,6 +30,8 @@ namespace Assets.Scripts.Ui
 
             if (_parentScroller != null)
                 _parentRectTransform = _parentScroller.RectTransformComponent;
+
+            CalculateValues();
         }
 
         public void SetParentScroller(UiVerticalScroller parent)
@@ -51,6 +53,7 @@ namespace Assets.Scripts.Ui
 
         public void ForceValue(float value)
         {
+            CalculateValues();
             float y = (_maxY - _minY) * value;
             _currentY = y;
         }
@@ -61,6 +64,9 @@ namespace Assets.Scripts.Ui
             float shift = deltaY * _parentScroller.Multiplier;
 
             MoveStick(shift);
+
+            //_parentScroller.ScrollValue = (_currentY - _minY) / (_maxY - _minY);
+            _parentScroller.SetValueStickAuthority((_currentY - _minY) / (_maxY - _minY));
 
             _prevMousePos = pointerDataProvider.MouseScreenPosition;
         }
@@ -80,25 +86,34 @@ namespace Assets.Scripts.Ui
             _currentY += shift;
         }
 
-        private void LateUpdate()
+        private void CalculateValues()
         {
+            if (_rectTransform == null)
+                _rectTransform = GetComponent<RectTransform>();
+
+            if (_parentRectTransform == null)
+                _parentRectTransform = GetComponentInParent<RectTransform>();
+
             _halfHeight = _rectTransform.sizeDelta.y / 2f;
 
             _minY = _halfHeight;
             _maxY = _parentRectTransform.anchoredPosition.y + _parentRectTransform.rect.size.y - _halfHeight;
-            
+
             if (_currentY > _maxY)
                 _currentY = _maxY;
             if (_currentY < _minY)
                 _currentY = _minY;
+        }
+
+        private void LateUpdate()
+        {
+            CalculateValues();
 
             Vector2 anchoredPos = _rectTransform.anchoredPosition;
             
             anchoredPos.y = _currentY;
 
             _rectTransform.anchoredPosition = anchoredPos;
-
-            _parentScroller.ScrollValue = (_currentY - _minY) / (_maxY - _minY);
             
             _isActive = false;
         }

@@ -16,7 +16,7 @@ namespace Assets.Scripts.Ui
         [SerializeField]
         private float _value;
 
-        [SerializeField] private UiVerticalScroller _scroller;
+        [SerializeField] private UiVerticalScrollerStick _scrollerStick;
 
         public float ScrollValue { get { return _value; } set { _value = value; StickForce(_value); } }
         public float ContentOveflowPart { get; set; }
@@ -25,14 +25,26 @@ namespace Assets.Scripts.Ui
 
         public RectTransform RectTransformComponent => GetComponent<RectTransform>();
 
+        private void Start()
+        {
+            _scrollerStick = GetComponentInChildren<UiVerticalScrollerStick>();
+
+            StickForce(_value);
+        }
+
         public override void Click()
         {
             
         }
 
+        public void SetValueStickAuthority(float value)
+        {
+            _value = value;
+        }
+
         private void StickForce(float value)
         {
-            
+            _scrollerStick.ForceValue(value);
         }
     }
 }
