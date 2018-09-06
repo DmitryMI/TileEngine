@@ -65,7 +65,6 @@ namespace Assets.Scripts.Ui
 
             MoveStick(shift);
 
-            //_parentScroller.ScrollValue = (_currentY - _minY) / (_maxY - _minY);
             _parentScroller.SetValueStickAuthority((_currentY - _minY) / (_maxY - _minY));
 
             _prevMousePos = pointerDataProvider.MouseScreenPosition;
