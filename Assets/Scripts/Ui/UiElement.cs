@@ -28,5 +28,10 @@ namespace Assets.Scripts.Ui
         {
             Debug.Log("Ui element was clicked: " + gameObject.name);
         }
+
+        public virtual void SetActive()
+        {
+            
+        }
     }
 }
