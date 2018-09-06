@@ -18,6 +18,8 @@ namespace Assets._MapEditor.Scripts
         [SerializeField] private float _maxClickTime;
         [SerializeField] private float _maxClickDelta;
 
+        [SerializeField] private GameObject _elementButtonPrefab;
+
         [SerializeField] private Form _elementsForm;
 
         private MapManager _mapManager;
@@ -45,7 +47,29 @@ namespace Assets._MapEditor.Scripts
                 controller.OnGameLoaded(this);
             }
 
-            _elementsForm.Collapsed = false;
+            FillElementsForm();
+        }
+
+        private void FillElementsForm()
+        {
+            UiList list = _elementsForm.GetComponentInChildren<UiList>();
+
+            if (list == null)
+            {
+                Debug.LogError("Elements window has no UiList!");
+                return;
+            }
+
+            var prefabList = _mapManager.GetPrefabList();
+
+            foreach (var prefab in prefabList)
+            {
+                GameObject button = Instantiate(_elementButtonPrefab);
+                RectTransform rt = button.GetComponent<RectTransform>();
+                list.Add(rt);
+                ElementButton buttonComponent = button.GetComponent<ElementButton>();
+                buttonComponent.SetData(prefab.Value.GetComponent<TileObject>());
+            }
         }
 
         private void FixedUpdate()

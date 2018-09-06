@@ -11,23 +11,23 @@ namespace Assets._MapEditor.Scripts
 {
     class FormButton : UiElement
     {
-        [SerializeField] private UnityAction _action;
+        [SerializeField] protected UnityAction Action;
 
-        private Form _formParent;
+        protected Form FormParent;
 
         public void SetParentForm(Form form)
         {
-            _formParent = form;
+            FormParent = form;
         }
 
         public void SetAction(UnityAction action)
         {
-            _action = action;
+            Action = action;
         }
 
         public override void Click()
         {
-            _action?.Invoke();
+            Action?.Invoke();
         }
     }
 }
