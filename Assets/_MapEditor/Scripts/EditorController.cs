@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts;
 using Assets.Scripts.Controllers;
@@ -13,17 +14,19 @@ namespace Assets._MapEditor.Scripts
     public class EditorController : MonoBehaviour, IPointerDataProvider, IServerDataProvider
     {
         [SerializeField] private ScrollRect _scrollRect;
-        [SerializeField] private ElementButton _buttonPrefab;
         [SerializeField] private Vector2Int _mapSize;
         [SerializeField] private float _maxClickTime;
         [SerializeField] private float _maxClickDelta;
 
-        [SerializeField] private GameObject _elementButtonPrefab;
+        [SerializeField] private FileButton _fileButtonPrefab;
+        [SerializeField] private FolderButton _folderButtonPrefab;
+        [SerializeField] private BackButton _backButtonPrefab;
 
         [SerializeField] private Form _elementsForm;
 
         private MapManager _mapManager;
-        private List<PrefabData> _loadedPrefabs;
+
+        private List<TileObject> _prefabList;
 
         private TileObject _objectUnderCursor;
         private UiElement _uiElementUnderCursor;
@@ -34,6 +37,7 @@ namespace Assets._MapEditor.Scripts
         private bool _prevLmbPressed;
         private int _pressFrame;
         private Grid _grid;
+        private GameType _gameType;
 
         void Start()
         {
@@ -62,14 +66,82 @@ namespace Assets._MapEditor.Scripts
 
             var prefabList = _mapManager.GetPrefabList();
 
-            foreach (var prefab in prefabList)
+            // Creating categories
+
+            _gameType = AssemplyAnalizer.GetTypeTree(typeof(TileObject));
+            Debug.Log("Assembly analysis finished");
+
+           _prefabList = new List<TileObject>(prefabList.Count);
+            foreach (var prefabData in prefabList)
             {
-                GameObject button = Instantiate(_elementButtonPrefab);
-                RectTransform rt = button.GetComponent<RectTransform>();
-                list.Add(rt);
-                ElementButton buttonComponent = button.GetComponent<ElementButton>();
-                buttonComponent.SetData(prefab.Value.GetComponent<TileObject>());
+                _prefabList.Add(prefabData.Value.GetComponent<TileObject>());
             }
+
+            ProcessGameType(_gameType, null, list);
+        }
+
+        private void ProcessGameType(GameType type, GameType parent, IUiList list)
+        {
+            list.Clear();
+            SpawnBackButton(list);
+
+            foreach (var prefab in _prefabList)
+            {
+                if (prefab.GetType() == type.Type)
+                {
+                    SpawnPrefabButton(prefab, list);
+                }
+            }
+
+            if (type.Length > 0)
+            {
+                SpawnCategoryButton(type, parent, list);
+            }
+        }
+
+        private FolderButton SpawnCategoryButton(GameType type, GameType parent, IUiList container)
+        {
+            GameObject button = Instantiate(_folderButtonPrefab.gameObject);
+            RectTransform rt = button.GetComponent<RectTransform>();
+            container.Add(rt);
+            FolderButton buttonComponent = button.GetComponent<FolderButton>();
+            buttonComponent.SetData(this, type, parent);
+            return buttonComponent;
+        }
+
+        private void SpawnPrefabButton(TileObject prefab, IUiList list)
+        {
+            GameObject button = Instantiate(_fileButtonPrefab.gameObject);
+            RectTransform rt = button.GetComponent<RectTransform>();
+            list.Add(rt);
+            FileButton buttonComponent = button.GetComponent<FileButton>();
+            buttonComponent.SetData(this, prefab);
+        }
+
+        private void SpawnBackButton(IUiList list)
+        {
+            GameObject button = Instantiate(_backButtonPrefab.gameObject);
+            RectTransform rt = button.GetComponent<RectTransform>();
+            list.Add(rt);
+            BackButton buttonComponent = button.GetComponent<BackButton>();
+            buttonComponent.SetHandler(this);
+        }
+
+        public void PressedFileButton(TileObject prefab)
+        {
+            Debug.Log("Prefab pressed!");
+        }
+
+
+        public void PressedFolderButton(GameType type, GameType parent)
+        {
+            Debug.Log("Folder pressed!");
+            //ProcessGameType(type, parent, );
+        }
+
+        public void PressedBackButton()
+        {
+            Debug.Log("BACK pressed!");
         }
 
         private void FixedUpdate()
