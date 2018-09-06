@@ -54,7 +54,7 @@ namespace Assets.Scripts.Ui
         public void ForceValue(float value)
         {
             CalculateValues();
-            float y = (_maxY - _minY) * value;
+            float y = (_maxY - _minY) * value + _minY;
             _currentY = y;
         }
 
