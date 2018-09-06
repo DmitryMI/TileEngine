@@ -5,7 +5,7 @@ using UnityEngine.Experimental.UIElements.StyleEnums;
 
 namespace Assets.Scripts.Ui
 {
-    public class UiList : UiElement
+    public class UiList : UiElement, IUiList
     {
         [Tooltip("Children of this transfrom will be scrolled")]
         [SerializeField] private Transform _contentGroup;
@@ -28,6 +28,18 @@ namespace Assets.Scripts.Ui
         public void Remove(RectTransform element)
         {
             RemoveElement(element);
+        }
+
+        public void Clear()
+        {
+            if (_elementList != null)
+            {
+                foreach (var element in _elementList)
+                {
+                    RemoveElement(element);
+                    Destroy(element.gameObject);
+                }
+            }
         }
 
         private void Start()
