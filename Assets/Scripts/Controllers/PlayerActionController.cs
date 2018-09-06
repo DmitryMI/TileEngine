@@ -259,7 +259,7 @@ namespace Assets.Scripts.Controllers
 
             if (_localPlayer == null)
             {
-                Debug.LogError("Local player was not found!");
+                //Debug.LogError("Local player was not found!");
                 return;
             }
 
