@@ -18,6 +18,8 @@ namespace Assets._MapEditor.Scripts
         [SerializeField] private float _maxClickTime;
         [SerializeField] private float _maxClickDelta;
 
+        [SerializeField] private Form _elementsForm;
+
         private MapManager _mapManager;
         private List<PrefabData> _loadedPrefabs;
 
@@ -42,6 +44,8 @@ namespace Assets._MapEditor.Scripts
                 controller.RegistrateDataProvider(this);
                 controller.OnGameLoaded(this);
             }
+
+            _elementsForm.Collapsed = false;
         }
 
         private void FixedUpdate()
