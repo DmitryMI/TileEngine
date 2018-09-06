@@ -6,6 +6,7 @@ using System.Text;
 using Assets.Scripts.Objects;
 using UnityEngine;
 using UnityEngine.Networking;
+using Object = UnityEngine.Object;
 
 namespace Assets.Scripts
 {
@@ -27,11 +28,32 @@ namespace Assets.Scripts
             LoadPrefabs();
         }
 
+        private TileObject[] GetTileObjects(Object[] objs)
+        {
+            List<TileObject> tos = new List<TileObject>(objs.Length);
+
+            foreach (var obj in objs)
+            {
+                GameObject prefab = obj as GameObject;
+                if (prefab != null)
+                {
+                    TileObject to = prefab.GetComponent<TileObject>();
+                    if(to != null)
+                        tos.Add(to);
+                }
+            }
+
+            return tos.ToArray();
+        }
+
         private void LoadPrefabs()
         {
             _prefabs = new List<KeyValuePair<int, GameObject>>();
 
-            TileObject[] tos = Resources.FindObjectsOfTypeAll<TileObject>();
+            //TileObject[] tos = Resources.FindObjectsOfTypeAll<TileObject>();
+            var loadedArray = Resources.LoadAll("Prefabs");
+
+            var tos = GetTileObjects(loadedArray);
 
             foreach (var to in tos)
             {
