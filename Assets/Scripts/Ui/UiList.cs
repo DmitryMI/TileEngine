@@ -18,7 +18,6 @@ namespace Assets.Scripts.Ui
         private IScroller _scrollerUi;
 
         private List<RectTransform> _elementList;
-        private List<float> _elementCoordinatesList;
         private RectTransform _rectTransform;
 
         public void Add(RectTransform element)
@@ -28,7 +27,7 @@ namespace Assets.Scripts.Ui
 
         public void Remove(RectTransform element)
         {
-
+            RemoveElement(element);
         }
 
         private void Start()
@@ -41,7 +40,6 @@ namespace Assets.Scripts.Ui
             }
 
             _elementList = new List<RectTransform>();
-            _elementCoordinatesList = new List<float>();
 
             _rectTransform = GetComponent<RectTransform>();
 
@@ -70,7 +68,6 @@ namespace Assets.Scripts.Ui
             if (_elementList == null)
             {
                 _elementList = new List<RectTransform>();
-                _elementCoordinatesList = new List<float>();
             }
             element.transform.SetParent(_contentGroup, false);
 
@@ -80,8 +77,20 @@ namespace Assets.Scripts.Ui
             _elementList.Add(element);
         }
 
+        private void RemoveElement(RectTransform element)
+        {
+            if(_elementList == null)
+                return;
+
+            element.transform.SetParent(null);
+            _elementList.Remove(element);
+        }
+
         private void ProcessPlacement()
         {
+            if(_elementList.Count == 0)
+                return;
+
             float startX = _elementList[0].rect.width / 2 + _leftOffset;
             float startY = _elementList[0].rect.height / 2;
 
