@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Objects.Equipment.Power
 {
-    class WireConnector : TileObject
+    class WireConnector : Equipment
     {
         [SerializeField] private Sprite _north;
         [SerializeField] private Sprite _south;

@@ -3,7 +3,7 @@ using UnityEngine.Networking;
 
 namespace Assets.Scripts.Objects.Equipment.Power
 {
-    public class PowerStorageModule : TileObject
+    public class PowerStorageModule : Equipment
     {
         [SerializeField] private float _maximumOutput;
 

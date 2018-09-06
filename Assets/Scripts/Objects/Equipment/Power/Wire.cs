@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 
 namespace Assets.Scripts.Objects.Equipment.Power
 {
-    class Wire : TileObject
+    class Wire : Equipment
     {
         [SerializeField] private Sprite _ns; //
         [SerializeField] private Sprite _we;

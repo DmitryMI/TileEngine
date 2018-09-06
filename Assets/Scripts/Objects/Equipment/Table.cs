@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Objects.Equipment
 {
-    public class Table : Turf.Turf, IPlayerInteractable
+    public class Table : Equipment, IPlayerInteractable
     {
         public void ApplyItemClient(Item.Item item)
         {
