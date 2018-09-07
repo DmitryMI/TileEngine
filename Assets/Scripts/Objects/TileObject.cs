@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using Assets.Scripts.Controllers;
 using Assets.Scripts.Controllers.Atmos;
 using UnityEngine;
@@ -59,8 +61,17 @@ namespace Assets.Scripts.Objects
             if (isServer)
             {
                 TileController = FindObjectOfType<TileController>();
-                TileController.AddObject(Cell.x, Cell.y, this);
+                StartCoroutine(WaitForServerController());
             }
+        }
+
+        IEnumerator WaitForServerController()
+        {
+            while(!ServerController.Ready)
+                yield return new WaitForEndOfFrame();
+
+            TileController = FindObjectOfType<TileController>();
+            TileController.AddObject(Cell.x, Cell.y, this);
 
             _transformChanged = true;
         }

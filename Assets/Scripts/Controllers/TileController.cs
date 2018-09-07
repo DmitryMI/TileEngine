@@ -45,6 +45,11 @@ namespace Assets.Scripts.Controllers
         {
             if(WasLoaded && ServerController.IsCellInBounds(x, y))
                 _objects[x, y].Add(obj);
+
+            if (!WasLoaded)
+            {
+                Debug.Log("Detected attempt to registrate object before launching TileController. This can cause malfunctions");
+            }
         }
 
         [Server]

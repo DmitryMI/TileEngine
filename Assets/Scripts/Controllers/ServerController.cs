@@ -1,9 +1,13 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using Assets.Scripts.Objects;
 using Assets.Scripts.Objects.Mob;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Controllers
 {
@@ -14,8 +18,10 @@ namespace Assets.Scripts.Controllers
         [SerializeField] private bool _shouldClearScene;
         [SerializeField] private bool _debugSaveScene;
 
-        private MapManager _mapManager;
+        //private MapManager _mapManager;
         private int _notFinished;
+
+        private bool _gameReady = false;
 
         private static ServerController _instance;
 
@@ -25,46 +31,14 @@ namespace Assets.Scripts.Controllers
         {
             _instance = this;
 
-            if (isServer)
-            {
-                _notFinished = 0;
-
-                _mapManager = new MapManager();
-
-                
-                if (Application.isEditor && _debugSaveScene)
-                {
-                    ApplyFixers();
-                    _mapManager.SaveScene("SavedScene.temap");
-                    Debug.Log("Scene saved!");
-                }
-
-                if (_shouldClearScene)
-                    ClearScene();
-
-                if (!LoadMap())
-                {
-                    Debug.LogError("Map was not loaded correctly!");
-                }
-                else
-                {
-                    Debug.Log("Map loaded successfully: ");
-                }
-
-            }
-            else
-            {
-                //ClearScene();
-            }
-
             LaunchGameplay();
         }
 
-        private bool LoadMap()
+        /*private bool LoadMap()
         {
             bool ok = _mapManager.LoadMapToScene("SavedScene.temap");
             return ok;
-        }
+        }*/
 
         private void ClearScene()
         {
@@ -96,27 +70,49 @@ namespace Assets.Scripts.Controllers
         private void LaunchGameplay()
         {
             Controller[] controllers = FindObjectsOfType<Controller>();
+
+            _notFinished = controllers.Length;
+
             foreach (var controller in controllers)
             {
                 controller.RegistrateDataProvider(this);
                 controller.OnGameLoaded(this);
                 Debug.Log("Controller loading started: " + controller.name);
-                _notFinished++;
             }
         }
 
-        public void RequestLoadingFinished()
+        public void ReportLoadingFinished()
         {
             _notFinished--;
+
+            if (_notFinished == 0)
+            {
+                _gameReady = true;
+                ApplyFixers();
+                Debug.Log("All controllers loaded!");
+            }
         }
 
         public bool Ready
         {
-            get { return _notFinished == 0; }
+            get { return _gameReady; }
         }
 
         [Server]
         public void SpawnPlayer(Player player)
+        {
+            StartCoroutine(WaitForLoadingFinished(SpawnPlayerImmediately, player));
+        }
+
+        IEnumerator WaitForLoadingFinished<T>(Action<T> action, T value)
+        {
+            while(_notFinished > 0)
+                yield return new WaitForEndOfFrame();
+
+            action(value);
+        }
+
+        private void SpawnPlayerImmediately(Player player)
         {
             Text output = GameObject.Find("OutputText").GetComponent<Text>();
 

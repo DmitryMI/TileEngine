@@ -10,7 +10,7 @@ namespace Assets.Scripts.Controllers
     public interface IServerDataProvider
     {
         Vector2Int MapSize { get; }
-        void RequestLoadingFinished();
+        void ReportLoadingFinished();
         bool Ready { get; }
         bool IsCellInBounds(Vector2Int cell);
         bool IsCellInBounds(int x, int y);

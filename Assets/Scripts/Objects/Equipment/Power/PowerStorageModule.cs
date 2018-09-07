@@ -31,7 +31,7 @@ namespace Assets.Scripts.Objects.Equipment.Power
         {
             base.Update();
             
-            if(isServer)
+            if(isServer && ServerController.Ready)
                 SendPower(_maximumOutput);
         }
 
@@ -42,8 +42,6 @@ namespace Assets.Scripts.Objects.Equipment.Power
 
             if (connector == null)
             {
-                if(TileController.IsReady)
-                    Debug.LogWarning("PSM is not connected to a wire!");
                 return;
             }
 
