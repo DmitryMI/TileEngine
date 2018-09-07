@@ -1,4 +1,6 @@
-﻿using Assets.Scripts.Objects;
+﻿using System.Collections;
+using System.Collections.Generic;
+using Assets.Scripts.Objects;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -33,6 +35,8 @@ namespace Assets.Scripts
         [Server]
         public void ApplySavedTransformations()
         {
+            //NetworkServer.Spawn(gameObject);
+
             TileObject to = GetComponent<TileObject>();
             to.Cell = _cell;
             to.CellOffset = _cellOffset;
