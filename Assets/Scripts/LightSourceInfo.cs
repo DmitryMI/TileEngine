@@ -70,8 +70,7 @@ namespace Assets.Scripts
             _intensityDecrement = decrement;
         }
 
-        [Obsolete("Better use Vector2Int as parameter")]
-        public virtual float CalculateIntensity(float range)
+        public virtual float CalculateIntensityRange(float range)
         {
             float b = _initialIntensity;
             float k = -1f / (_maxRange + 1f);

@@ -289,7 +289,7 @@ namespace Assets.Scripts.Controllers
 
                         //float brightness = mask.GetBrightness() + info.CalculateIntensity(new Vector2Int(x, y));
                         float range = Vector2Int.Distance(new Vector2Int(info.X, info.Y), new Vector2Int(x, y));
-                        float intensity = info.CalculateIntensity(range);
+                        float intensity = info.CalculateIntensityRange(range);
 
                         if (intensity < 0)
                             intensity = 0;
