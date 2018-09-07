@@ -23,6 +23,16 @@ namespace Assets.Scripts.Objects.Item.Chem
 
         public float FillValue { get; set; }
 
+        public void SetSortingOrder(int order)
+        {
+            if (_spriteRenderer == null)
+            {
+                _spriteRenderer = GetComponent<SpriteRenderer>();
+            }
+
+            _spriteRenderer.sortingOrder = order;
+        }
+
         public Color ReagentsColor
         {
             get
