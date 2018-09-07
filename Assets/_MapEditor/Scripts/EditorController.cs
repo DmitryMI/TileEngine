@@ -262,7 +262,7 @@ namespace Assets._MapEditor.Scripts
         }
 
         public Vector2Int MapSize { get { return _mapSize; } }
-        public void RequestLoadingFinished()
+        public void ReportLoadingFinished()
         {
             //throw new System.NotImplementedException();
         }

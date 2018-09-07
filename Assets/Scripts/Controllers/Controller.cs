@@ -13,7 +13,7 @@ namespace Assets.Scripts.Controllers
             {
                 _wasLoaded = value;
                 if(_wasLoaded)
-                    ServerController.RequestLoadingFinished();
+                    ServerController.ReportLoadingFinished();
             }
         }
 

@@ -105,7 +105,7 @@ namespace Assets.Scripts.Controllers
             }
         }
 
-        public void RequestLoadingFinished()
+        public void ReportLoadingFinished()
         {
             _notFinished--;
         }
