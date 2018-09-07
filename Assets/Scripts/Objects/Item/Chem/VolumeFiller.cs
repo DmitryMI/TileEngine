@@ -68,12 +68,17 @@ namespace Assets.Scripts.Objects.Item.Chem
 
             int line = (int)((_highestLine - _lowestLine) * FillValue) + _lowestLine;
 
+            if (Math.Abs(FillValue) < 0.001f)
+            {
+                line = 0;
+            }
+
             if(line < 0)
                 return;
             if(line > _highestLine)
                 return;
 
-            for (int y = line; y < _highestLine; y++)
+            for (int y = line; y <  height; y++)
             {
                 int offset = y * width;
                 for (int x = 0; x < width; x++)

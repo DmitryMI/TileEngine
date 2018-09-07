@@ -18,6 +18,15 @@ namespace Assets.Scripts.Objects.Item.Chem
         {
             base.Update();
 
+            if (Holder != null)
+            {
+                _filler.gameObject.SetActive(false);
+            }
+            else
+            {
+                _filler.gameObject.SetActive(true);
+            }
+
             _filler.FillValue = _fillValue;
             _filler.ReagentsColor = _color;
         }
