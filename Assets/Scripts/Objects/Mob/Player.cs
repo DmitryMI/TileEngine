@@ -7,7 +7,7 @@ using Assets.Scripts.Objects.Item;
 
 namespace Assets.Scripts.Objects.Mob
 {
-    public class Player : Mob, IItemContainer
+    public class Player : Mob, IItemContainer, IHumanoid
     {
         [SerializeField]
         private float _moveSpeed;
@@ -53,6 +53,8 @@ namespace Assets.Scripts.Objects.Mob
             get { return _descriptiveName; }
         }
 
+        
+
         protected override void Update()
         {
             base.Update();
@@ -62,6 +64,11 @@ namespace Assets.Scripts.Objects.Mob
                 UpdateCamera();
                 ProcessPlayerControll();
             }
+
+            if (isServer)
+            {
+                UpdateHealth();
+            }
         }
 
         private void UpdateCamera()
@@ -69,6 +76,8 @@ namespace Assets.Scripts.Objects.Mob
             //VisionController.SetCameraPosition(Cell, CellOffset);
             VisionController.SetCameraPosition(transform.position);
         }
+
+        
 
         private void ProcessPlayerControll()
         {
@@ -326,6 +335,174 @@ namespace Assets.Scripts.Objects.Mob
             IReceiver sender = senderGo.GetComponent<IReceiver>();
             IReceiver receiver = receiverGo.GetComponent<IReceiver>();
             receiver.ReceiveData(sender, data);
+        }
+
+        #endregion
+
+        #region HealthSystem
+
+        [SerializeField][SyncVar] private bool _isAlive = true;
+        [SerializeField][SyncVar]private bool _isLying = false;
+        [SerializeField] private float _maxHeadDamage;
+        [SerializeField] private float _maxNeckDamage;
+        [SerializeField] private float _maxChestDamage;
+        [SerializeField] private float _maxGroinDamage;
+        [SerializeField] private float _maxArmDamage;
+        [SerializeField] private float _maxWristDamage;
+        [SerializeField] private float _maxLegDamage;
+        [SerializeField] private float _maxFootDamage;
+
+        [SyncVar] private Damage _headDamage;
+        [SyncVar] private Damage _neckDamage;
+        [SyncVar] private Damage _chestDamage;
+        [SyncVar] private Damage _groinDamage;
+        [SyncVar] private Damage _leftArmDamage;
+        [SyncVar] private Damage _rightArmDamage;
+        [SyncVar] private Damage _leftLegDamage;
+        [SyncVar] private Damage _rightLegDamage;
+        [SyncVar] private Damage _leftFootDamage;
+        [SyncVar] private Damage _rightFootDamage;
+        [SyncVar] private Damage _leftWristDamage;
+        [SyncVar] private Damage _rightWristDamage;
+
+        protected override void UpdateSprite()
+        {
+            base.UpdateSprite();
+
+            if (_isLying)
+            {
+                transform.localRotation = Quaternion.Euler(0, 0, -90);
+            }
+            else
+            {
+                transform.localRotation = Quaternion.identity;
+            }
+        }
+
+
+        public override bool IsLying => _isLying;
+        public override bool IsAlive => _isAlive;
+        public Damage HeadDamage {get { return _headDamage; }set { _headDamage = value; } }
+        public Damage NeckDamage { get { return _neckDamage; } set { _neckDamage = value; } }
+        public Damage ChestDamage { get { return _chestDamage; } set { _chestDamage = value; } }
+        public Damage LeftArmDamage { get { return _leftArmDamage; } set { _leftArmDamage = value; } }
+        public Damage RightArmDamage { get { return _rightArmDamage; } set { _rightArmDamage = value; } }
+        public Damage LeftWristDamage { get { return _leftWristDamage; } set { _leftWristDamage = value; } }
+        public Damage RightWristDamage { get { return _rightWristDamage; } set { _rightWristDamage = value; } }
+        public Damage LeftLegDamage { get { return _leftLegDamage; } set { _leftLegDamage = value; } }
+        public Damage RightLegDamage { get { return _rightLegDamage; } set { _rightLegDamage = value; } }
+        public Damage LeftFootDamage { get { return _leftFootDamage; } set { _leftFootDamage = value; } }
+        public Damage RightFootDamage { get { return _rightFootDamage; } set { _rightFootDamage = value; } }
+        public Damage GroinDamage { get { return _groinDamage; } set { _groinDamage = value; } }
+
+        public Damage TotalDamage
+        {
+            get { return CalculateTotalDamage(); }
+        }
+
+        [Server]
+        private void UpdateHealth()
+        {
+            
+        }
+
+        private Damage CalculateTotalDamage()
+        {
+            Damage result = new Damage(0, 0, 0, 0);
+            foreach (HumanoidImpactTarget target in Enum.GetValues(typeof(HumanoidImpactTarget)))
+            {
+                result += GetDamage(target);
+            }
+
+            return result;
+        }
+
+        private void DoDamage(Damage damage, HumanoidImpactTarget target)
+        {
+            switch (target)
+            {
+                case HumanoidImpactTarget.Head:
+                    _headDamage += damage;
+                    break;
+                case HumanoidImpactTarget.Neck:
+                    _neckDamage += damage;
+                    break;
+                case HumanoidImpactTarget.Chest:
+                    _chestDamage += damage;
+                    break;
+                case HumanoidImpactTarget.Groin:
+                    _groinDamage += damage;
+                    break;
+                case HumanoidImpactTarget.LeftArm:
+                    _leftArmDamage += damage;
+                    break;
+                case HumanoidImpactTarget.RightArm:
+                    _rightArmDamage += damage;
+                    break;
+                case HumanoidImpactTarget.LeftWrist:
+                    _leftWristDamage += damage;
+                    break;
+                case HumanoidImpactTarget.RightWrist:
+                    _rightWristDamage += damage;
+                    break;
+                case HumanoidImpactTarget.LeftLeg:
+                    _leftLegDamage += damage;
+                    break;
+                case HumanoidImpactTarget.RightLeg:
+                    _rightLegDamage += damage;
+                    break;
+                case HumanoidImpactTarget.LeftFoot:
+                    _leftFootDamage += damage;
+                    break;
+                case HumanoidImpactTarget.RightFoot:
+                    _rightFootDamage += damage;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(target), target, null);
+            }
+        }
+
+        private Damage GetDamage(HumanoidImpactTarget target)
+        {
+            switch (target)
+            {
+                case HumanoidImpactTarget.Head:
+                    return _headDamage;
+                case HumanoidImpactTarget.Neck:
+                    return _neckDamage;
+                    break;
+                case HumanoidImpactTarget.Chest:
+                    return _chestDamage;
+                    break;
+                case HumanoidImpactTarget.Groin:
+                    return _groinDamage;
+                    break;
+                case HumanoidImpactTarget.LeftArm:
+                    return _leftArmDamage;
+                    break;
+                case HumanoidImpactTarget.RightArm:
+                    return _rightArmDamage;
+                    break;
+                case HumanoidImpactTarget.LeftWrist:
+                    return _leftWristDamage;
+                    break;
+                case HumanoidImpactTarget.RightWrist:
+                    return _rightWristDamage;
+                case HumanoidImpactTarget.LeftLeg:
+                    return _leftLegDamage;
+                    break;
+                case HumanoidImpactTarget.RightLeg:
+                    return _rightLegDamage;
+                    break;
+                case HumanoidImpactTarget.LeftFoot:
+                    return _leftFootDamage;
+                    break;
+                case HumanoidImpactTarget.RightFoot:
+                    return _rightFootDamage;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(target), target, null);
+            }
         }
 
         #endregion

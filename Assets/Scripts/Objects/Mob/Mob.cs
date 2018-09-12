@@ -14,9 +14,13 @@ namespace Assets.Scripts.Objects.Mob
         [SerializeField] protected Sprite BackSprite;
         [SerializeField] protected Sprite LeftSprite;
         [SerializeField] protected Sprite RightSprite;
+        [SerializeField] protected Sprite LyingSprite;
 
         private bool _movementFinished = true;
         protected SpriteRenderer Renderer;
+
+        public abstract bool IsLying { get; }
+        public abstract bool IsAlive { get; }
 
         private IEnumerator AnimateMovement(Vector2 velocity, float time)
         {
@@ -43,11 +47,14 @@ namespace Assets.Scripts.Objects.Mob
         protected override void Update()
         {
             base.Update();
-            UpdateSpriteRotation();
+            UpdateSprite();
         }
 
         protected void DoMove(Direction direction, float speed)
         {
+            if(IsLying)
+                return;
+
             if (!_movementFinished)
             {
                 //Debug.Log("Movement not finished!");
@@ -100,25 +107,33 @@ namespace Assets.Scripts.Objects.Mob
             }
         }
 
-        protected virtual void UpdateSpriteRotation()
+        protected virtual void UpdateSprite()
         {
-            switch (Rotation)
+            if (IsLying)
             {
-                case Direction.Forward:
-                    Renderer.sprite = BackSprite;
-                    break;
+                if(LyingSprite != null)
+                Renderer.sprite = LyingSprite;
+            }
+            else
+            {
+                switch (Rotation)
+                {
+                    case Direction.Forward:
+                        Renderer.sprite = BackSprite;
+                        break;
 
-                case Direction.Backward:
-                    Renderer.sprite = FrontSprite;
-                    break;
+                    case Direction.Backward:
+                        Renderer.sprite = FrontSprite;
+                        break;
 
-                case Direction.Left:
-                    Renderer.sprite = LeftSprite;
-                    break;
+                    case Direction.Left:
+                        Renderer.sprite = LeftSprite;
+                        break;
 
-                case Direction.Right:
-                    Renderer.sprite = RightSprite;
-                    break;
+                    case Direction.Right:
+                        Renderer.sprite = RightSprite;
+                        break;
+                }
             }
         }
     }
