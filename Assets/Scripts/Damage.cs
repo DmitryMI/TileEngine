@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
+    [Serializable]
     public struct Damage
     {
+        [SerializeField]
         private float _brute;
+        [SerializeField]
         private float _burn;
+        [SerializeField]
         private float _toxin;
+        [SerializeField]
         private float _suffocation;
 
         public bool Equals(Damage other)

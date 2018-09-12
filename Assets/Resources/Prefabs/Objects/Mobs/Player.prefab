@@ -290,11 +290,22 @@ MonoBehaviour:
   BackSprite: {fileID: 21300000, guid: f2d10c3f510386a478337ce35c0189f5, type: 3}
   LeftSprite: {fileID: 21300000, guid: af709dbfa2b385d42aa64cbfbba5cfde, type: 3}
   RightSprite: {fileID: 21300000, guid: ad9c6bd6806922941afb688bae3d45df, type: 3}
+  LyingSprite: {fileID: 0}
   _moveSpeed: 0.1
   _hairSetId: 0
   _leftHandItem: {fileID: 0}
   _rightHandItem: {fileID: 0}
   _costumeItem: {fileID: 0}
+  _isAlive: 1
+  _isLying: 0
+  _maxHeadDamage: 0
+  _maxNeckDamage: 0
+  _maxChestDamage: 0
+  _maxGroinDamage: 0
+  _maxArmDamage: 0
+  _maxWristDamage: 0
+  _maxLegDamage: 0
+  _maxFootDamage: 0
 --- !u!114 &114946383858496454
 MonoBehaviour:
   m_ObjectHideFlags: 1

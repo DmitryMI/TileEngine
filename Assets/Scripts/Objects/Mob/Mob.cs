@@ -21,6 +21,7 @@ namespace Assets.Scripts.Objects.Mob
 
         public abstract bool IsLying { get; }
         public abstract bool IsAlive { get; }
+        public abstract bool IsInCrit { get; }
 
         private IEnumerator AnimateMovement(Vector2 velocity, float time)
         {
@@ -111,8 +112,7 @@ namespace Assets.Scripts.Objects.Mob
         {
             if (IsLying)
             {
-                if(LyingSprite != null)
-                Renderer.sprite = LyingSprite;
+                Renderer.sprite = FrontSprite;
             }
             else
             {

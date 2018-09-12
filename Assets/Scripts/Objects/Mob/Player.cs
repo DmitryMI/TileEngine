@@ -13,10 +13,12 @@ namespace Assets.Scripts.Objects.Mob
         private float _moveSpeed;
 
         [SerializeField] [SyncVar] private int _hairSetId;
+        [SerializeField] [SyncVar] private bool _isLying = false;
 
         private bool _transperent;
         private bool _canWalkThrough;
         private bool _canContainGas;
+
 
         private string _descriptiveName = "Unnamed human";
         private bool _spawned;
@@ -33,27 +35,16 @@ namespace Assets.Scripts.Objects.Mob
         private GameObject _costumeItem;
 
 
-        protected override bool Transperent
-        {
-            get { return true; }
-        }
+        protected override bool Transperent => true;
 
-        protected override bool CanWalkThrough
-        {
-            get { return true; }
-        }
+        protected override bool CanWalkThrough => true;
 
-        protected override bool PassesGas
-        {
-            get { return true; }
-        }
+        protected override bool PassesGas => true;
 
-        public override string DescriptiveName
-        {
-            get { return _descriptiveName; }
-        }
+        public override string DescriptiveName => _descriptiveName;
 
-        
+        public override bool IsLying => _isLying;
+
 
         protected override void Update()
         {
@@ -138,7 +129,7 @@ namespace Assets.Scripts.Objects.Mob
                 case SlotEnum.Gloves:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("slot", slot, null);
+                    throw new ArgumentOutOfRangeException(nameof(slot), slot, null);
             }
 
             return item;
@@ -175,18 +166,19 @@ namespace Assets.Scripts.Objects.Mob
                 case SlotEnum.Gloves:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("slot", slot, null);
+                    throw new ArgumentOutOfRangeException(nameof(slot), slot, null);
             }
         }
 
-        public int HairSetId
-        {
-            get { return _hairSetId; }
-        }
+        public int HairSetId => _hairSetId;
 
         public Direction SpriteOrientation
         {
-            get { return Rotation; }
+            get
+            {
+                if (!_isLying) return Rotation;
+                else return Direction.Backward;
+            }
         }
 
         public bool BlocksLightFromInside()
@@ -255,10 +247,7 @@ namespace Assets.Scripts.Objects.Mob
             Item.Item sourceItem = sourceItemGo.GetComponent<Item.Item>();
             IPlayerInteractable interactable = interactableGo.GetComponent<IPlayerInteractable>();
 
-            if (interactable != null)
-            {
-                interactable.ApplyItemServer(sourceItem);
-            }
+            interactable?.ApplyItemServer(sourceItem);
         }
 
         [Command]
@@ -285,7 +274,7 @@ namespace Assets.Scripts.Objects.Mob
                 case SlotEnum.Belt:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("slot", slot, null);
+                    throw new ArgumentOutOfRangeException(nameof(slot), slot, null);
             }
         }
 
@@ -311,7 +300,7 @@ namespace Assets.Scripts.Objects.Mob
                 case SlotEnum.Belt:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("slot", slot, null);
+                    throw new ArgumentOutOfRangeException(nameof(slot), slot, null);
             }
 
             if (item)
@@ -341,16 +330,19 @@ namespace Assets.Scripts.Objects.Mob
 
         #region HealthSystem
 
+        private Damage _totalDamage;
+
+        [SerializeField][SyncVar] private bool _isInCrit = false;
         [SerializeField][SyncVar] private bool _isAlive = true;
-        [SerializeField][SyncVar]private bool _isLying = false;
-        [SerializeField] private float _maxHeadDamage;
+
+        /*[SerializeField] private float _maxHeadDamage;
         [SerializeField] private float _maxNeckDamage;
         [SerializeField] private float _maxChestDamage;
         [SerializeField] private float _maxGroinDamage;
         [SerializeField] private float _maxArmDamage;
         [SerializeField] private float _maxWristDamage;
         [SerializeField] private float _maxLegDamage;
-        [SerializeField] private float _maxFootDamage;
+        [SerializeField] private float _maxFootDamage;*/ // TODO Implement damage thresold
 
         [SyncVar] private Damage _headDamage;
         [SyncVar] private Damage _neckDamage;
@@ -372,6 +364,7 @@ namespace Assets.Scripts.Objects.Mob
             if (_isLying)
             {
                 transform.localRotation = Quaternion.Euler(0, 0, -90);
+                Rotation = Direction.Forward;
             }
             else
             {
@@ -380,8 +373,9 @@ namespace Assets.Scripts.Objects.Mob
         }
 
 
-        public override bool IsLying => _isLying;
+        
         public override bool IsAlive => _isAlive;
+        public override bool IsInCrit => _isInCrit;
         public Damage HeadDamage {get { return _headDamage; }set { _headDamage = value; } }
         public Damage NeckDamage { get { return _neckDamage; } set { _neckDamage = value; } }
         public Damage ChestDamage { get { return _chestDamage; } set { _chestDamage = value; } }
@@ -395,15 +389,39 @@ namespace Assets.Scripts.Objects.Mob
         public Damage RightFootDamage { get { return _rightFootDamage; } set { _rightFootDamage = value; } }
         public Damage GroinDamage { get { return _groinDamage; } set { _groinDamage = value; } }
 
-        public Damage TotalDamage
-        {
-            get { return CalculateTotalDamage(); }
-        }
+        
+
+        public Damage TotalDamage => _totalDamage;
 
         [Server]
         private void UpdateHealth()
         {
-            
+            _totalDamage = CalculateTotalDamage();
+            float health = 100 - _totalDamage.Summ;
+
+            Debug.Log("Health: " + health);
+
+            if (health > 0)
+            {
+                _isInCrit = false;
+            }
+            else if (health > -200f)
+            {
+                // TODO Critical state
+                _isInCrit = true;
+            }
+            else
+            {
+                _isAlive = false;
+            }
+
+            if (_isInCrit || !_isAlive)
+                _isLying = true;
+            else
+            {
+                _isLying = false;
+            }
+
         }
 
         private Damage CalculateTotalDamage()
@@ -470,36 +488,36 @@ namespace Assets.Scripts.Objects.Mob
                     return _headDamage;
                 case HumanoidImpactTarget.Neck:
                     return _neckDamage;
-                    break;
+                    
                 case HumanoidImpactTarget.Chest:
                     return _chestDamage;
-                    break;
+                    
                 case HumanoidImpactTarget.Groin:
                     return _groinDamage;
-                    break;
+                    
                 case HumanoidImpactTarget.LeftArm:
                     return _leftArmDamage;
-                    break;
+                    
                 case HumanoidImpactTarget.RightArm:
                     return _rightArmDamage;
-                    break;
+                    
                 case HumanoidImpactTarget.LeftWrist:
                     return _leftWristDamage;
-                    break;
+                    
                 case HumanoidImpactTarget.RightWrist:
                     return _rightWristDamage;
                 case HumanoidImpactTarget.LeftLeg:
                     return _leftLegDamage;
-                    break;
+                    
                 case HumanoidImpactTarget.RightLeg:
                     return _rightLegDamage;
-                    break;
+                    
                 case HumanoidImpactTarget.LeftFoot:
                     return _leftFootDamage;
-                    break;
+                    
                 case HumanoidImpactTarget.RightFoot:
                     return _rightFootDamage;
-                    break;
+                    
                 default:
                     throw new ArgumentOutOfRangeException(nameof(target), target, null);
             }

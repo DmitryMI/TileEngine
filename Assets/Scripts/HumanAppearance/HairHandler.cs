@@ -118,7 +118,7 @@ namespace Assets.Scripts
 
         private void Update()
         {
-           UpdateHairSet();
+            UpdateHairSet();
             DrawCurrentHairSet();
         }
 
