@@ -14,7 +14,8 @@ namespace Assets.Scripts.Objects.Mob
 
         [SerializeField] [SyncVar] private int _hairSetId;
         [SerializeField] [SyncVar] private bool _isLying = false;
-        [SerializeField] [SyncVar] private HumanHealthData _healthData;
+
+        [SerializeField] private HumanHealthData _healthData;
 
 
         private bool _transperent;
@@ -78,7 +79,21 @@ namespace Assets.Scripts.Objects.Mob
             VisionController.SetCameraPosition(transform.position);
         }
 
-        
+        protected override void UpdateSprite()
+        {
+            base.UpdateSprite();
+
+            if (_isLying)
+            {
+                transform.localRotation = Quaternion.Euler(0, 0, -90);
+                Rotation = Direction.Forward;
+            }
+            else
+            {
+                transform.localRotation = Quaternion.identity;
+            }
+        }
+
 
         private void ProcessPlayerControll()
         {
@@ -339,39 +354,14 @@ namespace Assets.Scripts.Objects.Mob
         #endregion
 
         #region HealthSystem
-        protected override void UpdateSprite()
-        {
-            base.UpdateSprite();
 
-            if (_isLying)
-            {
-                transform.localRotation = Quaternion.Euler(0, 0, -90);
-                Rotation = Direction.Forward;
-            }
-            else
-            {
-                transform.localRotation = Quaternion.identity;
-            }
-        }
-
-        public HumanHealthData GetHealthDataCopy()
-        {
-            return _healthData;
-        }
-
-        public void SetHealthData(HumanHealthData data)
-        {
-            _healthData = data;
-        }
-        
+        public HumanHealthData HealthData => _healthData;
 
         [Server]
         private void UpdateHealth()
         {
             Damage totalDamage = _healthData.TotalDamage;
             float health = 100 - totalDamage.Summ;
-
-            Debug.Log("Health: " + health);
 
             if (health > 0)
             {
@@ -384,15 +374,14 @@ namespace Assets.Scripts.Objects.Mob
             }
             else
             {
+                _healthData.IsInCrit = true;
                 _healthData.IsAlive = false;
             }
 
-            if (_healthData.IsInCrit || _healthData.IsDead)
-                _isLying = true;
-            else
-                _isLying = false;
-            
-            
+            if (_healthData.IsDead || _healthData.IsInCrit)
+                _healthData.IsConsious = false;
+
+            _isLying = _healthData.IsUnconsious;
         }
         #endregion
     }

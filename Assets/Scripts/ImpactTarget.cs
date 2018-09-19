@@ -8,17 +8,17 @@ namespace Assets.Scripts
 {
     public enum HumanoidImpactTarget
     {
-        Head,
-        Neck,
-        Chest,
-        Groin,
-        LeftArm,
-        RightArm,
-        LeftWrist,
-        RightWrist,
-        LeftLeg,
-        RightLeg,
-        LeftFoot,
-        RightFoot
+        Head = 0,
+        Neck = 1,
+        Chest = 2,
+        Groin = 3,
+        LeftArm = 4,
+        RightArm = 5,
+        LeftWrist = 6,
+        RightWrist = 7,
+        LeftLeg = 8,
+        RightLeg = 9,
+        LeftFoot = 10,
+        RightFoot = 11
     }
 }

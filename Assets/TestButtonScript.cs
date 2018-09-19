@@ -16,15 +16,13 @@ namespace Assets
 
         public void TestButtonClick()
         {
-            Damage damage = new Damage(5, 5, 5, 5);
+            Damage damage = new Damage(_damageType, 10);
 
             Player player = PlayerActionController.Current.LocalPlayer;
 
-            HumanHealthData health = player.GetHealthDataCopy();
+            HumanHealthData health = player.HealthData;
 
             health.DoDamage(damage, target);
-
-            player.SetHealthData(health);
         }
     }
 }
