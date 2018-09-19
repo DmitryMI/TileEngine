@@ -9,7 +9,7 @@ namespace Assets.Scripts.Objects.Equipment.Power
 {
     class Wire : Equipment
     {
-        [SerializeField] private Sprite _ns; //
+        [SerializeField] private Sprite _ns; 
         [SerializeField] private Sprite _we;
         [SerializeField] private Sprite _nsw;
         [SerializeField] private Sprite _nse;
