@@ -8,7 +8,6 @@ namespace Assets.Scripts.Objects.Mob
 {
     interface IHumanoid
     {
-        void SetHealthData(HumanHealthData data);
-        HumanHealthData GetHealthDataCopy();
+        HumanHealthData HealthData { get; }
     }
 }
