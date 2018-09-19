@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts
 {
-    enum HumanoidImpactTarget
+    public enum HumanoidImpactTarget
     {
         Head,
         Neck,

@@ -2,6 +2,7 @@
 using Assets.Scripts;
 using Assets.Scripts.Controllers;
 using Assets.Scripts.Controllers.Atmos;
+using Assets.Scripts.Objects.Mob;
 using UnityEngine;
 
 namespace Assets
@@ -15,41 +16,15 @@ namespace Assets
 
         public void TestButtonClick()
         {
-            Damage damage = new Damage(_damageType, 20);
+            Damage damage = new Damage(5, 5, 5, 5);
 
-            switch (target)
-            {
-                case HumanoidImpactTarget.Head:
-                    PlayerActionController.Current.LocalPlayer.HeadDamage += damage;
-                    break;
-                case HumanoidImpactTarget.Neck:
-                    break;
-                case HumanoidImpactTarget.Chest:
-                    PlayerActionController.Current.LocalPlayer.ChestDamage += damage;
-                    break;
-                case HumanoidImpactTarget.Groin:
-                    break;
-                case HumanoidImpactTarget.LeftArm:
-                    PlayerActionController.Current.LocalPlayer.LeftArmDamage += damage;
-                    break;
-                case HumanoidImpactTarget.RightArm:
-                    break;
-                case HumanoidImpactTarget.LeftWrist:
-                    break;
-                case HumanoidImpactTarget.RightWrist:
-                    break;
-                case HumanoidImpactTarget.LeftLeg:
-                    break;
-                case HumanoidImpactTarget.RightLeg:
-                    break;
-                case HumanoidImpactTarget.LeftFoot:
-                    break;
-                case HumanoidImpactTarget.RightFoot:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            
+            Player player = PlayerActionController.Current.LocalPlayer;
+
+            HumanHealthData health = player.GetHealthDataCopy();
+
+            health.DoDamage(damage, target);
+
+            player.SetHealthData(health);
         }
     }
 }

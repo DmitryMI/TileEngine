@@ -14,6 +14,8 @@ namespace Assets.Scripts.Objects.Mob
 
         [SerializeField] [SyncVar] private int _hairSetId;
         [SerializeField] [SyncVar] private bool _isLying = false;
+        [SerializeField] [SyncVar] private HumanHealthData _healthData;
+
 
         private bool _transperent;
         private bool _canWalkThrough;
@@ -44,6 +46,14 @@ namespace Assets.Scripts.Objects.Mob
         public override string DescriptiveName => _descriptiveName;
 
         public override bool IsLying => _isLying;
+
+        protected override void Start()
+        {
+            base.Start();
+
+            if(isServer)
+                _healthData = new HumanHealthData();
+        }
 
 
         protected override void Update()
@@ -329,34 +339,6 @@ namespace Assets.Scripts.Objects.Mob
         #endregion
 
         #region HealthSystem
-
-        private Damage _totalDamage;
-
-        [SerializeField][SyncVar] private bool _isInCrit = false;
-        [SerializeField][SyncVar] private bool _isAlive = true;
-
-        /*[SerializeField] private float _maxHeadDamage;
-        [SerializeField] private float _maxNeckDamage;
-        [SerializeField] private float _maxChestDamage;
-        [SerializeField] private float _maxGroinDamage;
-        [SerializeField] private float _maxArmDamage;
-        [SerializeField] private float _maxWristDamage;
-        [SerializeField] private float _maxLegDamage;
-        [SerializeField] private float _maxFootDamage;*/ // TODO Implement damage thresold
-
-        [SyncVar] private Damage _headDamage;
-        [SyncVar] private Damage _neckDamage;
-        [SyncVar] private Damage _chestDamage;
-        [SyncVar] private Damage _groinDamage;
-        [SyncVar] private Damage _leftArmDamage;
-        [SyncVar] private Damage _rightArmDamage;
-        [SyncVar] private Damage _leftLegDamage;
-        [SyncVar] private Damage _rightLegDamage;
-        [SyncVar] private Damage _leftFootDamage;
-        [SyncVar] private Damage _rightFootDamage;
-        [SyncVar] private Damage _leftWristDamage;
-        [SyncVar] private Damage _rightWristDamage;
-
         protected override void UpdateSprite()
         {
             base.UpdateSprite();
@@ -372,157 +354,46 @@ namespace Assets.Scripts.Objects.Mob
             }
         }
 
+        public HumanHealthData GetHealthDataCopy()
+        {
+            return _healthData;
+        }
 
+        public void SetHealthData(HumanHealthData data)
+        {
+            _healthData = data;
+        }
         
-        public override bool IsAlive => _isAlive;
-        public override bool IsInCrit => _isInCrit;
-        public Damage HeadDamage {get { return _headDamage; }set { _headDamage = value; } }
-        public Damage NeckDamage { get { return _neckDamage; } set { _neckDamage = value; } }
-        public Damage ChestDamage { get { return _chestDamage; } set { _chestDamage = value; } }
-        public Damage LeftArmDamage { get { return _leftArmDamage; } set { _leftArmDamage = value; } }
-        public Damage RightArmDamage { get { return _rightArmDamage; } set { _rightArmDamage = value; } }
-        public Damage LeftWristDamage { get { return _leftWristDamage; } set { _leftWristDamage = value; } }
-        public Damage RightWristDamage { get { return _rightWristDamage; } set { _rightWristDamage = value; } }
-        public Damage LeftLegDamage { get { return _leftLegDamage; } set { _leftLegDamage = value; } }
-        public Damage RightLegDamage { get { return _rightLegDamage; } set { _rightLegDamage = value; } }
-        public Damage LeftFootDamage { get { return _leftFootDamage; } set { _leftFootDamage = value; } }
-        public Damage RightFootDamage { get { return _rightFootDamage; } set { _rightFootDamage = value; } }
-        public Damage GroinDamage { get { return _groinDamage; } set { _groinDamage = value; } }
-
-        
-
-        public Damage TotalDamage => _totalDamage;
 
         [Server]
         private void UpdateHealth()
         {
-            _totalDamage = CalculateTotalDamage();
-            float health = 100 - _totalDamage.Summ;
+            Damage totalDamage = _healthData.TotalDamage;
+            float health = 100 - totalDamage.Summ;
 
             Debug.Log("Health: " + health);
 
             if (health > 0)
             {
-                _isInCrit = false;
+                _healthData.IsInCrit = false;
             }
             else if (health > -200f)
             {
                 // TODO Critical state
-                _isInCrit = true;
+                _healthData.IsInCrit = true;
             }
             else
             {
-                _isAlive = false;
+                _healthData.IsAlive = false;
             }
 
-            if (_isInCrit || !_isAlive)
+            if (_healthData.IsInCrit || _healthData.IsDead)
                 _isLying = true;
             else
-            {
                 _isLying = false;
-            }
-
+            
+            
         }
-
-        private Damage CalculateTotalDamage()
-        {
-            Damage result = new Damage(0, 0, 0, 0);
-            foreach (HumanoidImpactTarget target in Enum.GetValues(typeof(HumanoidImpactTarget)))
-            {
-                result += GetDamage(target);
-            }
-
-            return result;
-        }
-
-        private void DoDamage(Damage damage, HumanoidImpactTarget target)
-        {
-            switch (target)
-            {
-                case HumanoidImpactTarget.Head:
-                    _headDamage += damage;
-                    break;
-                case HumanoidImpactTarget.Neck:
-                    _neckDamage += damage;
-                    break;
-                case HumanoidImpactTarget.Chest:
-                    _chestDamage += damage;
-                    break;
-                case HumanoidImpactTarget.Groin:
-                    _groinDamage += damage;
-                    break;
-                case HumanoidImpactTarget.LeftArm:
-                    _leftArmDamage += damage;
-                    break;
-                case HumanoidImpactTarget.RightArm:
-                    _rightArmDamage += damage;
-                    break;
-                case HumanoidImpactTarget.LeftWrist:
-                    _leftWristDamage += damage;
-                    break;
-                case HumanoidImpactTarget.RightWrist:
-                    _rightWristDamage += damage;
-                    break;
-                case HumanoidImpactTarget.LeftLeg:
-                    _leftLegDamage += damage;
-                    break;
-                case HumanoidImpactTarget.RightLeg:
-                    _rightLegDamage += damage;
-                    break;
-                case HumanoidImpactTarget.LeftFoot:
-                    _leftFootDamage += damage;
-                    break;
-                case HumanoidImpactTarget.RightFoot:
-                    _rightFootDamage += damage;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(target), target, null);
-            }
-        }
-
-        private Damage GetDamage(HumanoidImpactTarget target)
-        {
-            switch (target)
-            {
-                case HumanoidImpactTarget.Head:
-                    return _headDamage;
-                case HumanoidImpactTarget.Neck:
-                    return _neckDamage;
-                    
-                case HumanoidImpactTarget.Chest:
-                    return _chestDamage;
-                    
-                case HumanoidImpactTarget.Groin:
-                    return _groinDamage;
-                    
-                case HumanoidImpactTarget.LeftArm:
-                    return _leftArmDamage;
-                    
-                case HumanoidImpactTarget.RightArm:
-                    return _rightArmDamage;
-                    
-                case HumanoidImpactTarget.LeftWrist:
-                    return _leftWristDamage;
-                    
-                case HumanoidImpactTarget.RightWrist:
-                    return _rightWristDamage;
-                case HumanoidImpactTarget.LeftLeg:
-                    return _leftLegDamage;
-                    
-                case HumanoidImpactTarget.RightLeg:
-                    return _rightLegDamage;
-                    
-                case HumanoidImpactTarget.LeftFoot:
-                    return _leftFootDamage;
-                    
-                case HumanoidImpactTarget.RightFoot:
-                    return _rightFootDamage;
-                    
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(target), target, null);
-            }
-        }
-
         #endregion
     }
 }

@@ -20,8 +20,6 @@ namespace Assets.Scripts.Objects.Mob
         protected SpriteRenderer Renderer;
 
         public abstract bool IsLying { get; }
-        public abstract bool IsAlive { get; }
-        public abstract bool IsInCrit { get; }
 
         private IEnumerator AnimateMovement(Vector2 velocity, float time)
         {
