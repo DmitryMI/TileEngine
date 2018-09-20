@@ -38,7 +38,7 @@ namespace Assets.Scripts.Objects.Equipment.Power
         [Server]
         private void SendPower(float watts)
         {
-            WireConnector connector = TileController.Find<WireConnector>(Cell.x, Cell.y);
+            IPowerSender connector = TileController.Find<IPowerSender>(Cell.x, Cell.y);
 
             if (connector == null)
             {

@@ -74,11 +74,21 @@ namespace Assets.Scripts.Objects.Equipment.Doors
                     IsTransperent = false;
                     DoPassGas = false;
                     CanPassThrough = false;
+
+                    _rightPart.EffectColor = Color.clear;
+                    _leftPart.EffectColor = Color.clear;
+
                     break;
                 case DoorState.Opening:
                     IsTransperent = true;
                     DoPassGas = true;
                     CanPassThrough = false;
+
+                    if (_isPowered)
+                    {
+                        _rightPart.EffectColor = Color.green;
+                        _leftPart.EffectColor = Color.green;
+                    }
                     break;
                 case DoorState.Closing:
                     IsTransperent = true;
@@ -95,12 +105,6 @@ namespace Assets.Scripts.Objects.Equipment.Doors
                 _animator.SetInteger("state", 2);
                 StartCoroutine(WaitForAnimation(OpeningClip.length, SwitchToOpened));
                 AnimationSwitchingBlocked = true;
-
-                if (_isPowered)
-                {
-                    _rightPart.EffectColor = Color.green;
-                    _leftPart.EffectColor = Color.green;
-                }
             }
 
             if (State == DoorState.Closing && PrevDoorState != DoorState.Closing)
@@ -108,18 +112,6 @@ namespace Assets.Scripts.Objects.Equipment.Doors
                 StartCoroutine(WaitForAnimation(ClosingClip.length, SwitchToClosed));
                 AnimationSwitchingBlocked = true;
                 _animator.SetInteger("state", 0);
-
-                if (_isPowered)
-                {
-                    _rightPart.EffectColor = Color.green;
-                    _leftPart.EffectColor = Color.green;
-                }
-            }
-
-            if (State == DoorState.Closed)
-            {
-                _rightPart.EffectColor = Color.clear;
-                _leftPart.EffectColor = Color.clear;
             }
 
             PrevDoorState = State;

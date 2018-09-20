@@ -2,20 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using Assets.Scripts.Controllers;
 using UnityEngine;
 
 namespace Assets.Scripts.Objects.Equipment.Power
 {
-    class WireConnector : Equipment, IPowerSender, IPowerSpreader
+    class PowerSpreader : Equipment, IPowerSpreader
     {
-        [SerializeField] private Sprite _north;
-        [SerializeField] private Sprite _south;
-        [SerializeField] private Sprite _west;
-        [SerializeField] private Sprite _east;
-
         [SerializeField] private Direction _connectionDirection;
-
-        private SpriteRenderer _spriteRenderer;
 
         protected override bool Transperent
         {
@@ -34,14 +29,7 @@ namespace Assets.Scripts.Objects.Equipment.Power
 
         public override string DescriptiveName
         {
-            get { return "Wire connector"; }
-        }
-
-        protected override void Start()
-        {
-            base.Start();
-            
-            _spriteRenderer = GetComponent<SpriteRenderer>();
+            get { return "LPC Connector"; }
         }
 
         protected override void Update()
@@ -57,16 +45,19 @@ namespace Assets.Scripts.Objects.Equipment.Power
             switch (_connectionDirection)
             {
                 case Direction.Forward:
-                    _spriteRenderer.sprite = _north;
+                    //_spriteRenderer.sprite = _north;
+                    transform.localRotation = Quaternion.Euler(0, 0, 90);
                     break;
                 case Direction.Backward:
-                    _spriteRenderer.sprite = _south;
+                    transform.localRotation = Quaternion.Euler(0, 0, -90);
                     break;
                 case Direction.Left:
-                    _spriteRenderer.sprite = _west;
+                    //_spriteRenderer.sprite = _west;
+                    transform.localRotation = Quaternion.Euler(0, 0, 0);
                     break;
                 case Direction.Right:
-                    _spriteRenderer.sprite = _east;
+                    //_spriteRenderer.sprite = _east;
+                    transform.localRotation = Quaternion.Euler(0, 0, 180);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -82,14 +73,14 @@ namespace Assets.Scripts.Objects.Equipment.Power
 
             foreach (var obj in objects)
             {
-                if(obj is Wire)
+                if (obj is Wire)
                     return obj as Wire;
             }
 
             return null;
         }
 
-        public IPowerConsumer[] FindConsumers()
+        /*public IPowerConsumer[] FindConsumers()
         {
             List<Wire> wires = new List<Wire>();
             Wire initialWire = null;
@@ -121,21 +112,8 @@ namespace Assets.Scripts.Objects.Equipment.Power
 
             return null;
         }
-
-        public IPowerConsumer GetConnectedDevice()
-        {
-            TileObject[] objects = TileController.GetObjects(Cell.x, Cell.y);
-
-            foreach (var obj in objects)
-            {
-                if(obj is IPowerConsumer)
-                    return obj as IPowerConsumer;
-            }
-
-            return null;
-        }
-
-        private IPowerConsumer[] GetConsumers(Wire initialWire, List<Wire> wires)
+        */
+        /*private IPowerConsumer[] GetConsumers(Wire initialWire, List<Wire> wires)
         {
             List<Wire> connectedWires = initialWire.GetConnectedWires();
             connectedWires.Remove(initialWire);
@@ -144,7 +122,7 @@ namespace Assets.Scripts.Objects.Equipment.Power
             wires.Add(initialWire);
             foreach (var connectedWire in connectedWires)
             {
-                if(wires.Contains(connectedWire))
+                if (wires.Contains(connectedWire))
                     continue;
 
                 wires.Add(connectedWire);
@@ -157,39 +135,42 @@ namespace Assets.Scripts.Objects.Equipment.Power
             foreach (var connector in connectors)
             {
                 IPowerConsumer connectedDevice = connector.GetConnectedDevice();
-                if(connectedDevice != null)
+                if (connectedDevice != null)
                     result.Add(connectedDevice);
             }
 
             return result.ToArray();
         }
+        */
 
-        public override string ToMap()
+        public IPowerConsumer GetConnectedDevice()
         {
-            string map = base.ToMap() + " " + (int) _connectionDirection;
-            return map;
-        }
-
-        public override bool FromMap(string mapData)
-        {
-            if (!base.FromMap(mapData))
-                return false;
-
-            string[] units = mapData.Split(' ');
-
-            try
+            Vector2Int cell;
+            switch (_connectionDirection)
             {
-                int direction = Int32.Parse(units[4]);
-                _connectionDirection = (Direction) direction;
-            }
-            catch (FormatException ex)
-            {
-                Debug.LogError(ex.Message);
-                return false;
+                case Direction.Forward:
+                    cell = new Vector2Int(Cell.x, Cell.y + 1);
+                    break;
+
+                case Direction.Backward:
+                    cell = new Vector2Int(Cell.x, Cell.y - 1);
+                    break;
+
+                case Direction.Left:
+                    cell = new Vector2Int(Cell.x - 1, Cell.y);
+                    break;
+
+                case Direction.Right:
+                    cell = new Vector2Int(Cell.x + 1, Cell.y);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
-            return true;
+
+            LocalPowerController lpc = TileController.Find<LocalPowerController>(cell.x, cell.y);
+            return lpc;
         }
-
     }
 }

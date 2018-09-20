@@ -147,31 +147,31 @@ namespace Assets.Scripts.Objects.Equipment.Power
             return wires;
         }
 
-        public List<WireConnector> GetConnectors()
+        public List<IPowerSpreader> GetConnectors()
         {
-            List<WireConnector> connectors = new List<WireConnector>();
+            List<IPowerSpreader> connectors = new List<IPowerSpreader>();
             if (_connectsNorth)
             {
-                WireConnector connector = TileController.Find<WireConnector>(Cell.x, Cell.y + 1);
-                if (connector)
+                IPowerSpreader connector = TileController.Find<IPowerSpreader>(Cell.x, Cell.y + 1);
+                if (connector != null)
                     connectors.Add(connector);
             }
             if (_connectsSouth)
             {
-                WireConnector connector = TileController.Find<WireConnector>(Cell.x, Cell.y - 1);
-                if (connector)
+                IPowerSpreader connector = TileController.Find<IPowerSpreader>(Cell.x, Cell.y - 1);
+                if (connector != null)
                     connectors.Add(connector);
             }
             if (_connectsWest)
             {
-                WireConnector connector = TileController.Find<WireConnector>(Cell.x - 1, Cell.y);
-                if (connector)
+                IPowerSpreader connector = TileController.Find<IPowerSpreader>(Cell.x - 1, Cell.y);
+                if (connector != null)
                     connectors.Add(connector);
             }
             if (_connectsEast)
             {
-                WireConnector connector = TileController.Find<WireConnector>(Cell.x + 1, Cell.y);
-                if (connector)
+                IPowerSpreader connector = TileController.Find<IPowerSpreader>(Cell.x + 1, Cell.y);
+                if (connector != null)
                     connectors.Add(connector);
             }
             return connectors;

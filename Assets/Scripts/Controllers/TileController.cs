@@ -81,7 +81,7 @@ namespace Assets.Scripts.Controllers
             return null;
         }
 
-        public T Find<T>(int x, int y) where T : TileObject
+        public T Find<T>(int x, int y) where T:class
         {
             TileObject[] objects = GetObjects(x, y);
 
