@@ -37,6 +37,8 @@ namespace Assets.Scripts.Objects.Equipment.Doors
         [SyncVar]
         private bool _isPowered;
 
+        private CoroutineController _prevCoroutinController;
+
         protected override void Start()
         {
             base.Start();
@@ -44,7 +46,7 @@ namespace Assets.Scripts.Objects.Equipment.Doors
             _animator = GetComponent<Animator>();
             PrevDoorState = State;
 
-            _animator.SetBool("greenLighting", true);
+            //_animator.SetBool("greenLighting", true);
         }
 
         protected override void Update()
@@ -153,13 +155,14 @@ namespace Assets.Scripts.Objects.Equipment.Doors
             return State;
         }
         
-        private void CallServer()
+        private void CallServerNoItem()
         {
             PlayerActionController.Current.LocalPlayer.ApplyItem(null, this);
         }
 
         public override void ApplyItemClient(Item.Item item)
         {
+            Debug.Log("Door was pushed");
             PlayerActionController.Current.LocalPlayer.ApplyItem(item, this);
         }
 
@@ -173,7 +176,16 @@ namespace Assets.Scripts.Objects.Equipment.Doors
                     {
                         State = DoorState.Opening;
 
-                        StartCoroutine(CloseDoorDelayed());
+                        if(_prevCoroutinController != null)
+                            _prevCoroutinController.ShouldStop = true;
+
+                        _prevCoroutinController = new CoroutineController();
+
+                        StartCoroutine(CloseDoorDelayed(_prevCoroutinController));
+                    }
+                    if (State == DoorState.Opened)
+                    {
+                        State = DoorState.Closing;
                     }
                 }
             }
@@ -181,14 +193,20 @@ namespace Assets.Scripts.Objects.Equipment.Doors
 
         public override void TryToPass()
         {
-            CallServer();
+            CallServerNoItem();
         }
 
-        private IEnumerator CloseDoorDelayed()
+        private IEnumerator CloseDoorDelayed(CoroutineController controller)
         {
             yield return new WaitForSeconds(DoorCloseDelay);
 
-            State = DoorState.Closing;
+            if (!controller.ShouldStop)
+            {
+                if (State == DoorState.Opened)
+                    State = DoorState.Closing;
+
+                Debug.Log("Coroutine!");
+            }
         }
 
         public void SendPower(float power)
@@ -200,5 +218,10 @@ namespace Assets.Scripts.Objects.Equipment.Doors
         }
 
         public float AmountOfNeededPower => _maxPowerStored - _powerStored;
+
+        class CoroutineController
+        {
+            public bool ShouldStop = false;
+        }
     }
 }

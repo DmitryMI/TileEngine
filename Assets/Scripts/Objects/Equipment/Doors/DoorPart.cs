@@ -2,7 +2,7 @@
 
 namespace Assets.Scripts.Objects.Equipment.Doors
 {
-    public class DoorPart : MonoBehaviour
+    public class DoorPart : MonoBehaviour, IChildCollider
     {
         public Vector2 Position;
 
@@ -19,5 +19,7 @@ namespace Assets.Scripts.Objects.Equipment.Doors
 
             _effectsRenderer.color = EffectColor;
         }
+
+        public GameObject Parent => transform.parent.gameObject;
     }
 }

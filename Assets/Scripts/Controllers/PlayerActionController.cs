@@ -129,6 +129,13 @@ namespace Assets.Scripts.Controllers
                 GameObject go = hit.transform.gameObject;
                 TileObject to = go.GetComponent<TileObject>();
 
+                if (to == null)
+                {
+                    IChildCollider child = go.GetComponent<IChildCollider>();
+                    GameObject parentGo = child?.Parent;
+                    to = parentGo?.GetComponent<TileObject>();
+                }
+
                 SpriteRenderer spriteRenderer = go.GetComponent<SpriteRenderer>();
 
                 if (spriteRenderer == null)
