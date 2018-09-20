@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections;
 using Assets.Scripts.Controllers;
+using Assets.Scripts.Objects.Equipment.Power;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Assets.Scripts.Objects.Equipment.Doors
 {
-    public class DoublePartAirlock : Door
+    public class DoublePartAirlock : Door, IPowerConsumer
     {
         [SerializeField] protected AnimationClip OpeningClip;
         [SerializeField] protected AnimationClip ClosingClip;
         [SerializeField] protected float DoorCloseDelay;
+
+        [SerializeField] protected DoorPart _leftPart;
+        [SerializeField] protected DoorPart _rightPart;
 
         [SerializeField] [SyncVar]
         protected DoorState State;
@@ -24,21 +28,39 @@ namespace Assets.Scripts.Objects.Equipment.Doors
         protected DoorState PrevDoorState;
         protected bool AnimationSwitchingBlocked = false;
 
+        [SerializeField]
+        private float _maxPowerStored = 100f;
+
+        [SerializeField]
+        private float _powerStored = 100f;
+
+        [SyncVar]
+        private bool _isPowered;
+
         protected override void Start()
         {
             base.Start();
 
             _animator = GetComponent<Animator>();
             PrevDoorState = State;
+
+            _animator.SetBool("greenLighting", true);
         }
 
         protected override void Update()
         {
             base.Update();
 
-            if (!AnimationSwitchingBlocked)
+            if (_powerStored > 0)
             {
-                _animator.SetInteger("state", (int) State);
+                _isPowered = true;
+                _powerStored -= 1.0f * Time.deltaTime;
+            }
+            else
+            {
+                _powerStored = 0;
+
+                _isPowered = false;
             }
 
             switch (State)
@@ -70,14 +92,34 @@ namespace Assets.Scripts.Objects.Equipment.Doors
 
             if (State == DoorState.Opening && PrevDoorState != DoorState.Opening)
             {
+                _animator.SetInteger("state", 2);
                 StartCoroutine(WaitForAnimation(OpeningClip.length, SwitchToOpened));
                 AnimationSwitchingBlocked = true;
+
+                if (_isPowered)
+                {
+                    _rightPart.EffectColor = Color.green;
+                    _leftPart.EffectColor = Color.green;
+                }
             }
 
             if (State == DoorState.Closing && PrevDoorState != DoorState.Closing)
             {
                 StartCoroutine(WaitForAnimation(ClosingClip.length, SwitchToClosed));
                 AnimationSwitchingBlocked = true;
+                _animator.SetInteger("state", 0);
+
+                if (_isPowered)
+                {
+                    _rightPart.EffectColor = Color.green;
+                    _leftPart.EffectColor = Color.green;
+                }
+            }
+
+            if (State == DoorState.Closed)
+            {
+                _rightPart.EffectColor = Color.clear;
+                _leftPart.EffectColor = Color.clear;
             }
 
             PrevDoorState = State;
@@ -105,11 +147,13 @@ namespace Assets.Scripts.Objects.Equipment.Doors
         void SwitchToClosed()
         {
             State = DoorState.Closed;
+            _animator.SetInteger("state", 0);
         }
 
         void SwitchToOpened()
         {
             State = DoorState.Opened;
+            _animator.SetInteger("state", 2);
         }
 
         public DoorState GetDoorState()
@@ -122,15 +166,23 @@ namespace Assets.Scripts.Objects.Equipment.Doors
             PlayerActionController.Current.LocalPlayer.ApplyItem(null, this);
         }
 
+        public override void ApplyItemClient(Item.Item item)
+        {
+            PlayerActionController.Current.LocalPlayer.ApplyItem(item, this);
+        }
+
         public override void ApplyItemServer(Item.Item item)
         {
             if (item == null)
             {
-                if (State == DoorState.Closed)
+                if (_isPowered)
                 {
-                    State = DoorState.Opening;
+                    if (State == DoorState.Closed)
+                    {
+                        State = DoorState.Opening;
 
-                    StartCoroutine(CloseDoorDelayed());
+                        StartCoroutine(CloseDoorDelayed());
+                    }
                 }
             }
         }
@@ -146,5 +198,15 @@ namespace Assets.Scripts.Objects.Equipment.Doors
 
             State = DoorState.Closing;
         }
+
+        public void SendPower(float power)
+        {
+            _powerStored += power;
+
+            if (_powerStored > _maxPowerStored)
+                _powerStored = _maxPowerStored;
+        }
+
+        public float AmountOfNeededPower => _maxPowerStored - _powerStored;
     }
 }

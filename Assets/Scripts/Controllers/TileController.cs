@@ -42,8 +42,6 @@ namespace Assets.Scripts.Controllers
         }
 
         
-
-        [Server]
         public void AddObject(int x, int y, TileObject obj)
         {
             if (WasLoaded && ServerController.IsCellInBounds(x, y))
@@ -63,7 +61,6 @@ namespace Assets.Scripts.Controllers
             
         }
 
-        [Server]
         public void RemoveObject(int x, int y, TileObject obj)
         {
             if (WasLoaded && ServerController.IsCellInBounds(x, y))
@@ -76,7 +73,6 @@ namespace Assets.Scripts.Controllers
             }
         }
 
-        [Server]
         public TileObject[] GetObjects(int x, int y)
         {
             if(WasLoaded && ServerController.IsCellInBounds(x, y))

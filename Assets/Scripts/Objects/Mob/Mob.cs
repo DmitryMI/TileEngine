@@ -107,8 +107,10 @@ namespace Assets.Scripts.Objects.Mob
             }
             else // Find a door
             {
-                Door door = TileController.Find<Door>(Cell.x, Cell.y);
-                door.TryToPass();
+                Door door = TileController.Find<Door>(nextCell.x, nextCell.y);
+
+                if(door != null)
+                    door.TryToPass();
             }
         }
 

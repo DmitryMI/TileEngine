@@ -170,11 +170,8 @@ namespace Assets.Scripts.Objects
                 _cell = value;
                 _transformChanged = true;
 
-                if (isServer)
-                {
-                    TileController.Current.RemoveObject(oldCell.x, oldCell.y, this);
-                    TileController.Current.AddObject(_cell.x, _cell.y, this);
-                }
+                TileController.Current.RemoveObject(oldCell.x, oldCell.y, this);
+                TileController.Current.AddObject(_cell.x, _cell.y, this);
             }
         }
 

@@ -238,7 +238,8 @@ namespace Assets.Scripts.Objects.Mob
 
         public void ApplyItem(Item.Item sourceItem, IPlayerInteractable interactable)
         {
-            CmdApplyItem(sourceItem.gameObject, interactable.gameObject);
+            GameObject sourceGo = sourceItem?.gameObject;
+            CmdApplyItem(sourceGo, interactable.gameObject);
         }
 
         // TODO Act on equipment
@@ -269,7 +270,7 @@ namespace Assets.Scripts.Objects.Mob
         [Command]
         private void CmdApplyItem(GameObject sourceItemGo, GameObject interactableGo)
         {
-            Item.Item sourceItem = sourceItemGo.GetComponent<Item.Item>();
+            Item.Item sourceItem = sourceItemGo?.GetComponent<Item.Item>();
             IPlayerInteractable interactable = interactableGo.GetComponent<IPlayerInteractable>();
 
             interactable?.ApplyItemServer(sourceItem);
