@@ -64,113 +64,21 @@ namespace Assets.Scripts.Objects.Equipment.Power
             }
         }
 
-        private Wire FindWire(int x, int y)
-        {
-            TileObject[] objects = TileController.GetObjects(x, y);
-
-            if (objects == null)
-                return null;
-
-            foreach (var obj in objects)
-            {
-                if (obj is Wire)
-                    return obj as Wire;
-            }
-
-            return null;
-        }
-
-        /*public IPowerConsumer[] FindConsumers()
-        {
-            List<Wire> wires = new List<Wire>();
-            Wire initialWire = null;
-
-            switch (_connectionDirection)
-            {
-                case Direction.Forward:
-                    initialWire = FindWire(Cell.x, Cell.y + 1);
-                    break;
-
-                case Direction.Backward:
-                    initialWire = FindWire(Cell.x, Cell.y - 1);
-                    break;
-
-                case Direction.Left:
-                    initialWire = FindWire(Cell.x - 1, Cell.y);
-                    break;
-
-                case Direction.Right:
-                    initialWire = FindWire(Cell.x + 1, Cell.y);
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            if (initialWire != null)
-                return GetConsumers(initialWire, wires);
-
-            return null;
-        }
-        */
-        /*private IPowerConsumer[] GetConsumers(Wire initialWire, List<Wire> wires)
-        {
-            List<Wire> connectedWires = initialWire.GetConnectedWires();
-            connectedWires.Remove(initialWire);
-            List<IPowerConsumer> result = new List<IPowerConsumer>();
-
-            wires.Add(initialWire);
-            foreach (var connectedWire in connectedWires)
-            {
-                if (wires.Contains(connectedWire))
-                    continue;
-
-                wires.Add(connectedWire);
-
-                IPowerConsumer[] consumers = GetConsumers(connectedWire, wires);
-                result.AddRange(consumers);
-            }
-
-            List<IPowerSpreader> connectors = initialWire.GetConnectors();
-            foreach (var connector in connectors)
-            {
-                IPowerConsumer connectedDevice = connector.GetConnectedDevice();
-                if (connectedDevice != null)
-                    result.Add(connectedDevice);
-            }
-
-            return result.ToArray();
-        }
-        */
-
         public IPowerConsumer GetConnectedDevice()
         {
-            Vector2Int cell;
-            switch (_connectionDirection)
-            {
-                case Direction.Forward:
-                    cell = new Vector2Int(Cell.x, Cell.y + 1);
-                    break;
-
-                case Direction.Backward:
-                    cell = new Vector2Int(Cell.x, Cell.y - 1);
-                    break;
-
-                case Direction.Left:
-                    cell = new Vector2Int(Cell.x - 1, Cell.y);
-                    break;
-
-                case Direction.Right:
-                    cell = new Vector2Int(Cell.x + 1, Cell.y);
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
+            Vector2Int cell = Cell;
 
             LocalPowerController lpc = TileController.Find<LocalPowerController>(cell.x, cell.y);
-            return lpc;
+
+            if(CheckRotation(lpc))
+                return lpc;
+
+            return null;
+        }
+
+        private bool CheckRotation(LocalPowerController lpc)
+        {
+            return lpc.WallPressDirection == _connectionDirection;
         }
     }
 }

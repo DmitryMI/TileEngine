@@ -9749,7 +9749,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4257008662567596, guid: 8e90bf1574fff804785dd9fdd802ec5d, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 16.2
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 4257008662567596, guid: 8e90bf1574fff804785dd9fdd802ec5d, type: 2}
       propertyPath: m_LocalPosition.y
@@ -9777,6 +9777,21 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4257008662567596, guid: 8e90bf1574fff804785dd9fdd802ec5d, type: 2}
       propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114497790408836320, guid: 8e90bf1574fff804785dd9fdd802ec5d,
+        type: 2}
+      propertyPath: _wallPressDirection
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114497418214668336, guid: 8e90bf1574fff804785dd9fdd802ec5d,
+        type: 2}
+      propertyPath: m_ServerOnly
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591668787343180, guid: 8e90bf1574fff804785dd9fdd802ec5d,
+        type: 2}
+      propertyPath: _manual
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -23186,6 +23201,8 @@ MonoBehaviour:
   - {fileID: 1602841063150840, guid: 0e28f5168b368ae4ba02f043fd9aba92, type: 2}
   - {fileID: 1349262994398114, guid: c093882027084534581dd69d85496dd8, type: 2}
   - {fileID: 1372781546133534, guid: f96a9352fd3e68b489f82fc8c3e38341, type: 2}
+  - {fileID: 1403696137573916, guid: 96b22436dfb940446a8c35bdac4b4fce, type: 2}
+  - {fileID: 1527261055776920, guid: 8e90bf1574fff804785dd9fdd802ec5d, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:

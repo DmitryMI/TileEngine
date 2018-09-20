@@ -53,7 +53,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1527261055776920}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 16.2, y: 3, z: 0}
+  m_LocalPosition: {x: 17, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4591491988727462}
@@ -117,13 +117,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TypeId: 0
-  _cell: {x: 0, y: 0}
+  _cell: {x: 67, y: 53}
   _cellOffset: {x: 0, y: 0}
   Rotation: 0
   _transperent: 0
   _canWalkThrough: 0
   _canContainGas: 0
   _descriptiveName: 
+  _wallPressDirection: 2
+  _pressedOffset: 0.8
 --- !u!114 &114591668787343180
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -135,7 +137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2551358f7ebf8d4ebf2214b1292cd88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cell: {x: 0, y: 0}
+  _cell: {x: 67, y: 53}
   _cellOffset: {x: 0, y: 0}
 --- !u!212 &212360313111511092
 SpriteRenderer:

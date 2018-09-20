@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Assets.Scripts.Controllers;
 using Assets.Scripts.Controllers.Atmos;
+using Assets.Scripts.Objects.Equipment.Power;
 using UnityEngine;
 using UnityEngine.Networking;
+using Debug = UnityEngine.Debug;
 
 namespace Assets.Scripts.Objects
 {
     public abstract class TileObject : NetworkBehaviour
     {
         [SerializeField] protected int TypeId;
+
+        [SerializeField] protected float CellOffsetComparisonTolerance = 0.001f;
 
         [SerializeField]
         private Vector2Int _cell;
@@ -117,9 +122,12 @@ namespace Assets.Scripts.Objects
         {
             if (!isLocalPlayer)
             {
-                _cell = new Vector2Int(x, y);
-                _cellOffset = offset;
-                Rotation = direction;
+                if (!isServer)
+                {
+                    _cell = new Vector2Int(x, y);
+                    _cellOffset = offset;
+                    Rotation = direction;
+                }
             }
         }
 
@@ -180,8 +188,18 @@ namespace Assets.Scripts.Objects
             get { return _cellOffset; }
             set
             {
-                _cellOffset = value;
-                _transformChanged = true;
+                float delta = (value - _cellOffset).magnitude;
+
+                if (delta > CellOffsetComparisonTolerance)
+                {
+                    _cellOffset = value;
+                    _transformChanged = true;
+
+                    if (GetType() == typeof(LocalPowerController) && isServer)
+                    {
+                        Debug.Log("NEW VALUE: " + _cellOffset);
+                    }
+                }
             }
         }
 
