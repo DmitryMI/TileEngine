@@ -159,10 +159,12 @@ namespace Assets.Scripts.Controllers
 
         private void SortItemStacks()
         {
-            
-            foreach (var stack in _itemStackCollection)
+            if (_itemStackCollection.Length > 0)
             {
-                SortItemStack(stack);
+                foreach (var stack in _itemStackCollection)
+                {
+                    SortItemStack(stack);
+                }
             }
         }
 

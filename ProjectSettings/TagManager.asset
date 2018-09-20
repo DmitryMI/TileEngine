@@ -53,6 +53,9 @@ TagManager:
   - name: Turf
     uniqueID: 2834020523
     locked: 0
+  - name: Doors
+    uniqueID: 3961818491
+    locked: 0
   - name: Wall
     uniqueID: 795202559
     locked: 0

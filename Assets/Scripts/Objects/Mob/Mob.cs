@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Scripts.Objects.Equipment.Doors;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -103,6 +104,11 @@ namespace Assets.Scripts.Objects.Mob
                 CellOffset = -offset;
 
                 StartCoroutine(AnimateMovement(shift * speed, 1 / speed * Time.deltaTime));
+            }
+            else // Find a door
+            {
+                Door door = TileController.Find<Door>(Cell.x, Cell.y);
+                door.TryToPass();
             }
         }
 
