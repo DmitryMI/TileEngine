@@ -53,7 +53,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1527261055776920}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 17, y: 3, z: 0}
+  m_LocalPosition: {x: 16.199997, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4591491988727462}
@@ -117,8 +117,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TypeId: 0
+  CellOffsetComparisonTolerance: 0.001
   _cell: {x: 67, y: 53}
-  _cellOffset: {x: 0, y: 0}
+  _cellOffset: {x: -0.8, y: 0}
   Rotation: 0
   _transperent: 0
   _canWalkThrough: 0
@@ -126,6 +127,12 @@ MonoBehaviour:
   _descriptiveName: 
   _wallPressDirection: 2
   _pressedOffset: 0.8
+  _screenSpriteRenderer: {fileID: 212360313111511092}
+  _connectedCells:
+  - {x: 68, y: 51}
+  - {x: 69, y: 53}
+  _powerStored: 999.978
+  _powerCapacity: 1000
 --- !u!114 &114591668787343180
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -175,7 +182,7 @@ SpriteRenderer:
   m_SortingLayer: 7
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 4f45e7feb6fa7604fb0cb8b674330f53, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

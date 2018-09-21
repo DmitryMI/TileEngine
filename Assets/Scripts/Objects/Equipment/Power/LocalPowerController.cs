@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Assets.Scripts.Objects.Equipment.Power
 {
-    public class LocalPowerController : Equipment, IPowerConsumer
+    public class LocalPowerController : Equipment, IPowerConsumer, IWallPlaceable
     {
         [SerializeField] [SyncVar] private Direction _wallPressDirection;
         [SerializeField] private float _pressedOffset;
 
         [SerializeField] private SpriteRenderer _screenSpriteRenderer;
+
+        [SerializeField] private List<Vector2Int> _connectedCells;
 
 
         public Direction WallPressDirection => _wallPressDirection;
@@ -45,6 +48,33 @@ namespace Assets.Scripts.Objects.Equipment.Power
             else
             {
                 _screenSpriteRenderer.color = Color.red;
+            }
+
+            if (isServer)
+            {
+                ElectrifyArea();
+            }
+        }
+
+        [Server]
+        private void ElectrifyArea()
+        {
+            foreach (var cell in _connectedCells)
+            {
+                List<IWirelessPowerable> powerables = new List<IWirelessPowerable>();
+                TileController.FindAll(cell.x, cell.y, powerables);
+                foreach (var powerable in powerables)
+                {
+                    float powerNeeded = powerable.PowerNeeded;
+                    if (_powerStored >= powerNeeded)
+                    {
+                        _powerStored -= powerNeeded;
+                        powerable.Electrify();
+                    }
+
+                    Debug.DrawRay(transform.position, powerable.gameObject.transform.position - transform.position,
+                        Color.yellow);
+                }
             }
         }
 

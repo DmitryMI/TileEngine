@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 
 namespace Assets.Scripts.Objects.Equipment.Doors
 {
-    public class DoublePartAirlock : Door, IPowerConsumer
+    public class DoublePartAirlock : Door
     {
         [SerializeField] protected AnimationClip OpeningClip;
         [SerializeField] protected AnimationClip ClosingClip;
@@ -28,16 +28,21 @@ namespace Assets.Scripts.Objects.Equipment.Doors
         protected DoorState PrevDoorState;
         protected bool AnimationSwitchingBlocked = false;
 
-        [SerializeField]
-        private float _maxPowerStored = 100f;
-
-        [SerializeField]
-        private float _powerStored = 100f;
-
         [SyncVar]
         private bool _isPowered;
 
         private CoroutineController _prevCoroutinController;
+
+        public override float PowerNeeded
+        {
+            get
+            {
+                if (State == DoorState.Opening || State == DoorState.Closing)
+                    return 0.5f;
+                else
+                    return 0.01f;
+            }
+        }
 
         protected override void Start()
         {
@@ -53,17 +58,8 @@ namespace Assets.Scripts.Objects.Equipment.Doors
         {
             base.Update();
 
-            if (_powerStored > 0)
-            {
-                _isPowered = true;
-                _powerStored -= 1.0f * Time.deltaTime;
-            }
-            else
-            {
-                _powerStored = 0;
-
-                _isPowered = false;
-            }
+            if(isServer)
+                _isPowered = Electrified;
 
             switch (State)
             {
@@ -208,16 +204,6 @@ namespace Assets.Scripts.Objects.Equipment.Doors
                 Debug.Log("Coroutine!");
             }
         }
-
-        public void SendPower(float power)
-        {
-            _powerStored += power;
-
-            if (_powerStored > _maxPowerStored)
-                _powerStored = _maxPowerStored;
-        }
-
-        public float AmountOfNeededPower => _maxPowerStored - _powerStored;
 
         class CoroutineController
         {
