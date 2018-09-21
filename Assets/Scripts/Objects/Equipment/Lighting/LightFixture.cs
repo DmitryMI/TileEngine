@@ -19,7 +19,7 @@ namespace Assets.Scripts.Objects.Equipment.Lighting
 
         [SerializeField] private float _lightRange;
 
-        public Direction WallPressDirection { get; }
+        public Direction WallPressDirection { get { return _wallPressDirection; } }
 
         [SyncVar]
         private bool _electrified;
@@ -49,8 +49,14 @@ namespace Assets.Scripts.Objects.Equipment.Lighting
 
             UpdateSprite();
 
-            if(_electrified)
+            
+        }
+
+        protected void LateUpdate()
+        {
+            if (_electrified)
                 UpdateLightController();
+
         }
 
         private void UpdateSprite()

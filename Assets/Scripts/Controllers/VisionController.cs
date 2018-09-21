@@ -1,11 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace Assets.Scripts.Controllers
 {
     public class VisionController : Controller
     {
+        class VisionMaskData
+        {
+            public float Brightness;
+            public Color Color;
+        }
+
+
         [SerializeField] private int _maxSpawnPerFrame = 64;
         [SerializeField] private VisionMask _maskPrefab;
         [SerializeField] private bool _enableVisionMasks = true;
@@ -16,18 +27,27 @@ namespace Assets.Scripts.Controllers
         [SerializeField] private bool _ignoreLight;
 
         private int[,] _blockersCount;
+
+        private VisionMaskData[,] _maskData;
         private VisionMask[,] _masks;
+        private List<LightSourceInfo> _tempLightSourceInfos = new List<LightSourceInfo>();
+
+        private List<VisionMask> _processedMasks = new List<VisionMask>();
+        private List<float > _processedBrightness = new List<float>();
 
         private Camera _camera;
         private Grid _grid;
         private bool _prevEnableVisionMasks = true;
         private GameObject _visionMasksGroup;
 
+        private Task _job;
+
         private static VisionController _current;
         public static VisionController Current
         {
             get { return _current; }
         }
+
         public override void OnGameLoaded(IServerDataProvider controller)
         {
             //WasLoaded = true;
@@ -42,6 +62,7 @@ namespace Assets.Scripts.Controllers
 
             _blockersCount = new int[controller.MapSize.x, controller.MapSize.y];
             _masks = new VisionMask[controller.MapSize.x, controller.MapSize.y];
+            _maskData = new VisionMaskData[controller.MapSize.x, controller.MapSize.y];
 
             if (_maskPrefab == null)
             {
@@ -110,6 +131,8 @@ namespace Assets.Scripts.Controllers
                 return;
             }
 
+            //_tempLightSourceInfos.Clear();
+
             CheckVisionMasksEnabled();
 
             for (int i = 0; i < _blockersCount.GetLength(0); i++)
@@ -124,7 +147,17 @@ namespace Assets.Scripts.Controllers
         private void LateUpdate()
         {
             if (_visionActive && WasLoaded)
+            {
                 ProcessVisionBlockers();
+
+                if (_job == null || _job.IsCompleted)
+                {
+                    SetLightSourcesAfterJob();
+
+                    _job = new Task(SetLightSourcesJob);
+                    _job.Start();
+                }
+            }
         }
 
         private void CheckVisionMasksEnabled()
@@ -250,6 +283,22 @@ namespace Assets.Scripts.Controllers
 
         private void ProcessVisionBlockers()
         {
+            // Cells near player are always visible;
+            for (int x = _visionSourceCell.x - 1; x <= _visionSourceCell.x + 1; x++)
+            {
+                for (int y = _visionSourceCell.y - 1; y <= _visionSourceCell.y + 1; y++)
+                {
+                    VisionMask mask = GetMask(x, y);
+                    if (mask != null)
+                    {
+                        mask.SetVisible();
+
+                        if (_ignoreLight)
+                            mask.SetLighting(1, Color.black);
+                    }
+                }
+            }
+
             for (int x = _visionSourceCell.x - _sightRange; x <= _visionSourceCell.x + _sightRange; x++)
             {
                 for (int y = _visionSourceCell.y - _sightRange; y <= _visionSourceCell.y + _sightRange; y++)
@@ -265,7 +314,7 @@ namespace Assets.Scripts.Controllers
                         mask.SetVisible();
 
                         if (_ignoreLight)
-                            mask.SetLighting(1, Color.white);
+                            mask.SetLighting(1, Color.black);
                     }
 
                 }
@@ -277,29 +326,81 @@ namespace Assets.Scripts.Controllers
             if (!WasLoaded)
                 return;
 
-            for (int x = (int) Mathf.Round(info.X - info.Range); x <= info.X + info.Range; x++)
+            if (_job == null || _job.Status != TaskStatus.Running)
             {
-                for (int y = (int) Mathf.Round(info.Y - info.Range); y <= info.Y + info.Range; y++)
+                if (!_tempLightSourceInfos.Contains(info))
                 {
-                    bool result = IsVisibleFrom(new Vector2Int(info.X, info.Y), new Vector2Int(x, y));
-
-                    VisionMask mask = GetMask(x, y);
-                    if (mask != null && result)
-                    {
-
-                        //float brightness = mask.GetBrightness() + info.CalculateIntensity(new Vector2Int(x, y));
-                        float range = Vector2Int.Distance(new Vector2Int(info.X, info.Y), new Vector2Int(x, y));
-                        float intensity = info.CalculateIntensityRange(range);
-
-                        if (intensity < 0)
-                            intensity = 0;
-
-                        float brightness = mask.GetBrightness() + intensity;
-
-                        mask.SetLighting(brightness, mask.GetColor());
-                    }
+                    _tempLightSourceInfos.Add(info);
                 }
             }
         }
+
+        private void SetLightSourcesJob()
+        {
+            foreach(var info in _tempLightSourceInfos)
+            {
+                // Cells near light source are always visible;
+                for (int x = info.X - 1; x <= info.X + 1; x++)
+                {
+                    for (int y = info.Y - 1; y <= info.Y + 1; y++)
+                    {
+                        VisionMask mask = GetMask(x, y);
+                        if (mask != null)
+                        {
+                            float range = Vector2Int.Distance(new Vector2Int(info.X, info.Y), new Vector2Int(x, y));
+                            float intensity = info.CalculateIntensityRange(range);
+
+                            if (intensity < 0)
+                                intensity = 0;
+
+                            float brightness = intensity;
+
+                            _processedBrightness.Add(brightness);
+                            _processedMasks.Add(mask);
+                        }
+                    }
+                }
+
+                for (int x = (int)Mathf.Round(info.X - info.Range); x <= info.X + info.Range; x++)
+                {
+                    for (int y = (int)Mathf.Round(info.Y - info.Range); y <= info.Y + info.Range; y++)
+                    {
+                        bool result = IsVisibleFrom(new Vector2Int(info.X, info.Y), new Vector2Int(x, y));
+
+                        VisionMask mask = GetMask(x, y);
+                        if (mask != null && result)
+                        {
+
+                            //float brightness = mask.GetBrightness() + info.CalculateIntensity(new Vector2Int(x, y));
+                            float range = Vector2Int.Distance(new Vector2Int(info.X, info.Y), new Vector2Int(x, y));
+                            float intensity = info.CalculateIntensityRange(range);
+
+                            if (intensity < 0)
+                                intensity = 0;
+
+                            float brightness = intensity;
+
+                            _processedBrightness.Add(brightness);
+                            _processedMasks.Add(mask);
+
+                            //mask.SetLighting(brightness, mask.GetColor());
+                        }
+                    }
+                }
+            }
+
+            _tempLightSourceInfos.Clear();
+        }
+
+        private void SetLightSourcesAfterJob()
+        {
+            for (int i = 0; i < _processedMasks.Count; i++)
+            {
+                _processedMasks[i].SetLighting(_processedBrightness[i], Color.black);
+            }
+            _processedMasks.Clear();
+            _processedBrightness.Clear();
+        }
+        
     }
 }

@@ -13,6 +13,8 @@ namespace Assets.Scripts.Objects.Equipment.Doors
         [SerializeField] protected AnimationClip ClosingClip;
         [SerializeField] protected float DoorCloseDelay;
 
+        [SerializeField] protected bool HasWindow;
+
         [SerializeField] protected DoorPart _leftPart;
         [SerializeField] protected DoorPart _rightPart;
 
@@ -97,6 +99,8 @@ namespace Assets.Scripts.Objects.Equipment.Doors
                     throw new ArgumentOutOfRangeException();
             }
 
+            if (HasWindow)
+                IsTransperent = true;
 
             if (State == DoorState.Opening && PrevDoorState != DoorState.Opening)
             {
@@ -189,7 +193,8 @@ namespace Assets.Scripts.Objects.Equipment.Doors
 
         public override void TryToPass()
         {
-            CallServerNoItem();
+            if(State == DoorState.Closed)
+                CallServerNoItem();
         }
 
         private IEnumerator CloseDoorDelayed(CoroutineController controller)

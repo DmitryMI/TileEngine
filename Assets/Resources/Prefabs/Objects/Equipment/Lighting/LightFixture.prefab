@@ -38,7 +38,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1750199006663256}
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 19.42, y: 3, z: 0}
+  m_LocalPosition: {x: 19.449997, y: 3, z: 0}
   m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -83,7 +83,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2551358f7ebf8d4ebf2214b1292cd88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cell: {x: 0, y: 0}
+  _cell: {x: 69, y: 53}
   _cellOffset: {x: 0, y: 0}
 --- !u!114 &114804957713106828
 MonoBehaviour:
@@ -130,8 +130,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TypeId: 0
   CellOffsetComparisonTolerance: 0.001
-  _cell: {x: 0, y: 0}
-  _cellOffset: {x: 0, y: 0}
+  _cell: {x: 69, y: 53}
+  _cellOffset: {x: 0.45, y: 0}
   Rotation: 0
   _transperent: 0
   _canWalkThrough: 0
@@ -140,7 +140,7 @@ MonoBehaviour:
   _onSprite: {fileID: 21300000, guid: 3d8a081f603969d4592ff16c2cccddf8, type: 3}
   _offSprite: {fileID: 21300000, guid: 764907cf8bbe6ab498c676fa8adcdc29, type: 3}
   _wallPressDirection: 3
-  _pressedOffset: 0.58
+  _pressedOffset: 0.45
   _lightRange: 9
 --- !u!212 &212464632740423444
 SpriteRenderer:
@@ -177,7 +177,7 @@ SpriteRenderer:
   m_SortingLayerID: -1006300787
   m_SortingLayer: 10
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 764907cf8bbe6ab498c676fa8adcdc29, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3d8a081f603969d4592ff16c2cccddf8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

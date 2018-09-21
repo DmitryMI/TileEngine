@@ -13,15 +13,20 @@ namespace Assets.Scripts.Controllers
 
         [SerializeField]
         private bool _visible;
+
+        [SerializeField]
         private float _brightness;
 
         private Color _baseColor = Color.black;
+
+        private int _lastSetLighting;
 
         private void Start()
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
 
-            SetInvisible();
+            if(Time.frameCount - _lastSetLighting > 1)
+                SetInvisible();
         }
 
         public void SetInvisible()
@@ -38,6 +43,8 @@ namespace Assets.Scripts.Controllers
         {
             _brightness = Mathf.Clamp(brightness, 0, 1);
             _baseColor = lightColor;
+
+            _lastSetLighting = Time.frameCount;
             // TODO Process light color
         }
 

@@ -323,6 +323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TypeId: 0
+  CellOffsetComparisonTolerance: 0.001
   _cell: {x: 68, y: 51}
   _cellOffset: {x: 0, y: 0}
   Rotation: 0
@@ -333,11 +334,10 @@ MonoBehaviour:
   OpeningClip: {fileID: 7400000, guid: a042903acaab7934c9ff7646aa2e776b, type: 2}
   ClosingClip: {fileID: 7400000, guid: 0b60c23a3b4f6704aaf29157e09fe785, type: 2}
   DoorCloseDelay: 5
+  HasWindow: 1
   _leftPart: {fileID: 114244476053348274}
   _rightPart: {fileID: 114391914250569420}
   State: 0
-  _maxPowerStored: 100
-  _powerStored: 100
 --- !u!212 &212024649159055384
 SpriteRenderer:
   m_ObjectHideFlags: 1
