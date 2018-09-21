@@ -9,6 +9,9 @@ namespace Assets.Scripts.Objects.Equipment.Doors
 {
     public class DoublePartAirlock : Door
     {
+        [SerializeField] protected AudioClip OpeningAudioClip;
+        [SerializeField] protected AudioClip ClosingAudioClip;
+
         [SerializeField] protected AnimationClip OpeningClip;
         [SerializeField] protected AnimationClip ClosingClip;
         [SerializeField] protected float DoorCloseDelay;
@@ -35,14 +38,16 @@ namespace Assets.Scripts.Objects.Equipment.Doors
 
         private CoroutineController _prevCoroutinController;
 
+        private AudioSource _audioSource;
+
         public override float PowerNeeded
         {
             get
             {
                 if (State == DoorState.Opening || State == DoorState.Closing)
-                    return 0.5f;
+                    return 0.005f;
                 else
-                    return 0.01f;
+                    return 0.001f;
             }
         }
 
@@ -52,6 +57,7 @@ namespace Assets.Scripts.Objects.Equipment.Doors
 
             _animator = GetComponent<Animator>();
             PrevDoorState = State;
+            _audioSource = GetComponent<AudioSource>();
 
             //_animator.SetBool("greenLighting", true);
         }
@@ -107,6 +113,8 @@ namespace Assets.Scripts.Objects.Equipment.Doors
                 _animator.SetInteger("state", 2);
                 StartCoroutine(WaitForAnimation(OpeningClip.length, SwitchToOpened));
                 AnimationSwitchingBlocked = true;
+                _audioSource.clip = OpeningAudioClip;
+                _audioSource.Play();
             }
 
             if (State == DoorState.Closing && PrevDoorState != DoorState.Closing)
@@ -114,6 +122,9 @@ namespace Assets.Scripts.Objects.Equipment.Doors
                 StartCoroutine(WaitForAnimation(ClosingClip.length, SwitchToClosed));
                 AnimationSwitchingBlocked = true;
                 _animator.SetInteger("state", 0);
+
+                _audioSource.clip = ClosingAudioClip;
+                _audioSource.Play();
             }
 
             PrevDoorState = State;
@@ -203,7 +214,7 @@ namespace Assets.Scripts.Objects.Equipment.Doors
 
             if (!controller.ShouldStop)
             {
-                if (State == DoorState.Opened)
+                if (State == DoorState.Opened && Electrified)
                     State = DoorState.Closing;
 
                 Debug.Log("Coroutine!");
