@@ -98,7 +98,7 @@ namespace Assets.Scripts.Controllers
             return null;
         }
 
-        public void FindAll<T>(int x, int y, IList<T> list) where T : TileObject
+        public void FindAll<T>(int x, int y, IList<T> list) where T: class 
         {
             TileObject[] objects = GetObjects(x, y);
 
