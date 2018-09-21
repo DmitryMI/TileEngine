@@ -5,6 +5,8 @@ namespace Assets.Scripts.Objects.Equipment.Power
 {
     public class PowerStorageModule : Equipment
     {
+        [SerializeField] private float _powerStored = 0;
+        [SerializeField] private float _powerCapacity = 10000;
         [SerializeField] private float _maximumOutput;
 
         protected override bool Transperent
@@ -30,22 +32,20 @@ namespace Assets.Scripts.Objects.Equipment.Power
         protected override void Update()
         {
             base.Update();
-            
-            if(isServer && ServerController.Ready)
-                SendPower(_maximumOutput);
+
+            if (isServer && ServerController.Ready)
+            {
+                float send = Mathf.Min(_maximumOutput, _powerStored);
+                ProcessPower(send);
+            }
         }
 
         [Server]
-        private void SendPower(float watts)
+        private void ProcessPower(float watts)
         {
             IPowerSender connector = TileController.Find<IPowerSender>(Cell.x, Cell.y);
 
-            if (connector == null)
-            {
-                return;
-            }
-
-            IPowerConsumer[] consumers = connector.FindConsumers();
+            IPowerConsumer[] consumers = connector?.FindConsumers();
 
             if (consumers != null)
             {
@@ -57,11 +57,23 @@ namespace Assets.Scripts.Objects.Equipment.Power
                         Color.white);
 
                     if(consumer.AmountOfNeededPower < portion)
-                        consumer.SendPower(consumer.AmountOfNeededPower);
+                        //consumer.SendPower(consumer.AmountOfNeededPower);
+                        SendPowerTo(consumer, consumer.AmountOfNeededPower);
                     else
-                        consumer.SendPower(portion);
+                        //consumer.SendPower(portion);
+                        SendPowerTo(consumer, portion);
                     
                 }
+            }
+
+        }
+
+        private void SendPowerTo(IPowerConsumer consumer, float amount)
+        {
+            if (_powerStored >= amount)
+            {
+                consumer.SendPower(amount);
+                _powerStored -= amount;
             }
 
         }
