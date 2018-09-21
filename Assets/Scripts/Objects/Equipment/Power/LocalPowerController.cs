@@ -12,7 +12,7 @@ namespace Assets.Scripts.Objects.Equipment.Power
 
         [SerializeField] private SpriteRenderer _screenSpriteRenderer;
 
-        [SerializeField] private List<Vector2Int> _connectedCells;
+        [SerializeField] private List<Vector2Int> _connectedCellsRelative;
 
 
         public Direction WallPressDirection => _wallPressDirection;
@@ -59,8 +59,9 @@ namespace Assets.Scripts.Objects.Equipment.Power
         [Server]
         private void ElectrifyArea()
         {
-            foreach (var cell in _connectedCells)
+            foreach (var cellRelative in _connectedCellsRelative)
             {
+                Vector2Int cell = Cell + cellRelative;
                 List<IWirelessPowerable> powerables = new List<IWirelessPowerable>();
                 TileController.FindAll(cell.x, cell.y, powerables);
                 foreach (var powerable in powerables)
