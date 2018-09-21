@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 114425623217761240}
   - component: {fileID: 114073549342383660}
   - component: {fileID: 114449123566030652}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MetalFloor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,6 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TypeId: 17
+  CellOffsetComparisonTolerance: 0.001
   _cell: {x: 0, y: 0}
   _cellOffset: {x: 0, y: 0}
   Rotation: 0

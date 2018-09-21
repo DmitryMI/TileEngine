@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 114357597668239716}
   - component: {fileID: 114228935245521294}
   - component: {fileID: 114941547239057996}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: RedWire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,6 +55,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TypeId: 14
+  CellOffsetComparisonTolerance: 0.001
   _cell: {x: 0, y: 0}
   _cellOffset: {x: 0, y: 0}
   Rotation: 0

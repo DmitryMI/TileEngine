@@ -22,7 +22,8 @@ GameObject:
   - component: {fileID: 212143609353896486}
   - component: {fileID: 114197868555143156}
   - component: {fileID: 114441656376903132}
-  m_Layer: 0
+  - component: {fileID: 114055590492241128}
+  m_Layer: 12
   m_Name: PowerSpreader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,6 +43,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114055590492241128
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1403696137573916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2551358f7ebf8d4ebf2214b1292cd88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cell: {x: 0, y: 0}
+  _cellOffset: {x: 0, y: 0}
 --- !u!114 &114197868555143156
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -86,6 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TypeId: 0
+  CellOffsetComparisonTolerance: 0.001
   _cell: {x: 0, y: 0}
   _cellOffset: {x: 0, y: 0}
   Rotation: 0

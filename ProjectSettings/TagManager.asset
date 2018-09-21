@@ -15,9 +15,9 @@ TagManager:
   - 
   - VisionMasks
   - EditorOnly
-  - 
-  - 
-  - 
+  - Floor
+  - Walls
+  - Wiring
   - 
   - 
   - 
