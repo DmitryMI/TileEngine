@@ -38,6 +38,7 @@ namespace Assets.Scripts.Controllers
 
             _instance = this;
 
+            //Debug.Log("Starting memoty allocation");
             AllocateMemory();
         }
 
@@ -47,10 +48,12 @@ namespace Assets.Scripts.Controllers
             if (WasLoaded && ServerController.IsCellInBounds(x, y))
             {
                 _objects[x, y].Add(obj);
-
-                Item item = obj as Item;
-                if(item)
-                    _itemStackCollection.Add(item, new Vector2Int(x, y));
+                if (isServer)
+                {
+                    Item item = obj as Item;
+                    if (item)
+                        _itemStackCollection.Add(item, new Vector2Int(x, y));
+                }
             }
 
             if (!WasLoaded)
@@ -117,15 +120,21 @@ namespace Assets.Scripts.Controllers
 
         private IEnumerator WaitForAsyncAllocation()
         {
-            while(_allocationTask.IsCompleted)
+            while (_allocationTask.IsCompleted)
+            {
+                Debug.Log("Waiting for task completion");
                 yield return new WaitForEndOfFrame();
+            }
 
             WasLoaded = true;
         }
 
         private void AllocateMemory()
         {
-            _itemStackCollection = new ItemStackCollection();
+            if (isServer)
+            {
+                _itemStackCollection = new ItemStackCollection();
+            }
             _allocationTask = new Task(AllocateMemoryAsync, TaskCreationOptions.LongRunning);
             _allocationTask.Start();
 
@@ -147,12 +156,13 @@ namespace Assets.Scripts.Controllers
 
         private void Update()
         {
-            if (WasLoaded && ServerController.Ready)
+            if (WasLoaded && ServerController.Ready && isServer)
             {
                 SortItemStacks();
             }
         }
 
+        [Server]
         private void SortItemStacks()
         {
             if (_itemStackCollection.Length > 0)
@@ -164,6 +174,7 @@ namespace Assets.Scripts.Controllers
             }
         }
 
+        [Server]
         private void SortItemStack(ItemStack stack)
         {
             stack.SortStack();

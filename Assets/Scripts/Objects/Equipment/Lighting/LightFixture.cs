@@ -45,7 +45,8 @@ namespace Assets.Scripts.Objects.Equipment.Lighting
             if(isServer)
                 SetOffset();
 
-            UpdateElectro();
+            if(isServer)
+                UpdateElectro();
 
             UpdateSprite();
 
@@ -126,6 +127,7 @@ namespace Assets.Scripts.Objects.Equipment.Lighting
 
         public PowerablePriority Priority => PowerablePriority.Lighting;
 
+        [Server]
         private void UpdateElectro()
         {
             if (Time.frameCount - _prevElectroFrame > 2)

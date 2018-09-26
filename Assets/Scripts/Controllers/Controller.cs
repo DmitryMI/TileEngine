@@ -5,6 +5,7 @@ namespace Assets.Scripts.Controllers
 {
     public abstract class Controller : NetworkBehaviour, ILoadable
     {
+        [SerializeField]
         private bool _wasLoaded;
         protected bool WasLoaded
         {
@@ -12,8 +13,11 @@ namespace Assets.Scripts.Controllers
             set
             {
                 _wasLoaded = value;
-                if(_wasLoaded)
+                if (_wasLoaded)
+                {
+                    Debug.Log(this.GetType().Name + " finished loading!");
                     ServerController.ReportLoadingFinished();
+                }
             }
         }
 

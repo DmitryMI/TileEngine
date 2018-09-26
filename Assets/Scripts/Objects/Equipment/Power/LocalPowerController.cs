@@ -24,8 +24,6 @@ namespace Assets.Scripts.Objects.Equipment.Power
         protected override bool PassesGas => true;
         protected override bool CanWalkThrough => true;
 
-        private Vector2 _pressedCellOffset;
-
         [SerializeField]
         private float _powerStored = 500f;
 
@@ -60,11 +58,6 @@ namespace Assets.Scripts.Objects.Equipment.Power
         {
             base.Update();
 
-            if(isServer && ServerController.Ready)
-                SetOffset();
-
-            CellOffset = _pressedCellOffset;
-
             if (_charging)
             {
                 _screenSpriteRenderer.color = Color.green;
@@ -76,6 +69,7 @@ namespace Assets.Scripts.Objects.Equipment.Power
 
             if (isServer)
             {
+                SetOffset();
                 ElectrifyArea();
             }
         }
@@ -150,7 +144,7 @@ namespace Assets.Scripts.Objects.Equipment.Power
                     throw new ArgumentOutOfRangeException();
             }
 
-            _pressedCellOffset = cellOffset;
+            CellOffset = cellOffset;
         }
 
         public void SendPower(float power)

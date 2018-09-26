@@ -63,11 +63,10 @@ namespace Assets.Scripts.Objects
             WalkController = FindObjectOfType<WalkController>();
             AtmosController = FindObjectOfType<AtmosController>();
 
-            if (isServer)
-            {
+            
                 TileController = FindObjectOfType<TileController>();
                 StartCoroutine(WaitForServerController());
-            }
+            
         }
 
         IEnumerator WaitForServerController()

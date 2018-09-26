@@ -985,6 +985,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f5332f47e7dd814ebba208cd089a027, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _wasLoaded: 0
   _descriptiveText: {fileID: 784937059}
   _maxClickDelta: 1
   _activeHand: 0
@@ -1733,6 +1734,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b901f818e28d043ad8d09d3475a121, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _wasLoaded: 0
 --- !u!114 &62763782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12632,6 +12634,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f5377bf447b82b4cb2ed50d0e4c7a84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _wasLoaded: 0
   _displayWalkBlockers: 0
 --- !u!114 &555727684
 MonoBehaviour:
@@ -17922,6 +17925,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dce8101f017fbcd41ab31c5454d3532b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _wasLoaded: 0
   _minMouseOffset: 0.1
 --- !u!1001 &721277759
 Prefab:
@@ -41483,6 +41487,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd8f90581651b9439f2939717d14b60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _wasLoaded: 0
   _atmosProcessingEnabled: 0
   _visualizeGas: 0
   _gasList:
@@ -41522,7 +41527,7 @@ MonoBehaviour:
     i13: 0
     i14: 0
     i15: 0
-  m_ServerOnly: 0
+  m_ServerOnly: 1
   m_LocalPlayerAuthority: 0
 --- !u!1001 &1580730010
 Prefab:
@@ -54601,6 +54606,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 550d46bb831a6dc41ae09c3ab16f7e2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _wasLoaded: 0
   _maxSpawnPerFrame: 256
   _maskPrefab: {fileID: 114944299032662326, guid: aeb34f2de6606d243afccb2c80a66050,
     type: 2}

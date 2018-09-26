@@ -746,6 +746,8 @@ MonoBehaviour:
   _equipmentButton: {fileID: 114365992656790640}
   _lifeSupportButton: {fileID: 114272725779181438}
   _containmentButton: {fileID: 114198502452131166}
+  _buttonOnColor: {r: 0, g: 0.5471698, b: 0.058548015, a: 1}
+  _buttonOffColor: {r: 0.5943396, g: 0, b: 0, a: 1}
 --- !u!114 &114619264323631898
 MonoBehaviour:
   m_ObjectHideFlags: 1

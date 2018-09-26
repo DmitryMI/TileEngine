@@ -19,7 +19,7 @@ namespace Assets.Scripts.Controllers
         [SerializeField] private bool _debugSaveScene;
 
         //private MapManager _mapManager;
-        private int _notFinished;
+        private int _notFinished = Int32.MaxValue;
 
         private bool _gameReady = false;
 
@@ -33,12 +33,6 @@ namespace Assets.Scripts.Controllers
 
             LaunchGameplay();
         }
-
-        /*private bool LoadMap()
-        {
-            bool ok = _mapManager.LoadMapToScene("SavedScene.temap");
-            return ok;
-        }*/
 
         private void ClearScene()
         {
@@ -55,7 +49,11 @@ namespace Assets.Scripts.Controllers
         [Server]
         private void ApplyFixers()
         {
-            TileController.Current = GameObject.FindObjectOfType<TileController>();
+            if (TileController.Current == null)
+            {
+                TileController controller = GameObject.FindObjectOfType<TileController>();
+                TileController.Current = controller;
+            }
 
             TileObject[] tos = FindObjectsOfType<TileObject>();
 
@@ -106,10 +104,38 @@ namespace Assets.Scripts.Controllers
 
         IEnumerator WaitForLoadingFinished<T>(Action<T> action, T value)
         {
-            while(_notFinished > 0)
+            while (_notFinished > 0)
+            {
+                //Debug.Log("WAITING FOR CONTROLLERS. Left: " + _notFinished);
                 yield return new WaitForEndOfFrame();
+            }
 
+            //Debug.Log("ACTION!");
             action(value);
+        }
+
+        IEnumerator WaitForLoadingFinished<T1, T2>(Action<T1, T2> action, T1 value1, T2 value2)
+        {
+            while (_notFinished > 0)
+            {
+                //Debug.Log("WAITING FOR CONTROLLERS. Left: " + _notFinished);
+                yield return new WaitForEndOfFrame();
+            }
+
+            //Debug.Log("ACTION!");
+            action(value1, value2);
+        }
+
+        IEnumerator WaitForLoadingFinished<T1, T2, T3>(Action<T1, T2, T3> action, T1 value1, T2 value2, T3 value3)
+        {
+            while (_notFinished > 0)
+            {
+                //Debug.Log("WAITING FOR CONTROLLERS. Left: " + _notFinished);
+                yield return new WaitForEndOfFrame();
+            }
+
+            //Debug.Log("ACTION!");
+            action(value1, value2, value3);
         }
 
         private void SpawnPlayerImmediately(Player player)
@@ -139,12 +165,19 @@ namespace Assets.Scripts.Controllers
             }
         }
 
+        
+
         [ClientRpc]
-        private void RpcSetPlayerSpawned(GameObject playerGo, int x, int y, Vector2 ofset)
+        private void RpcSetPlayerSpawned(GameObject playerGo, int x, int y, Vector2 offset)
         {
             Player player = playerGo.GetComponent<Player>();
-            player.Cell = new Vector2Int(x, y);
-            player.CellOffset = ofset;
+            StartCoroutine(WaitForLoadingFinished(SetPlayerSpawnedImmediately, player, new Vector2Int(x, y), offset));
+        }
+
+        private void SetPlayerSpawnedImmediately(Player player, Vector2Int cell, Vector2 offset)
+        {
+            player.Cell = cell;
+            player.CellOffset = offset;
             player.Spawned = true;
         }
 
