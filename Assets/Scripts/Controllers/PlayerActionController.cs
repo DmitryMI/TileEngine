@@ -248,6 +248,7 @@ namespace Assets.Scripts.Controllers
                 UpdateMouseCell();
                 UpdateUiElementUnderCursor();
             }
+
         }
 
         private void LateUpdate()

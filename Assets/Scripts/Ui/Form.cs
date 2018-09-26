@@ -1,11 +1,9 @@
-﻿using Assets.Scripts;
-using Assets.Scripts.Ui;
+﻿using Assets._MapEditor.Scripts;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-
-namespace Assets._MapEditor.Scripts
+namespace Assets.Scripts.Ui
 {
 
     [RequireComponent(typeof(Image))]
@@ -32,12 +30,16 @@ namespace Assets._MapEditor.Scripts
 
         private Vector2 _prevSize;
 
-        private void Start()
+        protected virtual void Start()
         {
             _inputModule = (CustomInputModule)EventSystem.current.currentInputModule;
             _rectTransform = GetComponent<RectTransform>();
-            _collapseButton.SetParentForm(this);
-            _collapseButton.SetAction(CollapseButtonClick);
+
+            if (_collapseButton != null)
+            {
+                _collapseButton.SetParentForm(this);
+                _collapseButton.SetAction(CollapseButtonClick);
+            }
         }
 
         private void CollapseButtonClick()
@@ -144,6 +146,11 @@ namespace Assets._MapEditor.Scripts
         public void OnDragEnd(IDropReceiver receiver, IPointerDataProvider pointerDataProvider)
         {
             
+        }
+
+        protected void Close()
+        {
+            Destroy(this.gameObject);
         }
     }
 }

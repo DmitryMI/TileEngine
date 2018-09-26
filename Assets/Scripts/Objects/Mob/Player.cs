@@ -339,7 +339,7 @@ namespace Assets.Scripts.Objects.Mob
 
         #region ObjectsCommunication
 
-        public void SendDataToServer(IReceiver sender, IReceiver receiver, byte[] data)
+        public void SendDataToServer(INetworkDataReceiver sender, INetworkDataReceiver receiver, byte[] data)
         {
             CmdSendByteArray(sender.gameObject, receiver.gameObject, data);
         }
@@ -347,8 +347,8 @@ namespace Assets.Scripts.Objects.Mob
         [Command]
         private void CmdSendByteArray(GameObject senderGo, GameObject receiverGo, byte[] data)
         {
-            IReceiver sender = senderGo.GetComponent<IReceiver>();
-            IReceiver receiver = receiverGo.GetComponent<IReceiver>();
+            INetworkDataReceiver sender = senderGo.GetComponent<INetworkDataReceiver>();
+            INetworkDataReceiver receiver = receiverGo.GetComponent<INetworkDataReceiver>();
             receiver.ReceiveData(sender, data);
         }
 

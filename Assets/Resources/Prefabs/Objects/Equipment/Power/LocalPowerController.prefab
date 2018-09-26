@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 114497418214668336}
   - component: {fileID: 114591668787343180}
   - component: {fileID: 114497790408836320}
+  - component: {fileID: 61375325084958578}
   m_Layer: 0
   m_Name: LocalPowerController
   m_TagString: Untagged
@@ -53,7 +54,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1527261055776920}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 16.199997, y: 3, z: 0}
+  m_LocalPosition: {x: 17, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4591491988727462}
@@ -73,6 +74,31 @@ Transform:
   m_Father: {fileID: 4257008662567596}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &61375325084958578
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1527261055776920}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.47826087, y: 0.36956522}
+    newSize: {x: 0.22, y: 0.17}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.47826087, y: 0.36956522}
+  m_EdgeRadius: 0
 --- !u!114 &114497418214668336
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -128,10 +154,13 @@ MonoBehaviour:
   _wallPressDirection: 2
   _pressedOffset: 0.8
   _screenSpriteRenderer: {fileID: 212360313111511092}
-  _connectedCells:
-  - {x: 68, y: 51}
-  - {x: 69, y: 53}
-  _powerStored: 999.978
+  _connectedCellsRelative:
+  - {x: 1, y: -2}
+  - {x: 1, y: 2}
+  - {x: 2, y: 0}
+  _terminalPrefab: {fileID: 114564969553017718, guid: cda379f332402b24ea3eb43e7600a705,
+    type: 2}
+  _powerStored: 0
   _powerCapacity: 1000
 --- !u!114 &114591668787343180
 MonoBehaviour:

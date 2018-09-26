@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Ui
 {
-    class DagAndDropManager : MonoBehaviour
+    class DragAndDropManager : Controller
     {
         [SerializeField] private float _minMouseOffset;
         private IDragable _currentDragable;
@@ -20,12 +20,12 @@ namespace Assets.Scripts.Ui
 
         private void Start()
         {
-            FindPointerDataProvider();
+            
         }
 
         private void FindPointerDataProvider()
         {
-            MonoBehaviour[] controllers = FindObjectsOfType<MonoBehaviour>();
+            Controller[] controllers = FindObjectsOfType<Controller>();
 
             foreach (var controller in controllers)
             {
@@ -37,6 +37,9 @@ namespace Assets.Scripts.Ui
 
         void Update()
         {
+            if(!WasLoaded)
+                return;
+
             mousePressed = _pointerDataProvider.CurrentLmbState;
             bool prevMousePressed = _pointerDataProvider.PrevLmbState;
 
@@ -110,6 +113,12 @@ namespace Assets.Scripts.Ui
             result = to as IDragable;
 
             return result;
+        }
+
+        public override void OnGameLoaded(IServerDataProvider controller)
+        {
+            FindPointerDataProvider();
+            WasLoaded = true;
         }
     }
 }

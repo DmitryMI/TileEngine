@@ -6,10 +6,10 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public interface IReceiver
+    public interface INetworkDataReceiver
     {
         // ReSharper disable once InconsistentNaming
         GameObject gameObject { get; }
-        void ReceiveData(IReceiver sender, object data);
+        void ReceiveData(INetworkDataReceiver sender, byte[] data);
     }
 }

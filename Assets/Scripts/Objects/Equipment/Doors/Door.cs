@@ -29,7 +29,8 @@ namespace Assets.Scripts.Objects.Equipment.Doors
             PrevElectrificationFrame = Time.frameCount;
         }
 
-        public PowerablePriority Priority = PowerablePriority.Containment;
+
+        public PowerablePriority Priority => PowerablePriority.Containment;
 
         protected override void Update()
         {
