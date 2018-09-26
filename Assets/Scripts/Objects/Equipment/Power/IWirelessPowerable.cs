@@ -15,5 +15,7 @@ namespace Assets.Scripts.Objects.Equipment.Power
         void Electrify();
 
         GameObject gameObject { get; }
+
+        PowerablePriority Priority { get; }
     }
 }

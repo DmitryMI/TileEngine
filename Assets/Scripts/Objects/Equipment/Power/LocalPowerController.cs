@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 namespace Assets.Scripts.Objects.Equipment.Power
 {
-    public class LocalPowerController : Equipment, IPowerConsumer, IWallPlaceable
+    public class LocalPowerController : Equipment, IPowerConsumer, IWallPlaceable, IPlayerInteractable
     {
         [SerializeField] [SyncVar] private Direction _wallPressDirection;
         [SerializeField] private float _pressedOffset;
@@ -131,6 +131,23 @@ namespace Assets.Scripts.Objects.Equipment.Power
         private float CalculateNeededPower()
         {
             return Mathf.Max(10, _powerCapacity - _powerStored);
+        }
+
+        // Interaction
+        public void ApplyItemClient(Item.Item item)
+        {
+            if (item == null)
+            {
+                // Show terminal
+            }
+
+            // TODO Tool interaction
+            ApplyItemServer(item);
+        }
+
+        public void ApplyItemServer(Item.Item item)
+        {
+            throw new NotImplementedException();
         }
     }
 }

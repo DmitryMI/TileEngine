@@ -124,6 +124,8 @@ namespace Assets.Scripts.Objects.Equipment.Lighting
             _prevElectroFrame = Time.frameCount;
         }
 
+        public PowerablePriority Priority => PowerablePriority.Lighting;
+
         private void UpdateElectro()
         {
             if (Time.frameCount - _prevElectroFrame > 2)
