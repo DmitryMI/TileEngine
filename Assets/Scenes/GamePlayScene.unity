@@ -37224,6 +37224,11 @@ Prefab:
       propertyPath: _spawnMixture.Array.data[0]._substanceId
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 114770881806345700, guid: a29d5f36d4165ea46bd412a81f98c017,
+        type: 2}
+      propertyPath: _spawnMixture.Array.data[0]._volume
+      value: 16
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a29d5f36d4165ea46bd412a81f98c017, type: 2}
   m_IsPrefabAsset: 0
@@ -43285,7 +43290,7 @@ Prefab:
     - target: {fileID: 114770881806345700, guid: a29d5f36d4165ea46bd412a81f98c017,
         type: 2}
       propertyPath: _spawnMixture.Array.data[0]._volume
-      value: 10
+      value: 48
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a29d5f36d4165ea46bd412a81f98c017, type: 2}

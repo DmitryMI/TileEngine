@@ -24,8 +24,6 @@ namespace Assets.Scripts.Objects.Item.Chem
         protected override void Start()
         {
             base.Start();
-
-            DoReactions();
         }
 
         protected override void Update()
@@ -36,8 +34,8 @@ namespace Assets.Scripts.Objects.Item.Chem
                 UpdateColorAndVolume();
 
             UpdateFiller();
-
-            if(ServerController.Current.Ready)
+            
+            if(ServerController.Current != null && ServerController.Current.Ready)
                 DoReactions();
         }
 

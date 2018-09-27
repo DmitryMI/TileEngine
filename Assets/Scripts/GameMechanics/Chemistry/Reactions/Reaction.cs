@@ -32,10 +32,22 @@ namespace Assets.Scripts.GameMechanics.Chemistry.Reactions
             for (int i = 0; i < reagentsIndexes.Length; i++)
             {
                 int reagentIndex = reagentsIndexes[i];
+                if (reagentIndex < 0 || reagentIndex > mixture.Count)
+                {
+                    return;
+                }
                 SubstanceInfo substanceInfo = mixture[reagentIndex];
                 float reactionVolume = factor * reaction.Reagents[i].Mole;
                 substanceInfo.Volume -= reactionVolume;
-                mixture[reagentIndex] = substanceInfo;
+
+                if (substanceInfo.Volume > 0)
+                {
+                    mixture[reagentIndex] = substanceInfo;
+                }
+                else
+                {
+                    mixture.RemoveAt(reagentIndex);
+                }
             }
 
             SubstanceMixture additions = new SubstanceMixture(0, mixture.Temperature + reaction.TermalFactor * factor);
@@ -44,7 +56,7 @@ namespace Assets.Scripts.GameMechanics.Chemistry.Reactions
             {
                 int id = ChemistryController.Current.GetSubstance(reaction.Results[i].SubstanceName).Id;
                 if (id != -1) 
-                    additions.Add(new SubstanceInfo(id, factor));
+                    additions.Add(new SubstanceInfo(id, factor * reaction.Results[i].Mole));
             }
 
             mixture.Concatinate(additions);
