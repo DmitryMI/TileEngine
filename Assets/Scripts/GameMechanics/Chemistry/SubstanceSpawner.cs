@@ -16,6 +16,7 @@ namespace Assets.Scripts.GameMechanics.Chemistry
         [SerializeField] private Item _target;
 
         [SerializeField] private SubstanceInfo[] _spawnMixture;
+        [SerializeField] private float _temperature;
 
         void Start()
         {
@@ -41,7 +42,7 @@ namespace Assets.Scripts.GameMechanics.Chemistry
                     container = _target as ISubstanceContainer;
                 }
 
-                SubstanceMixture mixture = new SubstanceMixture(_spawnMixture.Length);
+                SubstanceMixture mixture = new SubstanceMixture(_spawnMixture.Length, _temperature);
 
                 mixture.AddRange(_spawnMixture);
 

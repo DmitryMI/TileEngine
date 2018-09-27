@@ -16,10 +16,13 @@ namespace Assets.Scripts.GameMechanics.Chemistry
 
         private bool _wasModified;
         private float _volume;
+        private float _temperature;
 
-        public SubstanceMixture(int capacity = 0)
+        public SubstanceMixture(int capacity = 0, float temperature = 0)
         {
             _listImplementation = new List<SubstanceInfo>(capacity);
+
+            _temperature = 0;
         }
 
         public float Volume
@@ -30,6 +33,12 @@ namespace Assets.Scripts.GameMechanics.Chemistry
                     RecalculateValues();
                 return _volume;
             }
+        }
+
+        public float Temperature
+        {
+            get { return _temperature; }
+            set { _temperature = value; }
         }
 
         public SubstanceMixture SubtractPart(float part)
@@ -78,8 +87,12 @@ namespace Assets.Scripts.GameMechanics.Chemistry
             return mixture;
         }
 
-        public void Concatinate(IList<SubstanceInfo> otherMixture)
+        public void Concatinate(SubstanceMixture otherMixture)
         {
+
+            _temperature = (_temperature * Volume + otherMixture.Temperature * otherMixture.Volume) /
+                           (Volume + otherMixture.Volume);
+
             foreach (var substanceInfo in otherMixture)
             {
                 int index = IndexOfSubstance(substanceInfo.SubstanceId);
@@ -92,9 +105,9 @@ namespace Assets.Scripts.GameMechanics.Chemistry
                 else
                 {
                     SubstanceInfo info = _listImplementation[index];
-                    info.Temperature = (substanceInfo.Temperature * substanceInfo.Volume + info.Temperature * info.Volume) / 
-                        (info.Volume + substanceInfo.Volume);
-
+                    /*info.Temperature = (substanceInfo.Temperature * substanceInfo.Volume + info.Temperature * info.Volume) / 
+                        (info.Volume + substanceInfo.Volume);*/
+                        
                     info.Volume += substanceInfo.Volume;
                     _listImplementation[index] = info;
                 }

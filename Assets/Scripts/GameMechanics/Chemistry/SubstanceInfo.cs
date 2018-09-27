@@ -14,14 +14,11 @@ namespace Assets.Scripts.GameMechanics.Chemistry
         private float _volume;
         [SerializeField]
         private int _substanceId;
-        [SerializeField]
-        private float _temperature;
 
-        public SubstanceInfo(int id, float volume, float temperature = 0)
+        public SubstanceInfo(int id, float volume)
         {
             _substanceId = id;
             _volume = volume;
-            _temperature = temperature;
         }
 
         public int SubstanceId => _substanceId;
@@ -32,18 +29,6 @@ namespace Assets.Scripts.GameMechanics.Chemistry
             set { _volume = value; }
         }
 
-        public float Temperature
-        {
-            get { return _temperature; }
-            set { _temperature = value; }
-        }
-
-        public float TemperatureCelsium
-        {
-            get { return _temperature + 274.15f; }
-        }
-
-
         public int CompareTo(object obj)
         {
             SubstanceInfo other = (SubstanceInfo)obj;
@@ -52,7 +37,7 @@ namespace Assets.Scripts.GameMechanics.Chemistry
 
         public override string ToString()
         {
-            return $"Id: {_substanceId}, Volume: {_volume}, Temperature: {_temperature}";
+            return $"Id: {_substanceId}, Volume: {_volume}";
         }
     }
 }
