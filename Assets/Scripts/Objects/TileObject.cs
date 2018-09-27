@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Assets.Scripts.Controllers;
 using Assets.Scripts.Controllers.Atmos;
+using Assets.Scripts.GameMechanics;
 using Assets.Scripts.Objects.Equipment.Power;
 using UnityEngine;
 using UnityEngine.Networking;

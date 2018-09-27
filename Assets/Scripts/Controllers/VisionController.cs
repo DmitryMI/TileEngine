@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Assets.Scripts.GameMechanics;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
@@ -28,7 +29,6 @@ namespace Assets.Scripts.Controllers
 
         private int[,] _blockersCount;
 
-        private VisionMaskData[,] _maskData;
         private VisionMask[,] _masks;
         private List<LightSourceInfo> _tempLightSourceInfos = new List<LightSourceInfo>();
 
@@ -62,7 +62,6 @@ namespace Assets.Scripts.Controllers
 
             _blockersCount = new int[controller.MapSize.x, controller.MapSize.y];
             _masks = new VisionMask[controller.MapSize.x, controller.MapSize.y];
-            _maskData = new VisionMaskData[controller.MapSize.x, controller.MapSize.y];
 
             if (_maskPrefab == null)
             {

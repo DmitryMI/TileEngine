@@ -1,8 +1,6 @@
 ﻿using Assets.Scripts.Objects;
-using UnityEngine;
-using UnityEngine.Networking;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.GameMechanics
 {
     public class SpawnPoint : TileObject
     {

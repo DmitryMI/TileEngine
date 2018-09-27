@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Assets.Scripts.Controllers;
-using Assets.Scripts.Objects.Equipment.Tables;
 using UnityEngine;
-using UnityEngine.Networking;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.GameMechanics
 {
     [Serializable]
     class SpatialVariativity

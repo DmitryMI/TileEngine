@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Assets.Scripts.Controllers;
 using Assets.Scripts.Objects.Item;
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.GameMechanics
 {
     class ItemStackCollectionEnumerator : IEnumerator<ItemStack>
     {

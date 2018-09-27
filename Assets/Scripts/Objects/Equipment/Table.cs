@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Controllers;
+using Assets.Scripts.GameMechanics;
 using Assets.Scripts.Objects.Mob;
 using UnityEngine;
 

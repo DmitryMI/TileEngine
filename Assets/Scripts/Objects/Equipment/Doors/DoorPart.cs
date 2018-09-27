@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.GameMechanics;
+using UnityEngine;
 
 namespace Assets.Scripts.Objects.Equipment.Doors
 {

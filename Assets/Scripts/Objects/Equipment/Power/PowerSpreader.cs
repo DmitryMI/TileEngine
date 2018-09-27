@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Assets.Scripts.Controllers;
+using Assets.Scripts.GameMechanics;
 using UnityEngine;
 
 namespace Assets.Scripts.Objects.Equipment.Power

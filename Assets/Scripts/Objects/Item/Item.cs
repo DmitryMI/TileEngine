@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Assets.Scripts.Controllers;
+using Assets.Scripts.GameMechanics;
 using Assets.Scripts.HumanAppearance;
 using Assets.Scripts.Ui;
 using UnityEngine;

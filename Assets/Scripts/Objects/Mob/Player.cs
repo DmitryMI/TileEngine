@@ -1,5 +1,6 @@
 ﻿using System;
 using Assets.Scripts.Controllers;
+using Assets.Scripts.GameMechanics;
 using Assets.Scripts.HumanAppearance;
 using UnityEngine;
 using UnityEngine.Networking;

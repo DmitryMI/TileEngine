@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using Assets.Scripts.GameMechanics;
 using Assets.Scripts.Objects.Equipment.Power;
 using UnityEngine;
 using UnityEngine.Networking;

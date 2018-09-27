@@ -1,4 +1,5 @@
 ﻿using System;
+using Assets.Scripts.GameMechanics;
 using UnityEngine;
 
 namespace Assets.Scripts.Objects.Mob

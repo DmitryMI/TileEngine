@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Objects.Equipment.Tables;
+﻿using Assets.Scripts.GameMechanics;
+using Assets.Scripts.Objects.Equipment.Tables;
 using UnityEngine;
 using UnityEngine.Networking;
 

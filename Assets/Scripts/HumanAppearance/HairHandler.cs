@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Assets.Scripts.HumanAppearance;
-using Assets.Scripts.Objects;
+using Assets.Scripts.GameMechanics;
 using Assets.Scripts.Objects.Mob;
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.HumanAppearance
 {
     public class HairHandler : MonoBehaviour
     {

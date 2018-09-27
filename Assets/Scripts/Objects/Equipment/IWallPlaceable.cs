@@ -1,4 +1,6 @@
-﻿namespace Assets.Scripts.Objects.Equipment
+﻿using Assets.Scripts.GameMechanics;
+
+namespace Assets.Scripts.Objects.Equipment
 {
     interface IWallPlaceable
     {

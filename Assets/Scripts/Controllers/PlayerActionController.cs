@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.GameMechanics;
 using Assets.Scripts.Objects;
 using Assets.Scripts.Objects.Item;
 using Assets.Scripts.Objects.Mob;

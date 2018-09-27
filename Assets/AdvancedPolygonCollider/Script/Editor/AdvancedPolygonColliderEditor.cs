@@ -5,14 +5,14 @@ using System.Collections;
 
 namespace DigitalRuby.AdvancedPolygonCollider
 {
-    [CustomEditor(typeof(AdvancedPolygonCollider))]
+    [CustomEditor(typeof(Assets.AdvancedPolygonCollider.Script.AdvancedPolygonCollider))]
     public class AdvancedPolygonColliderEditor : Editor
     {
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
 
-            AdvancedPolygonCollider c = target as AdvancedPolygonCollider;
+            Assets.AdvancedPolygonCollider.Script.AdvancedPolygonCollider c = target as Assets.AdvancedPolygonCollider.Script.AdvancedPolygonCollider;
             if (c != null)
             {
                 EditorGUILayout.LabelField("Vertices: " + c.VerticesCount);

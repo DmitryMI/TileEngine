@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Assets.Scripts.Objects.Item;
-using Assets.Scripts.Objects.Mob;
+﻿using Assets.Scripts.Objects.Item;
 using UnityEngine;
-using UnityEngine.Networking;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.GameMechanics
 {
     public interface IPlayerInteractable
     {
