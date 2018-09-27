@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Assets.Scripts.Controllers.Atmos
 {
@@ -59,7 +60,7 @@ namespace Assets.Scripts.Controllers.Atmos
         public int CompareTo(object obj)
         {
             GasInfo other = (GasInfo) obj;
-            return _gasId - other._gasId;
+            return Mathf.Clamp(_gasId - other._gasId, -1, 1);
         }
     }
 }

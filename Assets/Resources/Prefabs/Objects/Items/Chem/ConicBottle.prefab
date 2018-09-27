@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 114815401281505650}
   - component: {fileID: 114137721524164936}
   - component: {fileID: 60468562673201710}
+  - component: {fileID: 114770881806345700}
   m_Layer: 0
   m_Name: ConicBottle
   m_TagString: Untagged
@@ -133,14 +134,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TypeId: 0
+  CellOffsetComparisonTolerance: 0.001
   _cell: {x: 0, y: 0}
   _cellOffset: {x: 0, y: 0}
   Rotation: 0
   _descriptiveName: 
   ItemHolder: {fileID: 0}
+  _layersNeeded: 1
+  _sortingOrder: 0
   _filler: {fileID: 114889167356639444}
-  _fillValue: 0
   _color: {r: 0, g: 0, b: 0, a: 0}
+  _maxVolume: 50
+  _transferAmount: 5
+--- !u!114 &114770881806345700
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1832923945970782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcb0187f8445a1b43b3c9a137704ef8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spawnMixture:
+  - _volume: 25
+    _substanceId: 1
+    _temperature: 0
 --- !u!114 &114815401281505650
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -219,7 +239,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1109985509
-  m_SortingLayer: 7
+  m_SortingLayer: 8
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 1e124be9b4035ad4491987451a1ccb0c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -265,7 +285,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1109985509
-  m_SortingLayer: 7
+  m_SortingLayer: 8
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 63a5ab3b470364048a4814f07f619096, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
