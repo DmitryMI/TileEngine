@@ -32,7 +32,7 @@ namespace Assets.Scripts.GameMechanics.Chemistry.Reactions
             for (int i = 0; i < reagentsIndexes.Length; i++)
             {
                 int reagentIndex = reagentsIndexes[i];
-                if (reagentIndex < 0 || reagentIndex > mixture.Count)
+                if (reagentIndex < 0 || reagentIndex >= mixture.Count || mixture.Count == 0)
                 {
                     return;
                 }
