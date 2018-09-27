@@ -37219,6 +37219,11 @@ Prefab:
       propertyPath: m_Name
       value: ConicBottle (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 114770881806345700, guid: a29d5f36d4165ea46bd412a81f98c017,
+        type: 2}
+      propertyPath: _spawnMixture.Array.data[0]._substanceId
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a29d5f36d4165ea46bd412a81f98c017, type: 2}
   m_IsPrefabAsset: 0
@@ -43275,7 +43280,7 @@ Prefab:
     - target: {fileID: 114770881806345700, guid: a29d5f36d4165ea46bd412a81f98c017,
         type: 2}
       propertyPath: _spawnMixture.Array.data[0]._substanceId
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114770881806345700, guid: a29d5f36d4165ea46bd412a81f98c017,
         type: 2}
@@ -56792,6 +56797,15 @@ MonoBehaviour:
   - Id: 2
     Name: Coca-cola
     Color: {r: 0.31132078, g: 0, b: 0, a: 1}
+  - Id: 3
+    Name: Hydrogen
+    Color: {r: 0.745283, g: 0.745283, b: 0.745283, a: 1}
+  - Id: 4
+    Name: Nitrogen
+    Color: {r: 0.6556604, g: 1, b: 0.9403554, a: 1}
+  - Id: 5
+    Name: Ammonia
+    Color: {r: 0.31132078, g: 0.26666668, b: 0, a: 1}
 --- !u!114 &2138953691
 MonoBehaviour:
   m_ObjectHideFlags: 0

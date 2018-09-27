@@ -22,10 +22,10 @@ namespace Assets.Scripts.GameMechanics.Chemistry
                 return Color.clear;
             }
 
-            Color color = GetSubstanceById(list[0].SubstanceId).Color * list.GetElementPart(0);
+            Color color = GetSubstance(list[0].SubstanceId).Color * list.GetElementPart(0);
             for (int i = 1; i < list.Count; i++)
             {
-                Color elementColor = GetSubstanceById(list[i].SubstanceId).Color * list.GetElementPart(i);
+                Color elementColor = GetSubstance(list[i].SubstanceId).Color * list.GetElementPart(i);
                 color += elementColor;
             }
 
@@ -45,11 +45,22 @@ namespace Assets.Scripts.GameMechanics.Chemistry
             WasLoaded = true;
         }
 
-        public Substance GetSubstanceById(int id)
+        public Substance GetSubstance(int id)
         {
             foreach (var substance in _registeredSubstances)
             {
                 if (substance.Id == id)
+                    return substance;
+            }
+
+            return Substance.IncorrectSubstance;
+        }
+
+        public Substance GetSubstance(string substName)
+        {
+            foreach (var substance in _registeredSubstances)
+            {
+                if (substance.Name == substName)
                     return substance;
             }
 

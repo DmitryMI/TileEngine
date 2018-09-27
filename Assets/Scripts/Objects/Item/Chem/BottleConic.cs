@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Assets.Scripts.Controllers;
 using Assets.Scripts.GameMechanics.Chemistry;
+using Assets.Scripts.GameMechanics.Chemistry.Reactions;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -23,6 +24,8 @@ namespace Assets.Scripts.Objects.Item.Chem
         protected override void Start()
         {
             base.Start();
+
+            DoReactions();
         }
 
         protected override void Update()
@@ -33,6 +36,15 @@ namespace Assets.Scripts.Objects.Item.Chem
                 UpdateColorAndVolume();
 
             UpdateFiller();
+
+            if(ServerController.Current.Ready)
+                DoReactions();
+        }
+
+        [Server]
+        private void DoReactions()
+        {
+            Reaction.React(_mixture);
         }
 
         private void UpdateFiller()
