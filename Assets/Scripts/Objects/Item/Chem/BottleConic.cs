@@ -105,25 +105,7 @@ namespace Assets.Scripts.Objects.Item.Chem
             }
             else
             {
-                //concatinationMixture = new SubstanceMixture();
                 concatinationMixture = incomingMixture.SubtractVolume(remainingVolume);
-
-                //foreach (var substanceInfo in incomingMixture)
-                /*for(int i = 0; i < incomingMixture.Count; i++)
-                {
-                    SubstanceInfo substanceInfo = incomingMixture[i];
-                    float partInMixture = incomingMixture.GetElementPart(i);
-                    SubstanceInfo nInfo = substanceInfo;
-                    nInfo.Volume *= partInMixture * remainingVolume;
-                    substanceInfo.Volume -= nInfo.Volume;
-                    concatinationMixture.Add(nInfo);
-
-                    if(substanceInfo.Volume > 0)
-                        incomingMixture[i] = substanceInfo;
-                    else
-                        incomingMixture.RemoveAt(i);
-                }*/
-
             }
 
             _mixture.Concatinate(concatinationMixture);
