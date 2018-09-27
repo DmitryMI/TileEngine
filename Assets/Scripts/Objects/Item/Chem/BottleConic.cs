@@ -105,10 +105,11 @@ namespace Assets.Scripts.Objects.Item.Chem
             }
             else
             {
-                concatinationMixture = new SubstanceMixture();
+                //concatinationMixture = new SubstanceMixture();
+                concatinationMixture = incomingMixture.SubtractVolume(remainingVolume);
 
                 //foreach (var substanceInfo in incomingMixture)
-                for(int i = 0; i < incomingMixture.Count; i++)
+                /*for(int i = 0; i < incomingMixture.Count; i++)
                 {
                     SubstanceInfo substanceInfo = incomingMixture[i];
                     float partInMixture = incomingMixture.GetElementPart(i);
@@ -121,7 +122,8 @@ namespace Assets.Scripts.Objects.Item.Chem
                         incomingMixture[i] = substanceInfo;
                     else
                         incomingMixture.RemoveAt(i);
-                }
+                }*/
+
             }
 
             _mixture.Concatinate(concatinationMixture);
@@ -142,7 +144,7 @@ namespace Assets.Scripts.Objects.Item.Chem
             }
             else
             {
-
+                Debug.Log("Amount: " + amount);
                 SubstanceMixture subtractedMixture = _mixture.SubtractVolume(amount);
 
                 otherContainer.TransferInto(subtractedMixture);

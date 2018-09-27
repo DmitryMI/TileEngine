@@ -26,7 +26,7 @@ namespace Assets.Scripts.GameMechanics.Chemistry
         {
             get
             {
-                //if(_wasModified)
+                if(_wasModified)
                     RecalculateValues();
                 return _volume;
             }
@@ -62,14 +62,17 @@ namespace Assets.Scripts.GameMechanics.Chemistry
 
             SubstanceMixture mixture = new SubstanceMixture(_listImplementation.Count);
 
+            float volumeTmp = Volume;
+
             for (int i = 0; i < _listImplementation.Count; i++)
             {
                 SubstanceInfo info = _listImplementation[i];
                 SubstanceInfo subtracted = info;
-                subtracted.Volume = volume * GetElementPart(i);
+                subtracted.Volume = volume * info.Volume / volumeTmp;
                 info.Volume -= subtracted.Volume;
-                mixture.Add(subtracted);
                 _listImplementation[i] = info;
+
+                mixture.Add(subtracted);
             }
 
             return mixture;
@@ -96,6 +99,8 @@ namespace Assets.Scripts.GameMechanics.Chemistry
                     _listImplementation[index] = info;
                 }
             }
+
+            _wasModified = true;
         }
 
         public int IndexOfSubstance(int substanceId)

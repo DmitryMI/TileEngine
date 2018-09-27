@@ -140,12 +140,13 @@ MonoBehaviour:
   Rotation: 0
   _descriptiveName: 
   ItemHolder: {fileID: 0}
-  _layersNeeded: 1
+  _layersNeeded: 2
   _sortingOrder: 0
   _filler: {fileID: 114889167356639444}
   _color: {r: 0, g: 0, b: 0, a: 0}
   _maxVolume: 50
   _transferAmount: 5
+  _volume: 0
 --- !u!114 &114770881806345700
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -157,6 +158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcb0187f8445a1b43b3c9a137704ef8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _target: {fileID: 0}
   _spawnMixture:
   - _volume: 25
     _substanceId: 1
