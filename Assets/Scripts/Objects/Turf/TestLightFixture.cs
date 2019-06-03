@@ -55,7 +55,7 @@ namespace Assets.Scripts.Objects.Turf
         private void UpdateVisionController()
         {
             LightSourceInfo info = new LightSourceInfo(Cell.x, Cell.y, _color, _range, _initialIntensity, _intensityDecrement);
-            VisionController.SetLightSource(info);
+            VisionController.SetLightForOneFrame(info);
         }
 
         public override string ToMap()

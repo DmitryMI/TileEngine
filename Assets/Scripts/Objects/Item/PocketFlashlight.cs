@@ -10,7 +10,7 @@ using UnityEngine.Networking;
 
 namespace Assets.Scripts.Objects.Item
 {
-    class PocketFlashlight : Item
+    class PocketFlashlight : Item, ILightInfo
     {
         [SerializeField]
         private float _range;
@@ -30,43 +30,49 @@ namespace Assets.Scripts.Objects.Item
         [SerializeField] private bool _isOn;
 
         private SpriteRenderer _renderer;
+        private int _lightSourceId;
+        private bool _prevState;
 
         protected override void Start()
         {
             base.Start();
 
             _renderer = GetComponent<SpriteRenderer>();
+            _prevState = _isOn;
+
+            //_lightSourceInfo = new LightSourceInfo(PositionProvider, Color.white, _range, );
+
+            _lightSourceId = VisionController.SetLightContinuous(this);
+            OnLightingStateChange(_isOn);
         }
 
         protected override void Update()
         {
             base.Update();
 
-            UpdateLightController();
-        }
-
-        private void UpdateLightController()
-        {
-            if (_isOn)
+            if (_isOn != _prevState)
             {
-                LightSourceInfo info;
+                OnLightingStateChange(_isOn);
+            }
 
-                if (Holder == null)
-                {
-                    info = new LightSourceInfo(Cell.x, Cell.y, _color, _range, _initialIntensity, _intensityDecrement);
-                }
-                else
-                {
-                    TileObject holdingTo = Holder.GetComponent<TileObject>();
-                    info = new LightSourceInfo(holdingTo.Cell.x, holdingTo.Cell.y, _color, _range, _initialIntensity, _intensityDecrement);
-                }
-
-                VisionController.SetLightSource(info);
-
+            _prevState = _isOn;
+        }
+        
+        private void OnLightingStateChange(bool lightEnabled)
+        {
+            if (lightEnabled)
+            {
                 _renderer.sprite = _onSprite;
             }
             else
+            {
                 _renderer.sprite = _offSprite;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            VisionController.RemoveLightById(_lightSourceId);
         }
 
         public override void ApplyItemServer(Item item)
@@ -74,6 +80,7 @@ namespace Assets.Scripts.Objects.Item
             if (item == this)
             {
                 _isOn = !_isOn;
+                OnLightingStateChange(_isOn);
             }
         }
 
@@ -90,5 +97,20 @@ namespace Assets.Scripts.Objects.Item
                 local.ApplyItem(this, item);
             }
         }
+
+        public new ICellPositionProvider PositionProvider => base.PositionProvider;
+        public Color LightColor => _color;
+
+        public float Range
+        {
+            get
+            {
+                if (_isOn)
+                    return _range;
+                return 0;
+            }
+        }
+        public float Decrement => _intensityDecrement;
+        public float InitialIntensity => _initialIntensity;
     }
 }
