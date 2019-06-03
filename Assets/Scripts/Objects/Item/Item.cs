@@ -127,6 +127,8 @@ namespace Assets.Scripts.Objects.Item
         {
             base.Start();
 
+            PositionProvider = new ItemPositionProvider(this);
+
             Renderer = GetComponent<SpriteRenderer>();
             Collider = GetComponent<Collider2D>();
         }
@@ -177,6 +179,33 @@ namespace Assets.Scripts.Objects.Item
 
             var wearable = item as IWearable;
             return wearable?.AppropriateSlot == slot;
+        }
+
+        protected class ItemPositionProvider : ICellPositionProvider
+        {
+            private Item _item;
+
+            public ItemPositionProvider(Item item)
+            {
+                _item = item;
+            }
+
+            private int GetX()
+            {
+                if (_item.Holder == null)
+                    return _item.Cell.x;
+                return _item.Holder.GetComponent<TileObject>().Cell.x;
+            }
+
+            private int GetY()
+            {
+                if (_item.Holder == null)
+                    return _item.Cell.y;
+                return _item.Holder.GetComponent<TileObject>().Cell.y;
+            }
+
+            public int X => GetX();
+            public int Y => GetY();
         }
     }
 }
