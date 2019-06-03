@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts._Legacy;
+using UnityEngine;
 
 namespace Assets.Scripts.Controllers
 {
@@ -73,7 +74,7 @@ namespace Assets.Scripts.Controllers
                         {
                             brightness = 0.2f;
                         }
-                        _visionController.GetMask(x, y).SetLighting(brightness, color);
+                        _visionController.GetMask(x, y)?.SetLighting(brightness, color);
                     }
                 }
             }
