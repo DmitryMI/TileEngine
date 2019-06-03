@@ -8,7 +8,7 @@ using Assets.Scripts.Objects.Item;
 
 namespace Assets.Scripts.Objects.Mob
 {
-    public class Player : Mob, IItemContainer, IHumanoid
+    public class Player : Mob, IItemContainer, IHumanoid, IPositionProvider
     {
         [SerializeField]
         private float _moveSpeed;
@@ -55,6 +55,9 @@ namespace Assets.Scripts.Objects.Mob
 
             if(isServer)
                 _healthData = new HumanHealthData();
+
+            Debug.LogWarning("Setting player's position...");
+            VisionController.SetViewerPosition(this);
         }
 
 
@@ -64,20 +67,13 @@ namespace Assets.Scripts.Objects.Mob
 
             if (isLocalPlayer)
             {
-                UpdateCamera();
-                ProcessPlayerControll();
+                ProcessPlayerControl();
             }
 
             if (isServer)
             {
                 UpdateHealth();
             }
-        }
-
-        private void UpdateCamera()
-        {
-            //VisionController.SetCameraPosition(Cell, CellOffset);
-            VisionController.SetCameraPosition(transform.position);
         }
 
         protected override void UpdateSprite()
@@ -96,7 +92,7 @@ namespace Assets.Scripts.Objects.Mob
         }
 
 
-        private void ProcessPlayerControll()
+        private void ProcessPlayerControl()
         {
             float vertical = Input.GetAxisRaw("Vertical");
             float horizontal = Input.GetAxisRaw("Horizontal");
@@ -386,5 +382,10 @@ namespace Assets.Scripts.Objects.Mob
             _isLying = _healthData.IsUnconsious;
         }
         #endregion
+
+        public int X => Cell.x;
+        public int Y => Cell.y;
+        public float OffsetX => CellOffset.x;
+        public float OffsetY => CellOffset.y;
     }
 }
