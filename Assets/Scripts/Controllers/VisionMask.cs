@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Controllers
 {
+    [Obsolete("Vision mask should not be used any more")]
     public class VisionMask : MonoBehaviour
     {
         private bool _active = true;
