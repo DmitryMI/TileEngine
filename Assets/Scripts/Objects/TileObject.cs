@@ -6,9 +6,11 @@ using Assets.Scripts.Controllers;
 using Assets.Scripts.Controllers.Atmos;
 using Assets.Scripts.GameMechanics;
 using Assets.Scripts.Objects.Equipment.Power;
+using Assets.Scripts._Legacy;
 using UnityEngine;
 using UnityEngine.Networking;
 using Debug = UnityEngine.Debug;
+using VisionController = Assets.Scripts.Controllers.VisionController;
 
 namespace Assets.Scripts.Objects
 {
@@ -31,6 +33,7 @@ namespace Assets.Scripts.Objects
         protected ServerController ServerController;
         protected AtmosController AtmosController;
         protected TileController TileController;
+        protected ICellPositionProvider PositionProvider;
 
         /// <summary>
         /// True - object does not block light and vision
@@ -64,10 +67,11 @@ namespace Assets.Scripts.Objects
             WalkController = FindObjectOfType<WalkController>();
             AtmosController = FindObjectOfType<AtmosController>();
 
-            
-                TileController = FindObjectOfType<TileController>();
-                StartCoroutine(WaitForServerController());
-            
+
+            TileController = FindObjectOfType<TileController>();
+            StartCoroutine(WaitForServerController());
+
+            PositionProvider = new CellPositionProvider(this);
         }
 
         IEnumerator WaitForServerController()
@@ -146,7 +150,7 @@ namespace Assets.Scripts.Objects
             }
             if (!Transperent)
             {
-                VisionController.SetBlock(_cell.x, _cell.y);
+                //VisionController.SetBlock(_cell.x, _cell.y);
             }
             if (!PassesGas)
             {
@@ -258,6 +262,18 @@ namespace Assets.Scripts.Objects
             int dy = Mathf.Abs(cellA.y - cellB.y);
 
             return dx <= 1 && dy <= 1;
+        }
+
+        public class CellPositionProvider : ICellPositionProvider
+        {
+            private readonly TileObject _tileObject;
+            public int X => _tileObject.Cell.x;
+            public int Y => _tileObject.Cell.x;
+
+            public CellPositionProvider(TileObject obj)
+            {
+                _tileObject = obj;
+            }
         }
     }
 }
