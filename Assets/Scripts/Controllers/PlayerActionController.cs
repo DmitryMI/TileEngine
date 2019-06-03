@@ -6,6 +6,7 @@ using Assets.Scripts.Objects;
 using Assets.Scripts.Objects.Item;
 using Assets.Scripts.Objects.Mob;
 using Assets.Scripts.Ui;
+using Assets.Scripts._Legacy;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -44,6 +45,13 @@ namespace Assets.Scripts.Controllers
             WasLoaded = true;
 
             _visionController = FindObjectOfType<VisionController>();
+
+            if (_visionController == null)
+            {
+                Debug.LogError("VisionController not found!");
+                Debug.Break();
+            }
+
             _grid = FindObjectOfType<Grid>();
             _currentController = this;
 
