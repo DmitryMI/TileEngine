@@ -179,7 +179,7 @@ namespace Assets.Scripts.Controllers
             Vector2Int cell = _mouseCell;
             VisionMask visionMask = _visionController.GetMask(cell.x, cell.y);
             if (visionMask == null)
-                return false;
+                return true;
             return visionMask.IsVisible();
         }
         public TileObject UnderCursorTileObject

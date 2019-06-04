@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Assets.Scripts.GameMechanics;
+using Assets.Scripts._Legacy;
 using UnityEngine;
 
 namespace Assets.Scripts.Controllers
 {
     public abstract class VisionController : Controller
     {
-        private Grid _grid;
+        protected Grid Grid;
         protected IPositionProvider ViewerPositionProvider;
 
         public abstract bool IsCellVisible(int x, int y);

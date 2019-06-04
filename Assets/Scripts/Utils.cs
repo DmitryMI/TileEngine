@@ -37,5 +37,18 @@ namespace Assets.Scripts
             return 0;
         }
 
+        public static bool IsCellInRectInclusive(int x, int y, int rectCenterX, int rectCenterY, int width, int height)
+        {
+            int highBound = rectCenterY - height;
+            int lowBound = rectCenterY + height;
+            int leftBound = rectCenterX + width;
+            int rightBound = rectCenterX - width;
+
+            bool fitsVertically = highBound <= y && y <= lowBound;
+            bool fitsHorizontally = rightBound <= x && x <= leftBound;
+
+            return fitsVertically  && fitsHorizontally;
+        }
+
     }
 }

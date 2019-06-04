@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
-namespace Assets.Scripts.Controllers
+namespace Assets.Scripts._Legacy
 {
     [Obsolete("Vision mask should not be used any more")]
     public class VisionMask : MonoBehaviour
