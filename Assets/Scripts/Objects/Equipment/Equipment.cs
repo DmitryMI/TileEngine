@@ -20,7 +20,7 @@ namespace Assets.Scripts.Objects.Equipment
         private string _descriptiveName;
 
         // Use this for initialization
-        protected override bool Transperent
+        protected override bool Transparent
         {
             get { return _transperent; }
         }

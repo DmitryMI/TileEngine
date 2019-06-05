@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Assets.Scripts.GameMechanics
 {
     [Serializable]
-    public class LightSourceInfo
+    public class LightSourceInfo : ILightInfo
     {
         private int _x;
         private int _y;
@@ -13,20 +13,31 @@ namespace Assets.Scripts.GameMechanics
         private float _intensityDecrement = 0.05f;
         private float _initialIntensity;
 
+        private ICellPositionProvider _cellPositionProvider;
+
         public int X
         {
-            get { return _x; }
+            get
+            {
+                if(_cellPositionProvider == null) return _x;
+                return _cellPositionProvider.X;
+            }
         }
 
         public int Y
         {
-            get { return _y; }
+            get {
+                if (_cellPositionProvider == null) return _y;
+                return _cellPositionProvider.Y;
+            }
         }
 
         public Vector2Int SourceCell
         {
             get { return new Vector2Int(_x, _y);}
         }
+
+        public ICellPositionProvider PositionProvider => _cellPositionProvider;
 
         public Color LightColor
         {
@@ -36,7 +47,9 @@ namespace Assets.Scripts.GameMechanics
         public float Range
         {
             get { return _maxRange; }
+            set => _maxRange = value;
         }
+
 
         public float Decrement
         {
@@ -46,6 +59,7 @@ namespace Assets.Scripts.GameMechanics
         public float InitialIntensity
         {
             get { return _initialIntensity; }
+            set => _initialIntensity = value;
         }
 
         public LightSourceInfo(int x, int y, Color color, float range)
@@ -57,10 +71,22 @@ namespace Assets.Scripts.GameMechanics
             _initialIntensity = 1f;
         }
 
+        [Obsolete("Use ICellPositionProvider as the source of position information")]
         public LightSourceInfo(int x, int y, Color color, float range, float initialIntensity, float decrement)
         {
             _x = x;
             _y = y;
+            _color = color;
+            _maxRange = range;
+            _initialIntensity = initialIntensity;
+            _intensityDecrement = decrement;
+        }
+
+        public LightSourceInfo(ICellPositionProvider provider, Color color, float range, float initialIntensity, float decrement)
+        {
+            _x = provider.X;
+            _y = provider.Y;
+            _cellPositionProvider = provider;
             _color = color;
             _maxRange = range;
             _initialIntensity = initialIntensity;

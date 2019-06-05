@@ -10,14 +10,14 @@ namespace Assets.Scripts.HumanAppearance
     public class JumpsuitHandler : MonoBehaviour
     {
         private SpriteRenderer _spriteRenderer;
-        private Player _player;
+        private Humanoid _player;
 
         private IWearable _clothing;
 
         void Start ()
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
-            _player = GetComponentInParent<Player>();
+            _player = GetComponentInParent<Humanoid>();
         }
 	
         void Update ()

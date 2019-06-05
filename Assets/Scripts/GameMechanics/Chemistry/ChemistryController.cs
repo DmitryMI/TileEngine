@@ -40,7 +40,7 @@ namespace Assets.Scripts.GameMechanics.Chemistry
         {
             Current = this;
 
-            Debug.Log("ChemistryController: Loaded " + _registeredSubstances.Length + " substances.");
+            //Debug.Log("ChemistryController: Loaded " + _registeredSubstances.Length + " substances.");
 
             WasLoaded = true;
         }

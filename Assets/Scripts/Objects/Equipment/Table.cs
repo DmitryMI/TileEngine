@@ -12,7 +12,12 @@ namespace Assets.Scripts.Objects.Equipment
             //Debug.Log("Table was clicked!");
 
             PlayerActionController controller = PlayerActionController.Current;
-            Player localPlayer = controller.LocalPlayer;
+            Humanoid localPlayer = controller.LocalPlayerMob as Humanoid;
+
+            if(localPlayer == null)
+                return;
+            
+
             Item.Item heldItem = localPlayer.GetItemBySlot(controller.ActiveHand);
 
             if (heldItem == item)

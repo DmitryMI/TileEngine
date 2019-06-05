@@ -10,7 +10,7 @@ using UnityEngine.Networking;
 
 namespace Assets.Scripts.Objects.Mob
 {
-    public abstract class Mob : TileObject
+    public abstract class Mob : TileObject, IPositionProvider
     {
         [SerializeField] protected Sprite FrontSprite;
         [SerializeField] protected Sprite BackSprite;
@@ -18,10 +18,15 @@ namespace Assets.Scripts.Objects.Mob
         [SerializeField] protected Sprite RightSprite;
         [SerializeField] protected Sprite LyingSprite;
 
+        [SerializeField] [SyncVar] protected bool IsMobLying;
+
+        [SerializeField]
+        protected float MoveSpeed;
+
         private bool _movementFinished = true;
         protected SpriteRenderer Renderer;
 
-        public abstract bool IsLying { get; }
+        public virtual bool IsLying => IsMobLying;
 
         private IEnumerator AnimateMovement(Vector2 velocity, float time)
         {
@@ -51,8 +56,10 @@ namespace Assets.Scripts.Objects.Mob
             UpdateSprite();
         }
 
-        protected void DoMove(Direction direction, float speed)
+        public void DoMove(Direction direction)
         {
+            float speed = MoveSpeed;
+
             if(IsLying)
                 return;
 
@@ -143,5 +150,10 @@ namespace Assets.Scripts.Objects.Mob
                 }
             }
         }
+
+        public int X => Cell.x;
+        public int Y => Cell.y;
+        public float OffsetX => CellOffset.x;
+        public float OffsetY => CellOffset.y;
     }
 }

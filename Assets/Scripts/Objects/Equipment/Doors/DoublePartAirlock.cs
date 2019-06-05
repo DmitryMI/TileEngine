@@ -2,6 +2,7 @@
 using System.Collections;
 using Assets.Scripts.Controllers;
 using Assets.Scripts.Objects.Equipment.Power;
+using Assets.Scripts.Objects.Mob;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -130,7 +131,7 @@ namespace Assets.Scripts.Objects.Equipment.Doors
             PrevDoorState = State;
         }
 
-        protected override bool Transperent => IsTransperent;
+        protected override bool Transparent => IsTransperent;
         protected override bool PassesGas => DoPassGas;
         protected override bool CanWalkThrough => CanPassThrough;
 
@@ -168,13 +169,19 @@ namespace Assets.Scripts.Objects.Equipment.Doors
         
         private void CallServerNoItem()
         {
-            PlayerActionController.Current.LocalPlayer.ApplyItem(null, this);
+            Humanoid humanoid = PlayerActionController.Current.LocalPlayerMob as Humanoid;
+
+            humanoid?.ApplyItem(null, this);
         }
 
         public override void ApplyItemClient(Item.Item item)
         {
-            Debug.Log("Door was pushed");
-            PlayerActionController.Current.LocalPlayer.ApplyItem(item, this);
+            Humanoid humanoid = PlayerActionController.Current.LocalPlayerMob as Humanoid;
+            if (humanoid != null)
+            {
+                Debug.Log("Door was pushed");
+                humanoid.ApplyItem(item, this);
+            }
         }
 
         public override void ApplyItemServer(Item.Item item)

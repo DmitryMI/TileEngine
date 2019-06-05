@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Controllers;
 using Assets.Scripts.GameMechanics;
 using Assets.Scripts.Objects.Item;
+using Assets.Scripts.Objects.Mob;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,6 +25,7 @@ namespace Assets.Scripts.Ui
         private RectTransform _rectTransform;
         private RectTransform _itemImageTransform;
         private Image _selfRenderer;
+        
 
         private void Start()
         {
@@ -55,7 +57,7 @@ namespace Assets.Scripts.Ui
 
         private void UpdateHeldItem()
         {
-            IDisplayable displayable = LocalPlayer.GetItemBySlot(_slotEnum);
+            IDisplayable displayable = LocalPlayer?.GetItemBySlot(_slotEnum);
 
             if (displayable != null)
             {

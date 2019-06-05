@@ -6,9 +6,11 @@ using Assets.Scripts.Controllers;
 using Assets.Scripts.Controllers.Atmos;
 using Assets.Scripts.GameMechanics;
 using Assets.Scripts.Objects.Equipment.Power;
+using Assets.Scripts._Legacy;
 using UnityEngine;
 using UnityEngine.Networking;
 using Debug = UnityEngine.Debug;
+using VisionController = Assets.Scripts.Controllers.VisionController;
 
 namespace Assets.Scripts.Objects
 {
@@ -31,11 +33,42 @@ namespace Assets.Scripts.Objects
         protected ServerController ServerController;
         protected AtmosController AtmosController;
         protected TileController TileController;
+        protected ICellPositionProvider PositionProvider;
+
+        public WalkController GetWalkController()
+        {
+            EnsureControllers();
+            return WalkController;
+        }
+
+        public VisionController GetVisionController()
+        {
+            EnsureControllers();
+            return VisionController;
+        }
+
+        public ServerController GetServerController()
+        {
+            EnsureControllers();
+            return ServerController;
+        }
+
+        public AtmosController GetAtmosController()
+        {
+            EnsureControllers();
+            return AtmosController;
+        }
+
+        public TileController GetTileController()
+        {
+            EnsureControllers();
+            return TileController;
+        }
 
         /// <summary>
         /// True - object does not block light and vision
         /// </summary>
-        protected abstract bool Transperent { get; }
+        protected abstract bool Transparent { get; }
 
         /// <summary>
         /// True - object does not block mobs' movement
@@ -59,15 +92,13 @@ namespace Assets.Scripts.Objects
         protected virtual void Start()
         {
             Grid = FindObjectOfType<Grid>();
-            VisionController = FindObjectOfType<VisionController>();
-            ServerController = FindObjectOfType<ServerController>();
-            WalkController = FindObjectOfType<WalkController>();
-            AtmosController = FindObjectOfType<AtmosController>();
+            EnsureControllers();
 
-            
-                TileController = FindObjectOfType<TileController>();
-                StartCoroutine(WaitForServerController());
-            
+
+            TileController = FindObjectOfType<TileController>();
+            StartCoroutine(WaitForServerController());
+
+            PositionProvider = new CellPositionProvider(this);
         }
 
         IEnumerator WaitForServerController()
@@ -144,7 +175,7 @@ namespace Assets.Scripts.Objects
             {
                 WalkController.SetBlock(_cell.x, _cell.y);
             }
-            if (!Transperent)
+            if (!Transparent)
             {
                 VisionController.SetBlock(_cell.x, _cell.y);
             }
@@ -153,6 +184,18 @@ namespace Assets.Scripts.Objects
                 if(isServer)
                     AtmosController.SetBlock(_cell.x, _cell.y);
             }
+        }
+
+        private void EnsureControllers()
+        {
+            if(VisionController == null)
+                VisionController = FindObjectOfType<VisionController>();
+            if(ServerController == null)
+            ServerController = FindObjectOfType<ServerController>();
+            if(WalkController == null)
+                WalkController = FindObjectOfType<WalkController>();
+            if(AtmosController == null)
+                AtmosController = FindObjectOfType<AtmosController>();
         }
 
         private void UpdateTransfrom()
@@ -258,6 +301,18 @@ namespace Assets.Scripts.Objects
             int dy = Mathf.Abs(cellA.y - cellB.y);
 
             return dx <= 1 && dy <= 1;
+        }
+
+        public class CellPositionProvider : ICellPositionProvider
+        {
+            private readonly TileObject _tileObject;
+            public int X => _tileObject.Cell.x;
+            public int Y => _tileObject.Cell.x;
+
+            public CellPositionProvider(TileObject obj)
+            {
+                _tileObject = obj;
+            }
         }
     }
 }

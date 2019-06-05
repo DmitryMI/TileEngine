@@ -9,7 +9,7 @@ namespace Assets.Scripts.Objects.Equipment.Power
         [SerializeField] private float _powerCapacity = 10000;
         [SerializeField] private float _maximumOutput;
 
-        protected override bool Transperent
+        protected override bool Transparent
         {
             get { return true; }
         }

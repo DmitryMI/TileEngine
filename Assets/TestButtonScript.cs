@@ -19,11 +19,11 @@ namespace Assets
         {
             Damage damage = new Damage(_damageType, 10);
 
-            Player player = PlayerActionController.Current.LocalPlayer;
+            //Humanoid player = PlayerActionController.Current.LocalPlayerMob;
 
-            HumanHealthData health = player.HealthData;
+            /*HumanHealthData health = player.HealthData;
 
-            health.DoDamage(damage, target);
+            health.DoDamage(damage, target);*/
         }
     }
 }

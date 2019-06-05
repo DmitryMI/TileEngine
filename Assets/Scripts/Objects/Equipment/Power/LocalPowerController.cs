@@ -21,7 +21,7 @@ namespace Assets.Scripts.Objects.Equipment.Power
 
         public Direction WallPressDirection => _wallPressDirection;
 
-        protected override bool Transperent => true;
+        protected override bool Transparent => true;
         protected override bool PassesGas => true;
         protected override bool CanWalkThrough => true;
 

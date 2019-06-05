@@ -40,7 +40,7 @@ namespace Assets.Scripts.Objects.Equipment.Tables
         [SyncVar]
         private bool _isLongRight;
 
-        protected override bool Transperent => true;
+        protected override bool Transparent => true;
 
         private SpriteRenderer _spriteRenderer;
 

@@ -2,6 +2,7 @@
 using Assets.Scripts.Controllers;
 using Assets.Scripts.GameMechanics;
 using Assets.Scripts.HumanAppearance;
+using Assets.Scripts.Objects.Mob;
 using Assets.Scripts.Ui;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -30,7 +31,7 @@ namespace Assets.Scripts.Objects.Item
         [SyncVar]
         private int _spriteRendererSortingOrder;
 
-        protected override bool Transperent
+        protected override bool Transparent
         {
             get { return true; }
         }
@@ -127,6 +128,8 @@ namespace Assets.Scripts.Objects.Item
         {
             base.Start();
 
+            PositionProvider = new ItemPositionProvider(this);
+
             Renderer = GetComponent<SpriteRenderer>();
             Collider = GetComponent<Collider2D>();
         }
@@ -138,8 +141,9 @@ namespace Assets.Scripts.Objects.Item
 
         public virtual void ApplyItemClient(Item item)
         {
-            if(ItemHolder == null && item == null)
-                PlayerActionController.Current.LocalPlayer.PickItem(this, PlayerActionController.Current.ActiveHand);            
+            Humanoid humanoid = PlayerActionController.Current.LocalPlayerMob as Humanoid;
+            if (ItemHolder == null && item == null && humanoid != null)
+                humanoid.PickItem(this, PlayerActionController.Current.ActiveHand);            
         }
 
         public virtual void ApplyItemServer(Item item)
@@ -177,6 +181,33 @@ namespace Assets.Scripts.Objects.Item
 
             var wearable = item as IWearable;
             return wearable?.AppropriateSlot == slot;
+        }
+
+        protected class ItemPositionProvider : ICellPositionProvider
+        {
+            private Item _item;
+
+            public ItemPositionProvider(Item item)
+            {
+                _item = item;
+            }
+
+            private int GetX()
+            {
+                if (_item.Holder == null)
+                    return _item.Cell.x;
+                return _item.Holder.GetComponent<TileObject>().Cell.x;
+            }
+
+            private int GetY()
+            {
+                if (_item.Holder == null)
+                    return _item.Cell.y;
+                return _item.Holder.GetComponent<TileObject>().Cell.y;
+            }
+
+            public int X => GetX();
+            public int Y => GetY();
         }
     }
 }

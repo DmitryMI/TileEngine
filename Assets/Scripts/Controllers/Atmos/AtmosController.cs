@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Assets.Scripts._Legacy;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
@@ -240,7 +241,7 @@ namespace Assets.Scripts.Controllers.Atmos
             VisionController visionController = VisionController.Current;
             if (visionController != null)
             {
-                visionController.VisionProcessingEnabled = false;
+                //visionController.VisionProcessingEnabled = false;
 
                 for (int x = 0; x < _gasInfos.GetLength(0); x++)
                 {

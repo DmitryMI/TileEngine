@@ -43,7 +43,7 @@ namespace Assets.Scripts.Objects.Turf
             get { return "Metal floor"; }
         }
 
-        protected override bool Transperent
+        protected override bool Transparent
         {
             get { return true; }
         }

@@ -98,9 +98,9 @@ namespace Assets.Scripts.Controllers
         }
 
         [Server]
-        public void SpawnPlayer(Player player)
+        public void SpawnPlayer(GameObject playerGo)
         {
-            StartCoroutine(WaitForLoadingFinished(SpawnPlayerImmediately, player));
+            StartCoroutine(WaitForLoadingFinished(SpawnPlayerImmediately, playerGo));
         }
 
         IEnumerator WaitForLoadingFinished<T>(Action<T> action, T value)
@@ -139,7 +139,7 @@ namespace Assets.Scripts.Controllers
             action(value1, value2, value3);
         }
 
-        private void SpawnPlayerImmediately(Player player)
+        private void SpawnPlayerImmediately(GameObject playerGo)
         {
             Text output = GameObject.Find("OutputText").GetComponent<Text>();
 
@@ -155,12 +155,12 @@ namespace Assets.Scripts.Controllers
                 output.text += "\nNO SPAWNERS FOUND!";
                 Vector2Int cell = Vector2Int.zero;
                 //player.RpcForceTransformation(cell.x, cell.y, Vector2.zero);
-                RpcSetPlayerSpawned(player.gameObject, cell.x, cell.y, Vector2.zero);
+                RpcSetPlayerSpawned(playerGo, cell.x, cell.y, Vector2.zero);
             }
             else
             {
                 Vector2Int cell = spawners[rand].Cell;
-                RpcSetPlayerSpawned(player.gameObject, cell.x, cell.y, Vector2.zero);
+                RpcSetPlayerSpawned(playerGo, cell.x, cell.y, Vector2.zero);
 
                 output.text += "\nPlayer spawned on point: " + cell.x + " " + cell.y;
             }
@@ -171,15 +171,23 @@ namespace Assets.Scripts.Controllers
         [ClientRpc]
         private void RpcSetPlayerSpawned(GameObject playerGo, int x, int y, Vector2 offset)
         {
-            Player player = playerGo.GetComponent<Player>();
-            StartCoroutine(WaitForLoadingFinished(SetPlayerSpawnedImmediately, player, new Vector2Int(x, y), offset));
+            //Player player = playerGo.GetComponent<Player>();
+            StartCoroutine(WaitForLoadingFinished(SetPlayerSpawnedImmediately, playerGo, new Vector2Int(x, y), offset));
         }
 
-        private void SetPlayerSpawnedImmediately(Player player, Vector2Int cell, Vector2 offset)
+        private void SetPlayerSpawnedImmediately(GameObject playerGo, Vector2Int cell, Vector2 offset)
         {
+            Mob player = playerGo.GetComponent<Mob>();
             player.Cell = cell;
             player.CellOffset = offset;
-            player.Spawned = true;
+            //player.Spawned = true;
+
+            //if (player.IsLocalPlayer)
+            if(player.isLocalPlayer)
+            {
+                PlayerActionController _controller = FindObjectOfType<PlayerActionController>();
+                _controller.SetLocalPlayer(player);
+            }
         }
 
         [Command]

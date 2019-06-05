@@ -28,6 +28,8 @@ namespace Assets.Scripts.Objects.Equipment.Lighting
         private int _prevElectroFrame;
 
         private SpriteRenderer _spriteRenderer;
+        private LightSourceInfo _lightSourceInfo;
+        private int _lightSourceId;
 
         // TODO Has light tube
 
@@ -37,6 +39,14 @@ namespace Assets.Scripts.Objects.Equipment.Lighting
             base.Start();
 
             _spriteRenderer = GetComponent<SpriteRenderer>();
+            _lightSourceInfo = new LightSourceInfo(PositionProvider, Color.white, _lightRange, 1, 0.05f);
+
+            VisionController.SetLightContinuous(_lightSourceInfo);
+        }
+
+        public void OnDestroy()
+        {
+            VisionController?.RemoveLightById(_lightSourceId);
         }
 
         protected override void Update()
@@ -56,9 +66,7 @@ namespace Assets.Scripts.Objects.Equipment.Lighting
 
         protected void LateUpdate()
         {
-            if (_electrified)
-                UpdateLightController();
-
+            UpdateLightController(_electrified);
         }
 
         private void UpdateSprite()
@@ -137,16 +145,19 @@ namespace Assets.Scripts.Objects.Equipment.Lighting
             }
         }
 
-        private void UpdateLightController()
+        private void UpdateLightController(bool isOn)
         {
-            LightSourceInfo info = new LightSourceInfo(Cell.x, Cell.y, Color.white, _lightRange, 1, 0.05f);
-            VisionController.SetLightSource(info);
+            
+            if (isOn)
+                _lightSourceInfo.Range = 0;
+            else
+                _lightSourceInfo.Range = _lightRange;
         }
 
         public override string DescriptiveName => "Light fixture";
 
         protected override bool PassesGas => true;
-        protected override bool Transperent => true;
+        protected override bool Transparent => true;
         protected override bool CanWalkThrough => true;
     }
 }

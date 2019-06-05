@@ -18,7 +18,7 @@ namespace Assets.Scripts.Objects.Equipment.Power
 
         private SpriteRenderer _spriteRenderer;
 
-        protected override bool Transperent
+        protected override bool Transparent
         {
             get { return true; }
         }

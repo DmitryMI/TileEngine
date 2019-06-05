@@ -46,7 +46,7 @@ namespace Assets.Scripts.GameMechanics.Chemistry
 
                 mixture.AddRange(_spawnMixture);
 
-                Debug.Log("SubstanceSpawner: " + mixture);
+                //Debug.Log("SubstanceSpawner: " + mixture);
 
 
                 if (container != null)
