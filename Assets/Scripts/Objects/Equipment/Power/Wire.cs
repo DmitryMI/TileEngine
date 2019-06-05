@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
+#pragma warning disable 649
 
 namespace Assets.Scripts.Objects.Equipment.Power
 {

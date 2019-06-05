@@ -3,7 +3,9 @@ using UnityEngine.Networking;
 
 namespace Assets.Scripts.Controllers
 {
+#pragma warning disable 618
     public abstract class Controller : NetworkBehaviour, ILoadable
+#pragma warning restore 618
     {
         [SerializeField]
         private bool _wasLoaded;

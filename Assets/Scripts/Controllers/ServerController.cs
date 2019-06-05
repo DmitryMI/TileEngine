@@ -12,10 +12,13 @@ using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Controllers
 {
+#pragma warning disable 618
     public class ServerController : NetworkBehaviour, IServerDataProvider
+
     {
         [SerializeField] [SyncVar] private int _mapSizeX;
         [SerializeField] [SyncVar] private int _mapSizeY;
+#pragma warning restore 618
         [SerializeField] private bool _shouldClearScene;
         [SerializeField] private bool _debugSaveScene;
 

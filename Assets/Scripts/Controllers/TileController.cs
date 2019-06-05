@@ -163,7 +163,9 @@ namespace Assets.Scripts.Controllers
             }
         }
 
+#pragma warning disable 618
         [Server]
+#pragma warning restore 618
         private void SortItemStacks()
         {
             if (_itemStackCollection.Length > 0)
@@ -175,7 +177,9 @@ namespace Assets.Scripts.Controllers
             }
         }
 
+#pragma warning disable 618
         [Server]
+#pragma warning restore 618
         private void SortItemStack(ItemStack stack)
         {
             stack.SortStack();

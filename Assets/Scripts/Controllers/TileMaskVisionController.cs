@@ -28,7 +28,7 @@ namespace Assets.Scripts.Controllers
 
         public override bool IsCellVisible(int x, int y)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public override float GetCellBrightness(int x, int y)

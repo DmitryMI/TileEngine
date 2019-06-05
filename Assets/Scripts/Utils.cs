@@ -4,15 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
 {
-    class Utils
+    static class Utils
     {
         public const float PerLayerSpace = 0.1f;
         public const float LayerOrderSpace = 0.001f;
 
-        public float LayerToZ(string layer, int order)
+        public static float LayerToZ(string layer, int order)
         {
             var sortingLayers = SortingLayer.layers;
 
@@ -48,6 +49,13 @@ namespace Assets.Scripts
             bool fitsHorizontally = rightBound <= x && x <= leftBound;
 
             return fitsVertically  && fitsHorizontally;
+        }
+
+        public static T GetRandom<T>(ICollection<T> array)
+        {
+            int index = Random.Range(0, array.Count);
+
+            return array.ElementAt(index);
         }
 
     }

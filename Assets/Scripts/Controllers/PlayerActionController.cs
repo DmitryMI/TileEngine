@@ -185,11 +185,13 @@ namespace Assets.Scripts.Controllers
 
         public bool CheckVisibilityUnderCursor()
         {
-            Vector2Int cell = _mouseCell;
+            /*Vector2Int cell = _mouseCell;
             VisionMask visionMask = _visionController.GetMask(cell.x, cell.y);
             if (visionMask == null)
                 return true;
-            return visionMask.IsVisible();
+
+            return visionMask.IsVisible();*/
+            return _visionController.IsCellVisible(_mouseCell.x, _mouseCell.y);
         }
         public TileObject UnderCursorTileObject
         {
@@ -343,19 +345,25 @@ namespace Assets.Scripts.Controllers
 
         private void ClickOnTileObject()
         {
+            TileObject to = _objectUnderCursor;
+
             Humanoid playerHumanoid = _localPlayerMob as Humanoid;
             if (playerHumanoid != null)
             {
                 if (CheckVisibilityUnderCursor())
                 {
-                    TileObject to = _objectUnderCursor;
-
-                    var item = to as IPlayerInteractable;
-                    if (item != null && to.IsNeighbour(_localPlayerMob))
+                    if (to is IPlayerInteractable item && to.IsNeighbour(_localPlayerMob))
                     {
-                        ((IPlayerInteractable) to).ApplyItemClient(playerHumanoid.GetItemBySlot(ActiveHand));
+                        item.ApplyItemClient(playerHumanoid.GetItemBySlot(ActiveHand));
                     }
                 }
+            }
+            else
+            {
+                if(_objectUnderCursor == null)
+                    _localPlayerMob.DoPointAction(_mouseCell.x, _mouseCell.y);
+                else
+                    _localPlayerMob.DoTargetAction(_objectUnderCursor);
             }
         }
 

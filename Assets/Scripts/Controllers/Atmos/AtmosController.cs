@@ -91,7 +91,9 @@ namespace Assets.Scripts.Controllers.Atmos
             }
         }
 
+#pragma warning disable 618
         [Server]
+#pragma warning restore 618
         public GasInfo[] GetGases(int x, int y)
         {
             if (!WasLoaded)
@@ -103,7 +105,9 @@ namespace Assets.Scripts.Controllers.Atmos
             return null;
         }
 
+#pragma warning disable 618
         [Server]
+#pragma warning restore 618
         public float GetPressure(int x, int y)
         {
             List<GasInfo> gases = _gasInfos[x, y];
@@ -121,7 +125,9 @@ namespace Assets.Scripts.Controllers.Atmos
             return summ;
         }
 
+#pragma warning disable 618
         [Server]
+#pragma warning restore 618
         public void SetBlock(int x, int y)
         {
             if (!WasLoaded)
@@ -133,7 +139,9 @@ namespace Assets.Scripts.Controllers.Atmos
             _blockAdderDatas.Add(new BlockAdderData(){X = x, Y = y});
         }
 
+#pragma warning disable 618
         [Server]
+#pragma warning restore 618
         public void AddGas(int x, int y, int gasId, float volume, float pressure, float temperature)
         {
             if (!ServerController.IsCellInBounds(new Vector2Int(x, y)))

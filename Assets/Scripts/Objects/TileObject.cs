@@ -186,16 +186,25 @@ namespace Assets.Scripts.Objects
             }
         }
 
-        private void EnsureControllers()
+        protected bool EnsureControllers()
         {
             if(VisionController == null)
                 VisionController = FindObjectOfType<VisionController>();
             if(ServerController == null)
-            ServerController = FindObjectOfType<ServerController>();
+                ServerController = FindObjectOfType<ServerController>();
             if(WalkController == null)
                 WalkController = FindObjectOfType<WalkController>();
             if(AtmosController == null)
                 AtmosController = FindObjectOfType<AtmosController>();
+
+            if (!VisionController.IsReady)
+                return false;
+            if (!WalkController.IsReady)
+                return false;
+            if (!AtmosController.IsReady)
+                return false;
+
+            return true;
         }
 
         private void UpdateTransfrom()

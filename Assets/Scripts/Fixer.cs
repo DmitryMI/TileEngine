@@ -6,7 +6,9 @@ using UnityEngine.Networking;
 
 namespace Assets.Scripts
 {
+#pragma warning disable 618
     public class Fixer : NetworkBehaviour
+#pragma warning restore 618
     {
         [SerializeField]
         private Vector2Int _cell;
@@ -32,7 +34,9 @@ namespace Assets.Scripts
             }
         }
 
+#pragma warning disable 618
         [Server]
+#pragma warning restore 618
         public void ApplySavedTransformations()
         {
             //NetworkServer.Spawn(gameObject);

@@ -27,23 +27,7 @@ namespace Assets.Scripts.Objects.Mob
         protected SpriteRenderer Renderer;
 
         public virtual bool IsLying => IsMobLying;
-
-        private IEnumerator AnimateMovement(Vector2 velocity, float time)
-        {
-            float timePast = 0;
-            while (timePast < time)
-            {
-                CellOffset += velocity;
-                timePast += Time.deltaTime;
-                //Debug.Log("TimePast: " + timePast + ", time: " + time);
-                //TransformChanged = true;
-                yield return new WaitForEndOfFrame();
-            }
-
-            CellOffset = Vector2.zero;
-            _movementFinished = true;
-        }
-
+        
         protected override void Start()
         {
             base.Start();
@@ -56,9 +40,27 @@ namespace Assets.Scripts.Objects.Mob
             UpdateSprite();
         }
 
+        public virtual void DoTargetAction(TileObject to)
+        {
+
+        }
+
+        public virtual void DoPointAction(int x, int y)
+        {
+
+        }
+
+        public virtual void SetRotation(Direction rotation)
+        {
+            Rotation = rotation;
+        }
+
         public void DoMove(Direction direction)
         {
-            float speed = MoveSpeed;
+            if (!EnsureControllers())
+                return;
+
+            float ms = MoveSpeed;
 
             if(IsLying)
                 return;
@@ -111,7 +113,7 @@ namespace Assets.Scripts.Objects.Mob
                 Vector2 offset = new Vector2(offset3d.x, offset3d.y);
                 CellOffset = -offset;
 
-                StartCoroutine(AnimateMovement(shift * speed, 1 / speed * Time.deltaTime));
+                StartCoroutine(AnimateMovement(shift * ms , 1 / ms));
             }
             else // Find a door
             {
@@ -120,6 +122,33 @@ namespace Assets.Scripts.Objects.Mob
                 if(door != null)
                     door.TryToPass();
             }
+        }
+
+        private IEnumerator AnimateMovement(Vector2 velocity, float time)
+        {
+            Vector2 velocityTimed = velocity * Time.deltaTime;
+            float timePast = 0;
+            //Debug.Log("Time of animation: " + time + ". CellOffset: " + CellOffset);
+
+            Vector2 prevCellOffset = CellOffset - velocityTimed;
+            
+            while(true)
+            {
+                prevCellOffset = CellOffset;
+                CellOffset += velocityTimed;
+
+                if (CellOffset.magnitude >= prevCellOffset.magnitude)
+                {
+                    CellOffset = Vector2.zero;
+                    break;
+                }
+
+                timePast += Time.deltaTime;
+                
+                yield return new WaitForEndOfFrame();
+            }
+
+            _movementFinished = true;
         }
 
         protected virtual void UpdateSprite()
