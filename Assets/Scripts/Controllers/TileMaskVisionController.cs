@@ -15,7 +15,7 @@ namespace Assets.Scripts.Controllers
     class TileMaskVisionController : VisionController
     {
         private Hashtable _permanentLightSources = new Hashtable();
-        private List<ILightInfo> _tempLightSources = new List<ILightInfo>();
+        //private List<ILightInfo> _tempLightSources = new List<ILightInfo>();
         private Camera _camera;
 
         private TileMask[,] _tileMaskMatrix;
@@ -31,9 +31,20 @@ namespace Assets.Scripts.Controllers
             throw new NotImplementedException();
         }
 
-        public override bool VisionProcessingEnabled { get; }
+        public override float GetCellBrightness(int x, int y)
+        {
+            // TODO Cell brightness
+            return 1;
+        }
 
-        [Obsolete("Try to avoid calling this function. Better use 3D-lighting system via LightBlocker spawning")]
+        public override bool VisionProcessingEnabled { get; }
+        
+        public void SetBlockForOneFrame(int x, int y)
+        {
+            return;
+        }
+
+        [Obsolete("Use.")]
         public override void SetBlock(int x, int y)
         {
             return;
@@ -45,9 +56,10 @@ namespace Assets.Scripts.Controllers
             return null;
         }
 
+        [Obsolete("This method will not work anymore. Use SetLightContinuous")]
         public override void SetLightForOneFrame(ILightInfo info)
         {
-            _tempLightSources.Add(info);
+            //_tempLightSources.Add(info);
         }
 
         public override int SetLightContinuous(ILightInfo info)
@@ -65,7 +77,8 @@ namespace Assets.Scripts.Controllers
             _current = this;
             _serverDataProvider = controller;
 
-            CreateTileMasks();
+            if(_DEBUG_VisionProcessingOn)
+                CreateTileMasks();
 
             WasLoaded = true;
         }
@@ -104,7 +117,7 @@ namespace Assets.Scripts.Controllers
 
         private void RefreshLighting()
         {
-            _tempLightSources.Clear();
+            
         }
 
         private int AddLightSource(ILightInfo info)
@@ -203,23 +216,24 @@ namespace Assets.Scripts.Controllers
 
         private void Update()
         {
-            if(ViewerPositionProvider == null)
+            if (_DEBUG_VisionProcessingOn)
+                ActivateTileMasks();
+        }
+
+        private void ActivateTileMasks()
+        {
+            if (ViewerPositionProvider == null)
                 return;
-            
+
             int viewerX = ViewerPositionProvider.X;
             int viewerY = ViewerPositionProvider.Y;
 
-            Camera mainCamera = Camera.main;
-            float verticalSize = mainCamera.orthographicSize;
-            float horizontalSize = mainCamera.aspect * verticalSize;
-
-            int height = Mathf.CeilToInt(verticalSize);
-            int width = Mathf.CeilToInt(horizontalSize);
+            Vector2Int cameraSize = GetCameraSize();
+            int height = cameraSize.y;
+            int width = cameraSize.x;
 
             if (WasLoaded)
             {
-               
-
                 int viewerDeltaX = viewerX - _prevViewerX;
                 int viewerDeltaY = viewerY - _prevViewerY;
 
@@ -342,6 +356,18 @@ namespace Assets.Scripts.Controllers
             _prevViewerY = viewerY;
             _prevWidth = width;
             _prevHeight = height;
+        }
+
+        private Vector2Int GetCameraSize()
+        {
+            Camera mainCamera = Camera.main;
+            float verticalSize = mainCamera.orthographicSize;
+            float horizontalSize = mainCamera.aspect * verticalSize;
+
+            int height = Mathf.CeilToInt(verticalSize);
+            int width = Mathf.CeilToInt(horizontalSize);
+
+            return new Vector2Int(width + 3, height + 3);
         }
 
         private void LineSetActive(int leftBound, int rightBound, int y, bool active)

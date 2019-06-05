@@ -13,7 +13,7 @@ namespace Assets.Scripts.HumanAppearance
         [SerializeField] private Color _defaultHairColor;
 
         private SpriteRenderer _spriteRenderer;
-        private Player _player;
+        private Humanoid _player;
         private List<KeyValuePair<int, HairSet>> _hairSetPrefabs;
 
         private int _currentSetId = -1;
@@ -23,7 +23,7 @@ namespace Assets.Scripts.HumanAppearance
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
             //_player = GetComponent<Player>();
-            _player = GetComponentInParent<Player>();
+            _player = GetComponentInParent<Humanoid>();
 
             LoadPrefabs();
         }

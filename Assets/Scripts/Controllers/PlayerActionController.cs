@@ -25,7 +25,7 @@ namespace Assets.Scripts.Controllers
         private UiElement _uiElementUnderCursor;
         private Vector2 _mouseWorldPosition;
         private Vector2Int _mouseCell;
-        private Player _localPlayer;
+        private Mob _localPlayerMob;
         private Vector2 _mousePrevScreenPosition;
 
         [SerializeField]
@@ -55,7 +55,16 @@ namespace Assets.Scripts.Controllers
             _grid = FindObjectOfType<Grid>();
             _currentController = this;
 
-            FindLocalPlayer();
+            /*FindLocalPlayer();
+
+            _visionController.SetViewerPosition(_localPlayerMob);*/
+        }
+
+        public void SetLocalPlayer(Mob mob)
+        {
+            _localPlayerMob = mob;
+
+            _visionController.SetViewerPosition(mob);
         }
 
         public void UpdateMouseWorldPosition()
@@ -96,12 +105,12 @@ namespace Assets.Scripts.Controllers
 
         private void FindLocalPlayer()
         {
-            Player[] players = FindObjectsOfType<Player>();
+            Mob[] players = FindObjectsOfType<Mob>();
 
             foreach (var p in players)
             {
                 if (p.isLocalPlayer)
-                    _localPlayer = p;
+                    _localPlayerMob = p;
             }
         }
 
@@ -169,9 +178,9 @@ namespace Assets.Scripts.Controllers
             _objectUnderCursor = result;
         }
 
-        public Player LocalPlayer
+        public Mob LocalPlayerMob
         {
-            get { return _localPlayer; }
+            get { return _localPlayerMob; }
         }
 
         public bool CheckVisibilityUnderCursor()
@@ -256,6 +265,8 @@ namespace Assets.Scripts.Controllers
                 UpdateObjectUnderCursor();
                 UpdateMouseCell();
                 UpdateUiElementUnderCursor();
+
+                ProcessPlayerControl();
             }
 
         }
@@ -271,10 +282,10 @@ namespace Assets.Scripts.Controllers
 
         private void ProcessMouseState()
         {
-            if (_localPlayer == null)
+            if (_localPlayerMob == null)
                 FindLocalPlayer();
 
-            if (_localPlayer == null)
+            if (_localPlayerMob == null)
             {
                 //Debug.LogError("Local player was not found!");
                 return;
@@ -284,6 +295,29 @@ namespace Assets.Scripts.Controllers
                 StartCoroutine(WaitForMouse(MouseScreenPosition));
 
             _prevLmbPressed = CurrentLmbState;
+        }
+
+        private void ProcessPlayerControl()
+        {
+            float vertical = Input.GetAxisRaw("Vertical");
+            float horizontal = Input.GetAxisRaw("Horizontal");
+
+            if (vertical > 0)
+            {
+                _localPlayerMob.DoMove(Direction.Forward);
+            }
+            if (vertical < 0)
+            {
+                _localPlayerMob.DoMove(Direction.Backward);
+            }
+            if (horizontal > 0)
+            {
+                _localPlayerMob.DoMove(Direction.Right);
+            }
+            if (horizontal < 0)
+            {
+                _localPlayerMob.DoMove(Direction.Left);
+            }
         }
 
         IEnumerator WaitForMouse(Vector2 curMousePos)
@@ -309,14 +343,18 @@ namespace Assets.Scripts.Controllers
 
         private void ClickOnTileObject()
         {
-            if (CheckVisibilityUnderCursor())
+            Humanoid playerHumanoid = _localPlayerMob as Humanoid;
+            if (playerHumanoid != null)
             {
-                TileObject to = _objectUnderCursor;
-
-                var item = to as IPlayerInteractable;
-                if (item != null && to.IsNeighbour(_localPlayer))
+                if (CheckVisibilityUnderCursor())
                 {
-                    ((IPlayerInteractable) to).ApplyItemClient(_localPlayer.GetItemBySlot(ActiveHand));
+                    TileObject to = _objectUnderCursor;
+
+                    var item = to as IPlayerInteractable;
+                    if (item != null && to.IsNeighbour(_localPlayerMob))
+                    {
+                        ((IPlayerInteractable) to).ApplyItemClient(playerHumanoid.GetItemBySlot(ActiveHand));
+                    }
                 }
             }
         }

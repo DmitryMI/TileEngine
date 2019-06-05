@@ -54,7 +54,7 @@ namespace Assets.Scripts.Objects.Turf
             _spriteRenderer.sprite = sprite;
         }
 
-        protected override bool Transperent => false;
+        protected override bool Transparent => false;
         protected override bool CanWalkThrough => false;
         protected override bool PassesGas => false;
 

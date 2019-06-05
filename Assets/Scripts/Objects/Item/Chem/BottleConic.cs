@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Assets.Scripts.Controllers;
 using Assets.Scripts.GameMechanics.Chemistry;
 using Assets.Scripts.GameMechanics.Chemistry.Reactions;
+using Assets.Scripts.Objects.Mob;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -73,14 +74,20 @@ namespace Assets.Scripts.Objects.Item.Chem
 
         public override void ApplyItemClient(Item item)
         {
+            Humanoid playerHumanoid = PlayerActionController.Current.LocalPlayerMob as Humanoid;
+
+            if(playerHumanoid == null)
+                return;
+            
+
             if (item == null)
             {
-                PlayerActionController.Current.LocalPlayer.PickItem(this, PlayerActionController.Current.ActiveHand);
+                playerHumanoid.PickItem(this, PlayerActionController.Current.ActiveHand);
             }
             else
             {
                 //.ApplyItemClient(item);
-                PlayerActionController.Current.LocalPlayer.ApplyItem(item, this);
+                playerHumanoid.ApplyItem(item, this);
             }
         }
 

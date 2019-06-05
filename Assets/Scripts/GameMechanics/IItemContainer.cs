@@ -9,6 +9,6 @@ namespace Assets.Scripts.GameMechanics
 
         GameObject gameObject { get; }
 
-        bool BlocksLightFromInside();
+        bool BlocksLightFromInside { get; }
     }
 }

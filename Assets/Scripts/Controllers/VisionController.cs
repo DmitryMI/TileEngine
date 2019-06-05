@@ -11,10 +11,14 @@ namespace Assets.Scripts.Controllers
 {
     public abstract class VisionController : Controller
     {
+        [SerializeField]
+        protected bool _DEBUG_VisionProcessingOn;
+
         protected Grid Grid;
         protected IPositionProvider ViewerPositionProvider;
 
         public abstract bool IsCellVisible(int x, int y);
+        public abstract float GetCellBrightness(int x, int y);
 
         public abstract bool VisionProcessingEnabled { get; }
 
@@ -29,6 +33,7 @@ namespace Assets.Scripts.Controllers
         [Obsolete("VisionMask is not present in the game.")]
         public abstract VisionMask GetMask(int x, int y);
 
+        [Obsolete("This method will not work anymore. Use SetLightContinuous")]
         public abstract void SetLightForOneFrame(ILightInfo info);
 
         public abstract int SetLightContinuous(ILightInfo info);

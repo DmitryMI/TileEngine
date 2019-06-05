@@ -157,7 +157,7 @@ namespace Assets.Scripts.Objects.Equipment.Lighting
         public override string DescriptiveName => "Light fixture";
 
         protected override bool PassesGas => true;
-        protected override bool Transperent => true;
+        protected override bool Transparent => true;
         protected override bool CanWalkThrough => true;
     }
 }

@@ -2,6 +2,7 @@
 using Assets.Scripts.Controllers;
 using Assets.Scripts.GameMechanics;
 using Assets.Scripts.HumanAppearance;
+using Assets.Scripts.Objects.Mob;
 using Assets.Scripts.Ui;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -30,7 +31,7 @@ namespace Assets.Scripts.Objects.Item
         [SyncVar]
         private int _spriteRendererSortingOrder;
 
-        protected override bool Transperent
+        protected override bool Transparent
         {
             get { return true; }
         }
@@ -140,8 +141,9 @@ namespace Assets.Scripts.Objects.Item
 
         public virtual void ApplyItemClient(Item item)
         {
-            if(ItemHolder == null && item == null)
-                PlayerActionController.Current.LocalPlayer.PickItem(this, PlayerActionController.Current.ActiveHand);            
+            Humanoid humanoid = PlayerActionController.Current.LocalPlayerMob as Humanoid;
+            if (ItemHolder == null && item == null && humanoid != null)
+                humanoid.PickItem(this, PlayerActionController.Current.ActiveHand);            
         }
 
         public virtual void ApplyItemServer(Item item)

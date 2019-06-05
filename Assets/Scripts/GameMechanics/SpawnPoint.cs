@@ -4,7 +4,7 @@ namespace Assets.Scripts.GameMechanics
 {
     public class SpawnPoint : TileObject
     {
-        protected override bool Transperent
+        protected override bool Transparent
         {
             get { return true; }
         }

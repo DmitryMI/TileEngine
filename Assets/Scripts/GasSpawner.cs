@@ -15,7 +15,7 @@ namespace Assets.Scripts
         [SerializeField] private float _temperatureCelsium;
         [SerializeField] private float _pressure;
 
-        protected override bool Transperent
+        protected override bool Transparent
         {
             get { return true; }
         }

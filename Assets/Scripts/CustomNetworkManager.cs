@@ -32,7 +32,7 @@ namespace Assets.Scripts
                 _serverController = FindObjectOfType<ServerController>();
             }
 
-            _serverController.SpawnPlayer(playerController.gameObject.GetComponent<Player>());
+            _serverController.SpawnPlayer(playerController.gameObject);
 
             _serverController.RequestTransformUpdate();
         }

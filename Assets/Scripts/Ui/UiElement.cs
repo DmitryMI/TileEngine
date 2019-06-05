@@ -5,14 +5,18 @@ namespace Assets.Scripts.Ui
 {
     public class UiElement : MonoBehaviour
     {
-        protected Player LocalPlayer;
+        protected Humanoid LocalPlayer;
 
         private void FindLocalPlayer()
         {
-            Player[] players = FindObjectsOfType<Player>();
+            Mob[] players = FindObjectsOfType<Mob>();
 
-            foreach (var p in players)
+            foreach (var mob in players)
             {
+                var p =  mob as Humanoid;
+                if(p == null)
+                    continue;
+                
                 if (p.isLocalPlayer)
                     LocalPlayer = p;
             }

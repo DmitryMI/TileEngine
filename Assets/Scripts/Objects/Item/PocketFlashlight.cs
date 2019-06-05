@@ -72,7 +72,7 @@ namespace Assets.Scripts.Objects.Item
 
         private void OnDestroy()
         {
-            VisionController.RemoveLightById(_lightSourceId);
+            VisionController?.RemoveLightById(_lightSourceId);
         }
 
         public override void ApplyItemServer(Item item)
@@ -86,7 +86,7 @@ namespace Assets.Scripts.Objects.Item
 
         public override void ApplyItemClient(Item item)
         {
-            Player local = PlayerActionController.Current.LocalPlayer;
+            Humanoid local = PlayerActionController.Current.LocalPlayerMob as Humanoid;
             if (item == null)
             {
                 if(ItemHolder == null)

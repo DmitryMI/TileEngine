@@ -35,10 +35,40 @@ namespace Assets.Scripts.Objects
         protected TileController TileController;
         protected ICellPositionProvider PositionProvider;
 
+        public WalkController GetWalkController()
+        {
+            EnsureControllers();
+            return WalkController;
+        }
+
+        public VisionController GetVisionController()
+        {
+            EnsureControllers();
+            return VisionController;
+        }
+
+        public ServerController GetServerController()
+        {
+            EnsureControllers();
+            return ServerController;
+        }
+
+        public AtmosController GetAtmosController()
+        {
+            EnsureControllers();
+            return AtmosController;
+        }
+
+        public TileController GetTileController()
+        {
+            EnsureControllers();
+            return TileController;
+        }
+
         /// <summary>
         /// True - object does not block light and vision
         /// </summary>
-        protected abstract bool Transperent { get; }
+        protected abstract bool Transparent { get; }
 
         /// <summary>
         /// True - object does not block mobs' movement
@@ -62,10 +92,7 @@ namespace Assets.Scripts.Objects
         protected virtual void Start()
         {
             Grid = FindObjectOfType<Grid>();
-            VisionController = FindObjectOfType<VisionController>();
-            ServerController = FindObjectOfType<ServerController>();
-            WalkController = FindObjectOfType<WalkController>();
-            AtmosController = FindObjectOfType<AtmosController>();
+            EnsureControllers();
 
 
             TileController = FindObjectOfType<TileController>();
@@ -148,15 +175,27 @@ namespace Assets.Scripts.Objects
             {
                 WalkController.SetBlock(_cell.x, _cell.y);
             }
-            if (!Transperent)
+            if (!Transparent)
             {
-                //VisionController.SetBlock(_cell.x, _cell.y);
+                VisionController.SetBlock(_cell.x, _cell.y);
             }
             if (!PassesGas)
             {
                 if(isServer)
                     AtmosController.SetBlock(_cell.x, _cell.y);
             }
+        }
+
+        private void EnsureControllers()
+        {
+            if(VisionController == null)
+                VisionController = FindObjectOfType<VisionController>();
+            if(ServerController == null)
+            ServerController = FindObjectOfType<ServerController>();
+            if(WalkController == null)
+                WalkController = FindObjectOfType<WalkController>();
+            if(AtmosController == null)
+                AtmosController = FindObjectOfType<AtmosController>();
         }
 
         private void UpdateTransfrom()

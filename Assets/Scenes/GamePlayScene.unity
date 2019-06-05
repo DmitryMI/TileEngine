@@ -23251,7 +23251,7 @@ MonoBehaviour:
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
   m_LogLevel: 2
-  m_PlayerPrefab: {fileID: 1168459338012424, guid: bbaeb4adcd9dd6f4bb55a5b4a43e0159,
+  m_PlayerPrefab: {fileID: 389480118183415350, guid: 9f5b663b343621a4d8585483a40bcb6b,
     type: 3}
   m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 0
@@ -46779,6 +46779,11 @@ PrefabInstance:
       propertyPath: m_AssetId.i15
       value: 164
       objectReference: {fileID: 0}
+    - target: {fileID: 114911316410624180, guid: 88701ffdcaab41f43a267e78e8b84ba4,
+        type: 3}
+      propertyPath: _powerStored
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88701ffdcaab41f43a267e78e8b84ba4, type: 3}
 --- !u!1001 &1743705716
@@ -55493,6 +55498,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _wasLoaded: 0
+  _DEBUG_VisionProcessingOn: 0
   _tileMaskPrefab: {fileID: 8762615377267334775, guid: e47054829ec224b4e8af85be8c64735c,
     type: 3}
 --- !u!114 &2057525906
