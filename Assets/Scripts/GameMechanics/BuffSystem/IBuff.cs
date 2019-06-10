@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.GameMechanics.BuffSystem
 {
-    public interface IBuff
+    public interface IDisplayableBuff
     {
         SpriteSet BuffIcon { get; }
         bool IsIconVisible { get; }
-
-        float SpeedMultiplier { get; }
     }
 }

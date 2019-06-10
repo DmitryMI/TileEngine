@@ -470,7 +470,20 @@ MonoBehaviour:
   RightSprite: {fileID: 21300000, guid: ad9c6bd6806922941afb688bae3d45df, type: 3}
   LyingSprite: {fileID: 0}
   IsMobLying: 0
-  MoveSpeed: 5
+  DefaultMoveSpeed: 5
+  HealthData:
+    OverallDamage:
+      _brute: 0
+      _burn: 0
+      _toxin: 0
+      _suffocation: 0
+    ChestDamage:
+      _brute: 0
+      _burn: 0
+      _toxin: 0
+      _suffocation: 0
+    DefaultMaxNutrition: 100
+    CurrentNutrition: 50
   HumanoidHairSetId: 0
   LeftHandItem: {fileID: 0}
   RightHandItem: {fileID: 0}

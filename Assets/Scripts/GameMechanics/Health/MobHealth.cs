@@ -12,6 +12,12 @@ namespace Assets.Scripts.GameMechanics.Health
         [SerializeField]
         public DamageBuffer ChestDamage;
 
+        [SerializeField]
+        public float DefaultMaxNutrition;
+
+        [SerializeField] public float CurrentNutrition;
+
+
         protected virtual void ModifyChestDamage(DamageBuffer damage)
         {
             OverallDamage += damage;
