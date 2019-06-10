@@ -3,6 +3,7 @@ using System.Collections;
 using Assets.Scripts.Controllers;
 using Assets.Scripts.Objects.Equipment.Power;
 using Assets.Scripts.Objects.Mob;
+using Assets.Scripts.Objects.Mob.Humanoids;
 using UnityEngine;
 using UnityEngine.Networking;
 

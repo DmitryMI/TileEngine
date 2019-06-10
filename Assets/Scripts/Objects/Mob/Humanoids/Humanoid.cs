@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Assets.Scripts.GameMechanics;
+using Assets.Scripts.GameMechanics.Health;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Assets.Scripts.Objects.Mob
+namespace Assets.Scripts.Objects.Mob.Humanoids
 {
-    public abstract class Humanoid : Mob, IItemContainer
+    public abstract class Humanoid : Animal, IItemContainer
     {
 
         [SerializeField] [SyncVar] protected int HumanoidHairSetId;
@@ -28,12 +25,7 @@ namespace Assets.Scripts.Objects.Mob
         protected GameObject CostumeItem;
 
         public int HairSetId => HumanoidHairSetId;
-
-        protected override bool Transparent => true;
-
-        protected override bool CanWalkThrough => true;
-
-        protected override bool PassesGas => true;
+        
 
         public bool BlocksLightFromInside => false;
 
@@ -60,9 +52,6 @@ namespace Assets.Scripts.Objects.Mob
                 else return Direction.Backward;
             }
         }
-
-        //public override bool IsLying => IsMobLying;
-
         
         public Item.Item GetItemBySlot(SlotEnum slot)
         {
@@ -276,5 +265,10 @@ namespace Assets.Scripts.Objects.Mob
 
         [Obsolete("Consider removing this property. What's it's purpose?")]
         public bool Spawned { get; set; }
+
+        protected override void CreateHealthData()
+        {
+            HealthData = new HumanoidHealth();
+        }
     }
 }

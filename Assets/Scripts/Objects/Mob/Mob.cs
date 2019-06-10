@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Assets.Scripts.GameMechanics;
+using Assets.Scripts.GameMechanics.Health;
 using Assets.Scripts.Objects.Equipment.Doors;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -23,15 +24,20 @@ namespace Assets.Scripts.Objects.Mob
         [SerializeField]
         protected float MoveSpeed;
 
+        [SerializeField] [SyncVar] protected MobHealth HealthData;
+
         private bool _movementFinished = true;
         protected SpriteRenderer Renderer;
 
         public virtual bool IsLying => IsMobLying;
-        
+
+        public MobHealth Health => HealthData;
+
         protected override void Start()
         {
             base.Start();
             Renderer = GetComponent<SpriteRenderer>();
+            CreateHealthData();
         }
 
         protected override void Update()
@@ -39,6 +45,9 @@ namespace Assets.Scripts.Objects.Mob
             base.Update();
             UpdateSprite();
         }
+
+        [Server]
+        protected abstract void CreateHealthData();
 
         public virtual void DoTargetAction(TileObject to)
         {

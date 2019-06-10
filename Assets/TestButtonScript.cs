@@ -3,7 +3,9 @@ using Assets.Scripts;
 using Assets.Scripts.Controllers;
 using Assets.Scripts.Controllers.Atmos;
 using Assets.Scripts.GameMechanics;
+using Assets.Scripts.GameMechanics.Health;
 using Assets.Scripts.Objects.Mob;
+using Assets.Scripts.Objects.Mob.Humanoids;
 using UnityEngine;
 
 namespace Assets
@@ -11,19 +13,22 @@ namespace Assets
     public class TestButtonScript : MonoBehaviour
     {
         [SerializeField]
-        private HumanoidImpactTarget target;
+        private HumanoidHealth target;
 
         [SerializeField] private DamageType _damageType;
 
         public void TestButtonClick()
         {
-            Damage damage = new Damage(_damageType, 10);
+            DamageBuffer damage = new DamageBuffer(_damageType, 10);
 
-            //Humanoid player = PlayerActionController.Current.LocalPlayerMob;
+            Humanoid player = PlayerActionController.Current.LocalPlayerMob as Humanoid;
 
-            /*HumanHealthData health = player.HealthData;
+            if (player != null)
+            {
+                HumanoidHealth health = player.Health as HumanoidHealth;
 
-            health.DoDamage(damage, target);*/
+                health?.ModifyDamage(damage, ImpactTarget.Chest);
+            }
         }
     }
 }

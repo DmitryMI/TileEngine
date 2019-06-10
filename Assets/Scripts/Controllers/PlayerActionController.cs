@@ -5,6 +5,7 @@ using Assets.Scripts.GameMechanics;
 using Assets.Scripts.Objects;
 using Assets.Scripts.Objects.Item;
 using Assets.Scripts.Objects.Mob;
+using Assets.Scripts.Objects.Mob.Humanoids;
 using Assets.Scripts.Ui;
 using Assets.Scripts._Legacy;
 using UnityEngine;

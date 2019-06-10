@@ -3,6 +3,7 @@ using Assets.Scripts.Controllers;
 using Assets.Scripts.GameMechanics;
 using Assets.Scripts.HumanAppearance;
 using Assets.Scripts.Objects.Mob;
+using Assets.Scripts.Objects.Mob.Humanoids;
 using Assets.Scripts.Ui;
 using UnityEngine;
 using UnityEngine.Networking;

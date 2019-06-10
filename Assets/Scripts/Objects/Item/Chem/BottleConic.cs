@@ -4,6 +4,7 @@ using Assets.Scripts.Controllers;
 using Assets.Scripts.GameMechanics.Chemistry;
 using Assets.Scripts.GameMechanics.Chemistry.Reactions;
 using Assets.Scripts.Objects.Mob;
+using Assets.Scripts.Objects.Mob.Humanoids;
 using UnityEngine;
 using UnityEngine.Networking;
 

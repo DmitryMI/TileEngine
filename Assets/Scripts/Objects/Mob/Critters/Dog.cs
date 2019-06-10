@@ -3,7 +3,7 @@ using UnityEngine.Networking;
 
 namespace Assets.Scripts.Objects.Mob.Critters
 {
-    class Dog : Mob
+    class Dog : Animal
     {
         [SerializeField]
         protected string DogName;
@@ -19,11 +19,7 @@ namespace Assets.Scripts.Objects.Mob.Critters
             Source = GetComponent<AudioSource>();
         }
 
-        protected override bool Transparent => true;
-        protected override bool CanWalkThrough => true;
-        protected override bool PassesGas => true;
         public override string DescriptiveName => DogName;
-        public override bool IsLying { get; }
 
         
         public override void DoTargetAction(TileObject to)
@@ -38,7 +34,13 @@ namespace Assets.Scripts.Objects.Mob.Critters
             RpcDoBark(target);
         }
 
+        [ClientRpc]
         private void RpcDoBark(GameObject target)
+        {
+            Bark();
+        }
+
+        private void Bark()
         {
             if (!Source.isPlaying)
             {

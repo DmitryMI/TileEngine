@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Objects.Mob;
+using Assets.Scripts.Objects.Mob.Humanoids;
 using UnityEngine;
 
 namespace Assets.Scripts.Ui

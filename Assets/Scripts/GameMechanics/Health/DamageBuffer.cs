@@ -1,10 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Assets.Scripts.GameMechanics
+namespace Assets.Scripts.GameMechanics.Health
 {
     [Serializable]
-    public struct Damage
+    public struct DamageBuffer
     {
         [SerializeField]
         private float _brute;
@@ -15,7 +15,7 @@ namespace Assets.Scripts.GameMechanics
         [SerializeField]
         private float _suffocation;
 
-        public bool Equals(Damage other)
+        public bool Equals(DamageBuffer other)
         {
             return Brute.Equals(other.Brute) && Burn.Equals(other.Burn) && Toxin.Equals(other.Toxin) && Suffocation.Equals(other.Suffocation);
         }
@@ -23,7 +23,7 @@ namespace Assets.Scripts.GameMechanics
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is Damage && Equals((Damage) obj);
+            return obj is DamageBuffer && Equals((DamageBuffer) obj);
         }
 
         public override int GetHashCode()
@@ -64,7 +64,7 @@ namespace Assets.Scripts.GameMechanics
             set { _suffocation = value; }
         }
 
-        public Damage(float brute, float burn, float toxin, float suffocation)
+        public DamageBuffer(float brute, float burn, float toxin, float suffocation)
         {
             _brute = brute;
             _burn = burn;
@@ -72,7 +72,7 @@ namespace Assets.Scripts.GameMechanics
             _suffocation = suffocation;
         }
 
-        public Damage(DamageType damageType, float amount)
+        public DamageBuffer(DamageType damageType, float amount)
         {
             switch (damageType)
             {
@@ -105,32 +105,32 @@ namespace Assets.Scripts.GameMechanics
             }
         }
 
-        public static Damage operator +(Damage a, Damage b)
+        public static DamageBuffer operator +(DamageBuffer a, DamageBuffer b)
         {
-            return new Damage(a.Brute + b.Brute, a.Burn + b.Burn, a.Toxin + b.Toxin, a.Suffocation + b.Suffocation);
+            return new DamageBuffer(a.Brute + b.Brute, a.Burn + b.Burn, a.Toxin + b.Toxin, a.Suffocation + b.Suffocation);
         }
 
-        public static Damage operator -(Damage a)
+        public static DamageBuffer operator -(DamageBuffer a)
         {
-            return new Damage(-a.Brute, -a.Burn, -a.Toxin, -a.Suffocation);
+            return new DamageBuffer(-a.Brute, -a.Burn, -a.Toxin, -a.Suffocation);
         }
 
-        public static Damage operator -(Damage a, Damage b)
+        public static DamageBuffer operator -(DamageBuffer a, DamageBuffer b)
         {
-            return new Damage(a.Brute - b.Brute, a.Burn - b.Burn, a.Toxin - b.Toxin, a.Suffocation - b.Suffocation);
+            return new DamageBuffer(a.Brute - b.Brute, a.Burn - b.Burn, a.Toxin - b.Toxin, a.Suffocation - b.Suffocation);
         }
 
-        public static Damage operator *(Damage a, float k)
+        public static DamageBuffer operator *(DamageBuffer a, float k)
         {
-            return new Damage(a.Brute * k, a.Burn * k, a.Toxin * k, a.Suffocation * k);
+            return new DamageBuffer(a.Brute * k, a.Burn * k, a.Toxin * k, a.Suffocation * k);
         }
 
-        public static Damage operator /(Damage a, float k)
+        public static DamageBuffer operator /(DamageBuffer a, float k)
         {
-            return new Damage(a.Brute / k, a.Burn / k, a.Toxin / k, a.Suffocation / k);
+            return new DamageBuffer(a.Brute / k, a.Burn / k, a.Toxin / k, a.Suffocation / k);
         }
 
-        public static bool operator ==(Damage a, Damage b)
+        public static bool operator ==(DamageBuffer a, DamageBuffer b)
         {
             bool result =
                 Math.Abs(a.Burn - b.Burn) < ComparisonTolerance &&
@@ -140,7 +140,7 @@ namespace Assets.Scripts.GameMechanics
             return result;
         }
 
-        public static bool operator !=(Damage a, Damage b)
+        public static bool operator !=(DamageBuffer a, DamageBuffer b)
         {
             return !(a == b);
         }

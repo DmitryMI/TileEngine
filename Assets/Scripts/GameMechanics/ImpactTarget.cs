@@ -1,6 +1,8 @@
-﻿namespace Assets.Scripts.GameMechanics
+﻿using System;
+
+namespace Assets.Scripts.GameMechanics
 {
-    public enum HumanoidImpactTarget
+    public enum ImpactTarget
     {
         Head = 0,
         Neck = 1,

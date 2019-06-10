@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.GameMechanics
+﻿namespace Assets.Scripts.GameMechanics.Health
 {
     public enum DamageType
     {

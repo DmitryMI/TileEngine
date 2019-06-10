@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Assets.Scripts.GameMechanics;
 using Assets.Scripts.Objects.Mob;
+using Assets.Scripts.Objects.Mob.Humanoids;
 using UnityEngine;
 
 namespace Assets.Scripts.HumanAppearance
