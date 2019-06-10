@@ -7,10 +7,10 @@ namespace Assets.Scripts.GameMechanics.Health
     public class MobHealth
     {
         [SerializeField]
-        protected DamageBuffer OverallDamage;
+        public DamageBuffer OverallDamage;
 
         [SerializeField]
-        protected DamageBuffer ChestDamage;
+        public DamageBuffer ChestDamage;
 
         protected virtual void ModifyChestDamage(DamageBuffer damage)
         {

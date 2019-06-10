@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 90f2c354ac66dce42a8f8f11751e8d86
+guid: 85a98e1d206339c4490b80d59376fc18
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -45,7 +45,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -86,7 +86,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 20d829fa7061d0743899f711b3c282a8
+    spriteID: c11a08fbdd07cd94f8912fd3e33fd5a9
     internalID: 0
     vertices: []
     indices: 
@@ -94,7 +94,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
   spritePackingTag: 
-  pSDRemoveMatte: 1
+  pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 1
   userData: 
   assetBundleName: 

@@ -58,5 +58,14 @@ namespace Assets.Scripts
             return array.ElementAt(index);
         }
 
+        public static Color ClampRedGreenIntensity(Color c, float maxIntensity)
+        {
+            Vector2 vector2 = new Vector2(c.r, c.g);
+            vector2.Normalize();
+            vector2 = vector2 * maxIntensity;
+
+            return new Color(vector2.x, vector2.y, 0);
+        }
+
     }
 }
