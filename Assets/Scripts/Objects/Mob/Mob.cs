@@ -22,7 +22,7 @@ namespace Assets.Scripts.Objects.Mob
         [SerializeField] [SyncVar] protected bool IsMobLying;
 
         [SerializeField]
-        protected float MoveSpeed;
+        protected float DefaultMoveSpeed;
 
         [SerializeField] [SyncVar] protected MobHealth HealthData;
 
@@ -69,7 +69,7 @@ namespace Assets.Scripts.Objects.Mob
             if (!EnsureControllers())
                 return;
 
-            float ms = MoveSpeed;
+            float ms = DefaultMoveSpeed;
 
             if(IsLying)
                 return;
