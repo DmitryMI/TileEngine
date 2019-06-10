@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Assets.Scripts
 {
     [Serializable]
-    struct SpriteSet
+    public struct SpriteSet
     {
         [SerializeField]
         private int _currentSpriteIndex;
