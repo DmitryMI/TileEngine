@@ -1,9 +1,15 @@
-﻿namespace Assets.Scripts.GameMechanics.Health
+﻿using System;
+using UnityEngine;
+
+namespace Assets.Scripts.GameMechanics.Health
 {
+    [Serializable]
     public class MobHealth
     {
+        [SerializeField]
         protected DamageBuffer OverallDamage;
 
+        [SerializeField]
         protected DamageBuffer ChestDamage;
 
         protected virtual void ModifyChestDamage(DamageBuffer damage)
