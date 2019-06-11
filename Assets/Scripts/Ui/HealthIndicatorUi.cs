@@ -16,14 +16,16 @@ namespace Assets.Scripts.Ui
         private Image _stateMessage;
 
         [SerializeField] private SpriteSet _critMessageImg;
-        //private Sprite _critMessageImg;
+
+        [SerializeField] private SpriteSet _fullHpMessageImg;
 
 
         
         void Update()
         {
             _critMessageImg.OnUpdate();
-            if(EnsureMobLoaded())
+            _fullHpMessageImg.OnUpdate();
+            if (EnsureMobLoaded())
             {
                 UpdateHealthIndicator();
             }
@@ -41,7 +43,24 @@ namespace Assets.Scripts.Ui
             //DamageBuffer buffer = humanoidHealth.GetOverallDamage();
             float hp = health.NetHealthData.DamagePercentagePerception;
 
-            if (hp > 0)
+            float healthPointsValue = hp * GlobalPreferences.Instance.HumanMaxHp;
+
+            if (healthPointsValue >= GlobalPreferences.Instance.FullHpIndicationBorder)
+            {
+                _stateMessage.enabled = true;
+                _stateMessage.sprite = _fullHpMessageImg.CurrentSprite;
+
+                float red = 1 - hp;
+                float green = hp;
+
+                Color color = Color.black;
+                color.r = red;
+                color.g = green;
+
+                color = Utils.ClampRedGreenIntensity(color, 0.7f);
+                _humanDoll.color = color;
+            }
+            else if (healthPointsValue > GlobalPreferences.Instance.CriticalHealthPointsBorder)
             {
                 _stateMessage.enabled = false;
                 float red = 1 - hp;

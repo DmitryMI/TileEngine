@@ -29,6 +29,19 @@ namespace Assets.Scripts
         private float _humanNutritionInitial = 100.0f;
 
 
+        [Header("Health settings")]
+        [SerializeField]
+        private float _criticalHealthPointsBorder = 0.0f;
+
+        [SerializeField]
+        private float _fullHpIndicationBorder = 90.0f;
+
+        [SerializeField]
+        private float _humanMaxHp = 100.0f;
+
+        [SerializeField]
+        private float _humanDeathHp = -100.0f;
+
 
 
 
@@ -47,7 +60,24 @@ namespace Assets.Scripts
             get { return _humanNutritionInitial; }
         }
 
+        public float CriticalHealthPointsBorder
+        {
+            get { return _criticalHealthPointsBorder; }
+        }
 
-        
+        public float FullHpIndicationBorder
+        {
+            get { return _fullHpIndicationBorder; }
+        }
+
+        public float HumanMaxHp
+        {
+            get { return _humanMaxHp; }
+        }
+
+        public float HumanDeathHp
+        {
+            get { return _humanDeathHp; }
+        }
     }
 }
