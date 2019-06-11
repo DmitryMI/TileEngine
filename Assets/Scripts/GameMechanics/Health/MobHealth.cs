@@ -7,8 +7,14 @@ namespace Assets.Scripts.GameMechanics.Health
     public class MobHealth
     {
         // Network syncables
-        [SerializeField] public float DamagePercentagePerception;
-        [SerializeField] public float NutritionPercentagePerception;
+        [Serializable]
+        public struct ClientData
+        {
+            [SerializeField] public float DamagePercentagePerception;
+            [SerializeField] public float NutritionPercentagePerception;
+        }
+
+        public ClientData NetHealthData;
 
 
         protected DamageBuffer OverallDamage;
@@ -66,8 +72,8 @@ namespace Assets.Scripts.GameMechanics.Health
             if (NutritionCurrent <= 0)
                 NutritionCurrent = 0;
 
-            DamagePercentagePerception = GetDamagePercentageByFeelings();
-            NutritionPercentagePerception = GetNutritionPercentageByFeelings();
+            NetHealthData.DamagePercentagePerception = GetDamagePercentageByFeelings();
+            NetHealthData.NutritionPercentagePerception = GetNutritionPercentageByFeelings();
         }
 
         public virtual void OnStart()

@@ -40,7 +40,7 @@ namespace Assets.Scripts.Ui
 
         void UpdateHungerIndicator()
         {
-            float nutritionPercentage = LocalPlayer.Health.NutritionPercentagePerception;
+            float nutritionPercentage = LocalPlayer.Health.NetHealthData.NutritionPercentagePerception;
 
             if (nutritionPercentage > 0.85f)
             {

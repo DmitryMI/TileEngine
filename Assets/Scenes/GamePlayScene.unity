@@ -42017,7 +42017,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _humanNutritionMax: 100
-  _humanNutritionDecrement: 0.1
+  _humanNutritionDecrement: 5
   _humanNutritionInitial: 100
 --- !u!4 &1574221497
 Transform:

@@ -27,40 +27,41 @@ namespace Assets.Scripts.Ui
             {
                 UpdateHealthIndicator();
             }
+            else
+            {
+                
+            }
         }
 
         private void UpdateHealthIndicator()
         {
             MobHealth health = LocalPlayer.Health;
 
-            if(health is HumanoidHealth humanoidHealth)
+
+            //DamageBuffer buffer = humanoidHealth.GetOverallDamage();
+            float hp = health.NetHealthData.DamagePercentagePerception;
+
+            if (hp > 0)
             {
-                //DamageBuffer buffer = humanoidHealth.GetOverallDamage();
-                float hp = humanoidHealth.DamagePercentagePerception;
+                _stateMessage.enabled = false;
+                float red = 1 - hp;
+                float green = hp;
 
-                if (hp > 0)
-                {
-                    _stateMessage.enabled = false;
-                    float red = 1 - hp;
-                    float green = hp;
+                Color color = Color.black;
+                color.r = red;
+                color.g = green;
 
-                    Color color = Color.black;
-                    color.r = red;
-                    color.g = green;
-
-                    color = Utils.ClampRedGreenIntensity(color, 0.7f);
-                    _humanDoll.color = color;
-                }
-                else
-                {
-                    // Critical state
-                    _stateMessage.enabled = true;
-                    _stateMessage.sprite = _critMessageImg.CurrentSprite;
-                    _humanDoll.color = _critDollColor;
-                }
+                color = Utils.ClampRedGreenIntensity(color, 0.7f);
+                _humanDoll.color = color;
+            }
+            else
+            {
+                // Critical state
+                _stateMessage.enabled = true;
+                _stateMessage.sprite = _critMessageImg.CurrentSprite;
+                _humanDoll.color = _critDollColor;
             }
         }
-
-        
     }
+    
 }

@@ -32,13 +32,16 @@ namespace Assets.Scripts.Objects.Item.Chem
         {
             base.Update();
 
-            if(isServer)
+            if (isServer)
+            {
                 UpdateColorAndVolume();
+                if (ServerController.Current != null && ServerController.Current.Ready)
+                    DoReactions();
+            }
 
             UpdateFiller();
             
-            if(ServerController.Current != null && ServerController.Current.Ready)
-                DoReactions();
+            
         }
 
         [Server]

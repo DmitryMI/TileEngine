@@ -201,8 +201,12 @@ namespace Assets.Scripts.Objects
                 return false;
             if (!WalkController.IsReady)
                 return false;
-            if (!AtmosController.IsReady)
-                return false;
+
+            if (isServer)
+            {
+                if (!AtmosController.IsReady)
+                    return false;
+            }
 
             return true;
         }

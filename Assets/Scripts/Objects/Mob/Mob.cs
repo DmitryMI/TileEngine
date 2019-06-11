@@ -24,7 +24,7 @@ namespace Assets.Scripts.Objects.Mob
         [SerializeField]
         protected float DefaultMoveSpeed;
 
-        [SerializeField] [SyncVar] protected MobHealth HealthData;
+        [SerializeField] protected MobHealth HealthData;
 
         private bool _movementFinished = true;
         protected SpriteRenderer Renderer;
@@ -38,9 +38,10 @@ namespace Assets.Scripts.Objects.Mob
             base.Start();
             Renderer = GetComponent<SpriteRenderer>();
 
+            CreateHealthData();
+
             if (isServer)
             {
-                CreateHealthData();
                 HealthData.OnStart();
             }
         }
@@ -50,8 +51,23 @@ namespace Assets.Scripts.Objects.Mob
             base.Update();
             UpdateSprite();
 
-            if(isServer)
+            if (isServer)
+            {
                 HealthData.OnUpdate();
+                SendHealthDataToClients();
+            }
+        }
+
+        [Server]
+        protected void SendHealthDataToClients()
+        {
+            RpcReceiveHealthData(HealthData.NetHealthData);
+        }
+    
+        [ClientRpc]
+        protected void RpcReceiveHealthData(MobHealth.ClientData data)
+        {
+            HealthData.NetHealthData = data;
         }
 
         [Server]
