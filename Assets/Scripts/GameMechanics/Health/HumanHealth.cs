@@ -8,6 +8,11 @@ namespace Assets.Scripts.GameMechanics.Health
 {
     class HumanHealth : HumanoidHealth
     {
-        
+        public override void OnStart()
+        {
+            NutritionMax = GlobalPreferences.Instance.HumanMaxNutrition;
+            NutritionDecrement = GlobalPreferences.Instance.HumanNutritionDecrement;
+            NutritionCurrent = GlobalPreferences.Instance.HumanNutritionInitial;
+        }
     }
 }

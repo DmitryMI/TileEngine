@@ -6,18 +6,21 @@ namespace Assets.Scripts.GameMechanics.Health
     [Serializable]
     public class MobHealth
     {
-        [SerializeField]
-        public DamageBuffer OverallDamage;
+        // Network syncables
+        [SerializeField] public float DamagePercentagePerception;
+        [SerializeField] public float NutritionPercentagePerception;
 
-        [SerializeField]
-        public DamageBuffer ChestDamage;
 
-        [SerializeField]
-        public float NutritionMax;
+        protected DamageBuffer OverallDamage;
 
-        [SerializeField] public float NutritionCurrent;
+        protected DamageBuffer ChestDamage;
 
-        [SerializeField] public float NutritionDecrement;
+
+        protected float NutritionMax;
+
+        protected float NutritionCurrent;
+
+        protected float NutritionDecrement;
 
 
         protected virtual void ModifyChestDamage(DamageBuffer damage)
@@ -62,9 +65,17 @@ namespace Assets.Scripts.GameMechanics.Health
             NutritionCurrent -= NutritionDecrement * Time.deltaTime;
             if (NutritionCurrent <= 0)
                 NutritionCurrent = 0;
+
+            DamagePercentagePerception = GetDamagePercentageByFeelings();
+            NutritionPercentagePerception = GetNutritionPercentageByFeelings();
         }
 
-        public virtual float DamagePercentageByFeelings => 1.0f - OverallDamage.Summ / 100.0f;
-        public virtual float NutritionPercentageByFeelings => NutritionCurrent / NutritionMax;
+        public virtual void OnStart()
+        {
+
+        }
+
+        protected virtual float GetDamagePercentageByFeelings() => 1.0f - OverallDamage.Summ / 100.0f;
+        protected virtual float GetNutritionPercentageByFeelings() => NutritionCurrent / NutritionMax;
     }
 }

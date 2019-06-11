@@ -38,8 +38,11 @@ namespace Assets.Scripts.Objects.Mob
             base.Start();
             Renderer = GetComponent<SpriteRenderer>();
 
-            if(isServer)
+            if (isServer)
+            {
                 CreateHealthData();
+                HealthData.OnStart();
+            }
         }
 
         protected override void Update()

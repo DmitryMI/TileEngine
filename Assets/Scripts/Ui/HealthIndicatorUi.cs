@@ -36,7 +36,7 @@ namespace Assets.Scripts.Ui
             if(health is HumanoidHealth humanoidHealth)
             {
                 //DamageBuffer buffer = humanoidHealth.GetOverallDamage();
-                float hp = humanoidHealth.DamagePercentageByFeelings;
+                float hp = humanoidHealth.DamagePercentagePerception;
 
                 if (hp > 0)
                 {

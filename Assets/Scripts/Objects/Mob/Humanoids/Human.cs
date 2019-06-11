@@ -8,12 +8,7 @@ namespace Assets.Scripts.Objects.Mob.Humanoids
 
         protected override void CreateHealthData()
         {
-            HealthData = new HumanHealth
-            {
-                NutritionMax = GlobalPreferences.Instance.HumanMaxNutrition,
-                NutritionDecrement = GlobalPreferences.Instance.HumanNutritionDecrement,
-                NutritionCurrent = GlobalPreferences.Instance.HumanNutritionInitial
-            };
+            HealthData = new HumanHealth();
         }
     }
 }
