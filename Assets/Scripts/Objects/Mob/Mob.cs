@@ -37,13 +37,18 @@ namespace Assets.Scripts.Objects.Mob
         {
             base.Start();
             Renderer = GetComponent<SpriteRenderer>();
-            CreateHealthData();
+
+            if(isServer)
+                CreateHealthData();
         }
 
         protected override void Update()
         {
             base.Update();
             UpdateSprite();
+
+            if(isServer)
+                HealthData.OnUpdate();
         }
 
         [Server]
@@ -187,6 +192,19 @@ namespace Assets.Scripts.Objects.Mob
                         break;
                 }
             }
+        }
+
+        public void SendDataToServer(INetworkDataReceiver sender, INetworkDataReceiver receiver, byte[] data)
+        {
+            CmdSendByteArray(sender.gameObject, receiver.gameObject, data);
+        }
+
+        [Command]
+        private void CmdSendByteArray(GameObject senderGo, GameObject receiverGo, byte[] data)
+        {
+            INetworkDataReceiver sender = senderGo.GetComponent<INetworkDataReceiver>();
+            INetworkDataReceiver receiver = receiverGo.GetComponent<INetworkDataReceiver>();
+            receiver.ReceiveData(sender, data);
         }
 
         public int X => Cell.x;

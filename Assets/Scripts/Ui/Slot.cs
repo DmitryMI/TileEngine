@@ -2,6 +2,7 @@
 using Assets.Scripts.GameMechanics;
 using Assets.Scripts.Objects.Item;
 using Assets.Scripts.Objects.Mob;
+using Assets.Scripts.Objects.Mob.Humanoids;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,11 +36,10 @@ namespace Assets.Scripts.Ui
             _selfRenderer = GetComponent<Image>();
         }
 
-        protected override void Update()
+        protected void Update()
         {
-            base.Update();
-
-            if (LocalPlayer != null && _itemImage != null)
+            
+            if (EnsureMobLoaded() && _itemImage != null)
             {
                 UpdateHeldItem();
             }
@@ -57,7 +57,9 @@ namespace Assets.Scripts.Ui
 
         private void UpdateHeldItem()
         {
-            IDisplayable displayable = LocalPlayer?.GetItemBySlot(_slotEnum);
+            Humanoid localHumanoid = LocalPlayer as Humanoid;
+            
+            IDisplayable displayable = localHumanoid?.GetItemBySlot(_slotEnum);
 
             if (displayable != null)
             {
@@ -117,18 +119,23 @@ namespace Assets.Scripts.Ui
         {
             base.Click();
 
-            Item activeItem = LocalPlayer.GetItemBySlot(PlayerActionController.Current.ActiveHand);
+            Humanoid localHumanoid = LocalPlayer as Humanoid;
 
-            Item heldItem = LocalPlayer.GetItemBySlot(_slotEnum);
+            if(localHumanoid == null)
+                return;
+
+            Item activeItem = localHumanoid.GetItemBySlot(PlayerActionController.Current.ActiveHand);
+
+            Item heldItem = localHumanoid.GetItemBySlot(_slotEnum);
 
             if (heldItem == null && activeItem != null)
             {
-                LocalPlayer.MoveItem(PlayerActionController.Current.ActiveHand, _slotEnum);
+                localHumanoid.MoveItem(PlayerActionController.Current.ActiveHand, _slotEnum);
             }
 
             if (heldItem != null && activeItem == null)
             {
-                LocalPlayer.MoveItem(_slotEnum, PlayerActionController.Current.ActiveHand);
+                localHumanoid.MoveItem(_slotEnum, PlayerActionController.Current.ActiveHand);
                 // TODO Moving items via dragging
             }
 

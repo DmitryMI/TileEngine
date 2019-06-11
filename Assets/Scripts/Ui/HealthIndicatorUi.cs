@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.Ui
 {
-    public class HealthIndicatorUi : MonoBehaviour
+    public class HealthIndicatorUi : UiElement
     {
         [SerializeField] private Color _critDollColor;
 
@@ -18,13 +18,6 @@ namespace Assets.Scripts.Ui
         [SerializeField] private SpriteSet _critMessageImg;
         //private Sprite _critMessageImg;
 
-        private Mob _localMob;
-        private Color _cacheColor;
-
-        void Start()
-        {
-            _cacheColor = Color.black;
-        }
 
         
         void Update()
@@ -36,24 +29,14 @@ namespace Assets.Scripts.Ui
             }
         }
 
-        bool EnsureMobLoaded()
-        {
-            if (_localMob == null)
-            {
-                _localMob = PlayerActionController.Current?.LocalPlayerMob;
-            }
-
-            return _localMob != null;
-        }
-
         private void UpdateHealthIndicator()
         {
-            MobHealth health = _localMob.Health;
+            MobHealth health = LocalPlayer.Health;
 
             if(health is HumanoidHealth humanoidHealth)
             {
-                DamageBuffer buffer = humanoidHealth.GetOverallDamage();
-                float hp = (100.0f - buffer.Summ) / 100.0f;
+                //DamageBuffer buffer = humanoidHealth.GetOverallDamage();
+                float hp = humanoidHealth.DamagePercentageByFeelings;
 
                 if (hp > 0)
                 {
@@ -61,10 +44,9 @@ namespace Assets.Scripts.Ui
                     float red = 1 - hp;
                     float green = hp;
 
-                    Color color = _cacheColor;
+                    Color color = Color.black;
                     color.r = red;
                     color.g = green;
-                    color.b = 0;
 
                     color = Utils.ClampRedGreenIntensity(color, 0.7f);
                     _humanDoll.color = color;

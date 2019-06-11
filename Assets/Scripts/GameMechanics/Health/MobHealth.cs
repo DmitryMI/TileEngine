@@ -13,9 +13,11 @@ namespace Assets.Scripts.GameMechanics.Health
         public DamageBuffer ChestDamage;
 
         [SerializeField]
-        public float DefaultMaxNutrition;
+        public float NutritionMax;
 
-        [SerializeField] public float CurrentNutrition;
+        [SerializeField] public float NutritionCurrent;
+
+        [SerializeField] public float NutritionDecrement;
 
 
         protected virtual void ModifyChestDamage(DamageBuffer damage)
@@ -54,6 +56,15 @@ namespace Assets.Scripts.GameMechanics.Health
         }
 
         public DamageBuffer GetOverallDamage() => OverallDamage;
-        public DamageBuffer GetChestDamage() => ChestDamage;
+
+        public virtual void OnUpdate()
+        {
+            NutritionCurrent -= NutritionDecrement * Time.deltaTime;
+            if (NutritionCurrent <= 0)
+                NutritionCurrent = 0;
+        }
+
+        public virtual float DamagePercentageByFeelings => 1.0f - OverallDamage.Summ / 100.0f;
+        public virtual float NutritionPercentageByFeelings => NutritionCurrent / NutritionMax;
     }
 }

@@ -43,10 +43,9 @@ namespace Assets.Scripts.Ui
             StartCoroutine(LabelDelayedUpdater());
         }
 
-        protected override void Update()
+        protected  void Update()
         {
-            base.Update();
-
+            
             UpdateColoredButtons();
         }
 
@@ -79,22 +78,26 @@ namespace Assets.Scripts.Ui
 
         private void ClickLighting()
         {
-            LocalPlayer.SendDataToServer(_invoker, _invoker, new byte[1]{(byte)PowerablePriority.Lighting});
+            EnsureMobLoaded();
+            LocalPlayer?.SendDataToServer(_invoker, _invoker, new byte[1]{(byte)PowerablePriority.Lighting});
         }
 
         private void ClickEquipment()
         {
-            LocalPlayer.SendDataToServer(_invoker, _invoker, new byte[1] { (byte)PowerablePriority.Equipment });
+            EnsureMobLoaded();
+            LocalPlayer?.SendDataToServer(_invoker, _invoker, new byte[1] { (byte)PowerablePriority.Equipment });
         }
 
         private void ClickLifeSupport()
         {
-            LocalPlayer.SendDataToServer(_invoker, _invoker, new byte[1] { (byte)PowerablePriority.LifeSupport });
+            EnsureMobLoaded();
+            LocalPlayer?.SendDataToServer(_invoker, _invoker, new byte[1] { (byte)PowerablePriority.LifeSupport });
         }
 
         private void ClickContainment()
         {
-            LocalPlayer.SendDataToServer(_invoker, _invoker, new byte[1] { (byte)PowerablePriority.Containment });
+            EnsureMobLoaded();
+            LocalPlayer?.SendDataToServer(_invoker, _invoker, new byte[1] { (byte)PowerablePriority.Containment });
         }
 
         private void CloseButtonClick()

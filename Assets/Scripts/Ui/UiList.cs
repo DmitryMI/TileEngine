@@ -173,10 +173,8 @@ namespace Assets.Scripts.Ui
             }
         }
 
-        protected override void Update()
+        protected void Update()
         {
-            base.Update();
-
             ProcessPlacement();
         }
     }

@@ -247,25 +247,13 @@ namespace Assets.Scripts.Objects.Mob.Humanoids
                 item.CellOffset = position;
             }
         }
-
-
-        public void SendDataToServer(INetworkDataReceiver sender, INetworkDataReceiver receiver, byte[] data)
-        {
-            CmdSendByteArray(sender.gameObject, receiver.gameObject, data);
-        }
-
-        [Command]
-        private void CmdSendByteArray(GameObject senderGo, GameObject receiverGo, byte[] data)
-        {
-            INetworkDataReceiver sender = senderGo.GetComponent<INetworkDataReceiver>();
-            INetworkDataReceiver receiver = receiverGo.GetComponent<INetworkDataReceiver>();
-            receiver.ReceiveData(sender, data);
-        }
+        
 
 
         [Obsolete("Consider removing this property. What's it's purpose?")]
         public bool Spawned { get; set; }
 
+        [Server]
         protected override void CreateHealthData()
         {
             HealthData = new HumanoidHealth();

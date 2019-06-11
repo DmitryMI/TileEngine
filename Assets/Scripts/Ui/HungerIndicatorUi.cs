@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.Ui
 {
-    class HungerIndicatorUi : MonoBehaviour
+    class HungerIndicatorUi : UiElement
     {
         [SerializeField] private Image _foodImage;
         [SerializeField] private Image _messageDisplayer;
@@ -19,15 +19,13 @@ namespace Assets.Scripts.Ui
         [SerializeField] private SpriteSet _moderateSprite;
         [SerializeField] private SpriteSet _starvingSprite;
 
-        private Mob _localMob;
-
         void Start()
         {
             
         }
 
 
-        void Update()
+        protected void Update()
         {
             _slightlySprite.OnUpdate();
             _moderateSprite.OnUpdate();
@@ -38,20 +36,11 @@ namespace Assets.Scripts.Ui
                 UpdateHungerIndicator();
             }
         }
-
-        bool EnsureMobLoaded()
-        {
-            if (_localMob == null)
-            {
-                _localMob = PlayerActionController.Current?.LocalPlayerMob;
-            }
-
-            return _localMob != null;
-        }
+        
 
         void UpdateHungerIndicator()
         {
-            float nutritionPercentage = _localMob.Health.CurrentNutrition / _localMob.Health.DefaultMaxNutrition;
+            float nutritionPercentage = LocalPlayer.Health.NutritionPercentageByFeelings;
 
             if (nutritionPercentage > 0.85f)
             {

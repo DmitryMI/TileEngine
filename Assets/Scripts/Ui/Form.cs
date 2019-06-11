@@ -53,11 +53,6 @@ namespace Assets.Scripts.Ui
             }
         }
 
-        protected override void Update()
-        {
-            base.Update();
-        }
-
         private void Unroll()
         {
             for (int i = 0; i < transform.childCount; i++)

@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Objects.Mob;
+﻿using Assets.Scripts.Controllers;
+using Assets.Scripts.Objects.Mob;
 using Assets.Scripts.Objects.Mob.Humanoids;
 using UnityEngine;
 
@@ -6,28 +7,19 @@ namespace Assets.Scripts.Ui
 {
     public class UiElement : MonoBehaviour
     {
-        protected Humanoid LocalPlayer;
+        protected Mob LocalPlayer;
+        
 
-        private void FindLocalPlayer()
+        protected bool EnsureMobLoaded()
         {
-            Mob[] players = FindObjectsOfType<Mob>();
-
-            foreach (var mob in players)
+            if (LocalPlayer == null)
             {
-                var p =  mob as Humanoid;
-                if(p == null)
-                    continue;
-                
-                if (p.isLocalPlayer)
-                    LocalPlayer = p;
+                LocalPlayer = PlayerActionController.Current?.LocalPlayerMob;
             }
-        }
 
-        protected virtual void Update()
-        {
-            if(LocalPlayer == null)
-                FindLocalPlayer();
+            return LocalPlayer != null;
         }
+        
 
         public virtual void Click()
         {

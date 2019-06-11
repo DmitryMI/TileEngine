@@ -25,10 +25,8 @@ namespace Assets.Scripts.Ui
             _renderer = GetComponent<Image>();
         }
 
-        protected override void Update()
+        protected void Update()
         {
-            base.Update();
-
             _renderer.color = _backgroundColor;
         }
     }

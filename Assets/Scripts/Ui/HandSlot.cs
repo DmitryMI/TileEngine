@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Assets.Scripts.Controllers;
 using Assets.Scripts.Objects.Item;
+using Assets.Scripts.Objects.Mob.Humanoids;
 
 namespace Assets.Scripts.Ui
 {
@@ -11,14 +12,19 @@ namespace Assets.Scripts.Ui
     {
         public override void Click()
         {
-            Item itemThisHand = LocalPlayer.GetItemBySlot(_slotEnum);
-            Item sourceItem = LocalPlayer.GetItemBySlot(PlayerActionController.Current.ActiveHand);
+            base.Click();
 
-            if (itemThisHand)
+            Humanoid humanoid = LocalPlayer as Humanoid;
+            if (humanoid != null)
             {
-                itemThisHand.ApplyItemClient(sourceItem);
-            }
+                Item itemThisHand = humanoid.GetItemBySlot(_slotEnum);
+                Item sourceItem = humanoid.GetItemBySlot(PlayerActionController.Current.ActiveHand);
 
+                if (itemThisHand)
+                {
+                    itemThisHand.ApplyItemClient(sourceItem);
+                }
+            }
         }
     }
 }

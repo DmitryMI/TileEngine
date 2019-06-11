@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Controllers;
 using Assets.Scripts.GameMechanics;
 using Assets.Scripts.Objects.Item;
+using Assets.Scripts.Objects.Mob.Humanoids;
 using UnityEngine;
 
 namespace Assets.Scripts.Ui
@@ -9,11 +10,16 @@ namespace Assets.Scripts.Ui
     {
         public override void Click()
         {
-            SlotEnum slot = PlayerActionController.Current.ActiveHand;
-            Item item = LocalPlayer.GetItemBySlot(slot);
-            if (item != null)
+            Humanoid humanoid = PlayerActionController.Current.LocalPlayerMob as Humanoid;
+
+            if (humanoid != null)
             {
-                LocalPlayer.DropItem(slot, LocalPlayer.Cell, Vector2.zero);
+                SlotEnum slot = PlayerActionController.Current.ActiveHand;
+                Item item = humanoid.GetItemBySlot(slot);
+                if (item != null)
+                {
+                    humanoid.DropItem(slot, LocalPlayer.Cell, Vector2.zero);
+                }
             }
         }
     }

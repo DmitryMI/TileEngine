@@ -483,7 +483,7 @@ MonoBehaviour:
       _toxin: 0
       _suffocation: 0
     DefaultMaxNutrition: 100
-    CurrentNutrition: 50
+    CurrentNutrition: 100
   HumanoidHairSetId: 0
   LeftHandItem: {fileID: 0}
   RightHandItem: {fileID: 0}

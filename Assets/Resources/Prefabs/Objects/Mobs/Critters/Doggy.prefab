@@ -331,7 +331,21 @@ MonoBehaviour:
   RightSprite: {fileID: 21300000, guid: a2d77e7d0e7f53c439512c4459026718, type: 3}
   LyingSprite: {fileID: 0}
   IsMobLying: 0
-  MoveSpeed: 4
+  DefaultMoveSpeed: 4
+  HealthData:
+    OverallDamage:
+      _brute: 0
+      _burn: 0
+      _toxin: 0
+      _suffocation: 0
+    ChestDamage:
+      _brute: 0
+      _burn: 0
+      _toxin: 0
+      _suffocation: 0
+    NutritionMax: 0
+    NutritionCurrent: 0
+    NutritionDecrement: 0
   DogName: Unnamed doggy
   BarkSounds:
   - {fileID: 8300000, guid: 75f9765d0ccb0944d804c511646faa83, type: 3}
@@ -352,3 +366,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ControlledMob: {fileID: 0}
   DogBehaviourPeriod: 3
+  DoBehaviour: 0
