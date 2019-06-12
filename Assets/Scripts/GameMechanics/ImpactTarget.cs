@@ -2,7 +2,7 @@
 
 namespace Assets.Scripts.GameMechanics
 {
-    public enum ImpactTarget
+    public enum ImpactLimb
     {
         Head = 0,
         Neck = 1,

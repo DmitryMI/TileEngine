@@ -51,7 +51,7 @@ namespace Assets.Scripts.Objects.Mob
         private DamageBuffer CalculateTotalDamage()
         {
             DamageBuffer result = new DamageBuffer(0, 0, 0, 0);
-            foreach (ImpactTarget target in Enum.GetValues(typeof(ImpactTarget)))
+            foreach (ImpactLimb target in Enum.GetValues(typeof(ImpactLimb)))
             {
                 result += GetDamage(target);
             }
@@ -59,7 +59,7 @@ namespace Assets.Scripts.Objects.Mob
             return result;
         }
 
-        public DamageBuffer GetDamage(ImpactTarget target)
+        public DamageBuffer GetDamage(ImpactLimb target)
         {
             int index = (int) target;
 
@@ -69,7 +69,7 @@ namespace Assets.Scripts.Objects.Mob
             throw new ArgumentOutOfRangeException(nameof(target), $"{index} is not in range {0}..{_damageArray.Length}");
         }
 
-        public void DoDamage(DamageBuffer damage, ImpactTarget target)
+        public void DoDamage(DamageBuffer damage, ImpactLimb target)
         {
             int index = (int)target;
 

@@ -35,7 +35,7 @@
             Groin += damage;
         }
 
-        public override bool ModifyDamage(DamageBuffer damage, ImpactTarget impactTarget)
+        public override bool ModifyDamage(DamageBuffer damage, ImpactLimb impactTarget)
         {
             bool ok = base.ModifyDamage(damage, impactTarget);
 
@@ -44,19 +44,19 @@
 
             switch (impactTarget)
             {
-                case ImpactTarget.LeftArm:
+                case ImpactLimb.LeftArm:
                     ModifyLeftArmDamage(damage);
                     return true;
-                case ImpactTarget.RightArm:
+                case ImpactLimb.RightArm:
                     ModifyRightArmDamage(damage);
                     return true;
-                case ImpactTarget.LeftLeg:
+                case ImpactLimb.LeftLeg:
                     ModifyLeftLegDamage(damage);
                     return true;
-                case ImpactTarget.RightLeg:
+                case ImpactLimb.RightLeg:
                     ModifyRightLegDamage(damage);
                     return true;
-                case ImpactTarget.Groin:
+                case ImpactLimb.Groin:
                     ModifyGroinDamage(damage);
                     return true;
             }
@@ -64,7 +64,7 @@
             return false;
         }
 
-        public override bool SupportsImpactTarget(ImpactTarget impactTarget)
+        public override bool SupportsImpactTarget(ImpactLimb impactTarget)
         {
             bool hasBase = base.SupportsImpactTarget(impactTarget);
 
@@ -73,15 +73,15 @@
 
             switch (impactTarget)
             {
-                case ImpactTarget.LeftArm:
+                case ImpactLimb.LeftArm:
                     return true;
-                case ImpactTarget.RightArm:
+                case ImpactLimb.RightArm:
                     return true;
-                case ImpactTarget.LeftLeg:
+                case ImpactLimb.LeftLeg:
                     return true;
-                case ImpactTarget.RightLeg:
+                case ImpactLimb.RightLeg:
                     return true;
-                case ImpactTarget.Groin:
+                case ImpactLimb.Groin:
                     return true;
             }
 

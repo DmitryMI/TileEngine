@@ -27,7 +27,7 @@ namespace Assets
             {
                 HumanoidHealth health = player.Health as HumanoidHealth;
 
-                health?.ModifyDamage(damage, ImpactTarget.Chest);
+                health?.ModifyDamage(damage, ImpactLimb.Chest);
             }
         }
     }

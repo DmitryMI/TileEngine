@@ -37,7 +37,7 @@ namespace Assets.Scripts.GameMechanics.Health
             RightFoot += damage;
         }
 
-        public override bool ModifyDamage(DamageBuffer damage, ImpactTarget impactTarget)
+        public override bool ModifyDamage(DamageBuffer damage, ImpactLimb impactTarget)
         {
             bool ok = base.ModifyDamage(damage, impactTarget);
 
@@ -46,16 +46,16 @@ namespace Assets.Scripts.GameMechanics.Health
 
             switch (impactTarget)
             {
-                case ImpactTarget.LeftWrist:
+                case ImpactLimb.LeftWrist:
                     ModifyLeftWristDamage(damage);
                     return true;
-                case ImpactTarget.RightWrist:
+                case ImpactLimb.RightWrist:
                     ModifyRightWristDamage(damage);
                     return true;
-                case ImpactTarget.LeftFoot:
+                case ImpactLimb.LeftFoot:
                     ModifyLeftFootDamage(damage);
                     return true;
-                case ImpactTarget.RightFoot:
+                case ImpactLimb.RightFoot:
                     ModifyRightFootDamage(damage);
                     return true;
             }
@@ -64,7 +64,7 @@ namespace Assets.Scripts.GameMechanics.Health
         }
 
 
-        public override bool SupportsImpactTarget(ImpactTarget impactTarget)
+        public override bool SupportsImpactTarget(ImpactLimb impactTarget)
         {
             bool hasBase = base.SupportsImpactTarget(impactTarget);
 
@@ -73,13 +73,13 @@ namespace Assets.Scripts.GameMechanics.Health
 
             switch (impactTarget)
             {
-                case ImpactTarget.LeftWrist:
+                case ImpactLimb.LeftWrist:
                     return true;
-                case ImpactTarget.RightWrist:
+                case ImpactLimb.RightWrist:
                     return true;
-                case ImpactTarget.LeftFoot:
+                case ImpactLimb.LeftFoot:
                     return true;
-                case ImpactTarget.RightFoot:
+                case ImpactLimb.RightFoot:
                     return true;
             }
 

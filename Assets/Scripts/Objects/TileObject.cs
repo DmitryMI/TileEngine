@@ -34,6 +34,7 @@ namespace Assets.Scripts.Objects
         protected AtmosController AtmosController;
         protected TileController TileController;
         protected ICellPositionProvider PositionProvider;
+        protected AudioSource AudioSource;
 
         public WalkController GetWalkController()
         {
@@ -91,6 +92,8 @@ namespace Assets.Scripts.Objects
 
         protected virtual void Start()
         {
+            AudioSource = GetComponent<AudioSource>();
+
             Grid = FindObjectOfType<Grid>();
             EnsureControllers();
 
@@ -325,6 +328,34 @@ namespace Assets.Scripts.Objects
             public CellPositionProvider(TileObject obj)
             {
                 _tileObject = obj;
+            }
+        }
+
+        [Server]
+        public void PlaySoundOn(AudioClip clip)
+        {
+            if (AudioSource != null)
+            {
+                int id = AudioManager.Instance.GetId(clip);
+                RpcPlaySoundOn(id);
+            }
+            else
+            {
+                Debug.Log("Object does not support sound playing");
+            }
+        }
+
+        [ClientRpc]
+        private void RpcPlaySoundOn(int audioClipId)
+        {
+            if (AudioSource != null)
+            {
+                AudioClip clip = AudioManager.Instance.GetById(audioClipId);
+                AudioSource.PlayOneShot(clip);
+            }
+            else
+            {
+                Debug.Log("Object does not support sound playing");
             }
         }
     }

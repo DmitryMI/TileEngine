@@ -33,6 +33,7 @@ namespace Assets.Scripts.Controllers
         private SlotEnum _activeHand;
 
         [SerializeField] private Intent _intent = Intent.Help;
+        [SerializeField] private ImpactLimb _impactTarget = ImpactLimb.Chest;
 
         private bool _prevLmbPressed;
 
@@ -356,15 +357,22 @@ namespace Assets.Scripts.Controllers
         private void ClickOnTileObject()
         {
             TileObject to = _objectUnderCursor;
+            if(to == null)
+                return;
+            
 
             Humanoid playerHumanoid = _localPlayerMob as Humanoid;
             if (playerHumanoid != null)
             {
-                if (CheckVisibilityUnderCursor())
+                if (CheckVisibilityUnderCursor() && to.IsNeighbour(_localPlayerMob))
                 {
-                    if (to is IPlayerApplicable item && to.IsNeighbour(_localPlayerMob))
+                    if (to is IPlayerApplicable applicable)
                     {
-                        item.ApplyItemClient(playerHumanoid.GetItemBySlot(ActiveHand), _intent);
+                        applicable.ApplyItemClient(playerHumanoid.GetItemBySlot(ActiveHand), _intent);
+                    }
+                    else if (to is IPlayerImpactable impactable)
+                    {
+                        impactable.ImpactItemClient(playerHumanoid, playerHumanoid.GetItemBySlot(ActiveHand), _intent, _impactTarget);
                     }
                 }
             }

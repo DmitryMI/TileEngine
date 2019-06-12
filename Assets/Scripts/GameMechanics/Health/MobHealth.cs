@@ -41,11 +41,11 @@ namespace Assets.Scripts.GameMechanics.Health
         /// <param name="damage">Modifying damage buffer</param>
         /// <param name="impactTarget">Impact target</param>
         /// <returns>Returns true, if this MobHealth supports requested impact target</returns>
-        public virtual bool ModifyDamage(DamageBuffer damage, ImpactTarget impactTarget)
+        public virtual bool ModifyDamage(DamageBuffer damage, ImpactLimb impactTarget)
         {
             switch (impactTarget)
             {
-                case ImpactTarget.Chest:
+                case ImpactLimb.Chest:
                     ModifyChestDamage(damage);
                     return true;
             }
@@ -53,11 +53,11 @@ namespace Assets.Scripts.GameMechanics.Health
             return false;
         }
 
-        public virtual bool SupportsImpactTarget(ImpactTarget impactTarget)
+        public virtual bool SupportsImpactTarget(ImpactLimb impactTarget)
         {
             switch (impactTarget)
             {
-                case ImpactTarget.Chest:
+                case ImpactLimb.Chest:
                     return true;
             }
 

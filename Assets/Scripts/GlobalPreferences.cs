@@ -42,7 +42,11 @@ namespace Assets.Scripts
         [SerializeField]
         private float _humanDeathHp = -100.0f;
 
+        [Header("Fighting and damage settings")] [SerializeField]
+        private float _defaultFistDamage = 5.0f;
 
+        [SerializeField] private float _defaultFistDamageDispersion = 0.5f;
+        [SerializeField] private AudioClip[] _fistAttackClips;
 
 
         public float HumanMaxNutrition
@@ -78,6 +82,21 @@ namespace Assets.Scripts
         public float HumanDeathHp
         {
             get { return _humanDeathHp; }
+        }
+
+        public float DefaultFistDamage
+        {
+            get { return _defaultFistDamage; }
+        }
+
+        public float DefaultFistDamageDispersion
+        {
+            get { return _defaultFistDamageDispersion; }
+        }
+
+        public AudioClip[] FistAttackClips
+        {
+            get { return _fistAttackClips; }
         }
     }
 }

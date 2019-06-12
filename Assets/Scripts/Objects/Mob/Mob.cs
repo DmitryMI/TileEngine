@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Scripts.Controllers;
 using Assets.Scripts.GameMechanics;
 using Assets.Scripts.GameMechanics.Health;
 using Assets.Scripts.Objects.Equipment.Doors;
@@ -11,7 +12,7 @@ using UnityEngine.Networking;
 
 namespace Assets.Scripts.Objects.Mob
 {
-    public abstract class Mob : TileObject, IPositionProvider
+    public abstract class Mob : TileObject, IPositionProvider, IPlayerImpactable
     {
         [SerializeField] protected Sprite FrontSprite;
         [SerializeField] protected Sprite BackSprite;
@@ -226,9 +227,57 @@ namespace Assets.Scripts.Objects.Mob
             receiver.ReceiveData(sender, data);
         }
 
+
+
+        public void ImpactItemAuthority(Mob impactSource, Item.Item sourceItem, IPlayerImpactable impactable, Intent intent, ImpactLimb iTarget)
+        {
+            GameObject itemGo = sourceItem?.gameObject;
+            GameObject sourceGo = impactSource.gameObject;
+            CmdImpactItem(sourceGo, itemGo, impactable.gameObject, intent, iTarget);
+        }
+        
+
+        [Command]
+        private void CmdImpactItem(GameObject impactSource, GameObject sourceItemGo, GameObject impactableGo, Intent intent, ImpactLimb iTarget)
+        {
+            Item.Item sourceItem = sourceItemGo?.GetComponent<Item.Item>();
+            Mob sourceMob = impactSource?.GetComponent<Mob>();
+            IPlayerImpactable impactable = impactableGo.GetComponent<IPlayerImpactable>();
+
+            
+            impactable?.ImpactItemServer(sourceMob, sourceItem, intent, iTarget);
+        }
+
         public int X => Cell.x;
         public int Y => Cell.y;
         public float OffsetX => CellOffset.x;
         public float OffsetY => CellOffset.y;
+
+
+        public virtual void ImpactItemClient(Mob impactSource, Item.Item item, Intent intent, ImpactLimb impactTarget)
+        {
+            if (isServer)
+            {
+                ImpactItemServer(impactSource, item, intent, impactTarget);
+            }
+            else
+            {
+                PlayerActionController.Current.LocalPlayerMob.ImpactItemAuthority(impactSource, item, this, intent, impactTarget);
+            }
+        }
+
+        public virtual void ImpactItemServer(Mob impactSourceMob, Item.Item item, Intent intent, ImpactLimb impactTarget)
+        {
+            if (item == null)
+            {
+                IImpactHandler mobAsHandler = impactSourceMob as IImpactHandler;
+                mobAsHandler?.OnImpact(this, intent, impactTarget);
+            }
+            else
+            {
+                IImpactHandler itemAsHandler = item as IImpactHandler;
+                itemAsHandler?.OnImpact(this, intent, impactTarget);
+            }
+        }
     }
 }

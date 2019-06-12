@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 namespace Assets.Scripts.Objects.Mob.Humanoids
 {
-    public abstract class Humanoid : Animal, IItemContainer
+    public abstract class Humanoid : Animal, IItemContainer, IImpactHandler
     {
 
         [SerializeField] [SyncVar] protected int HumanoidHairSetId;
@@ -153,6 +153,23 @@ namespace Assets.Scripts.Objects.Mob.Humanoids
             CmdApplyItem(sourceGo, interactable.gameObject, intent);
         }
 
+        [Command]
+        private void CmdApplyItemSlot(SlotEnum activeHand, GameObject interactableGo, Intent intent)
+        {
+            Item.Item activeItem = GetItemBySlot(activeHand);
+            interactableGo.GetComponent<IPlayerApplicable>().ApplyItemServer(activeItem, intent);
+        }
+
+        [Command]
+        private void CmdApplyItem(GameObject sourceItemGo, GameObject interactableGo, Intent intent)
+        {
+            Item.Item sourceItem = sourceItemGo?.GetComponent<Item.Item>();
+            IPlayerApplicable interactable = interactableGo.GetComponent<IPlayerApplicable>();
+
+            interactable?.ApplyItemServer(sourceItem, intent);
+        }
+
+
         // TODO Act on equipment
 
         // Server side of interaction
@@ -171,21 +188,7 @@ namespace Assets.Scripts.Objects.Mob.Humanoids
             }
         }
 
-        [Command]
-        private void CmdApplyItemSlot(SlotEnum activeHand, GameObject interactableGo, Intent intent)
-        {
-            Item.Item activeItem = GetItemBySlot(activeHand);
-            interactableGo.GetComponent<IPlayerApplicable>().ApplyItemServer(activeItem, intent);
-        }
-
-        [Command]
-        private void CmdApplyItem(GameObject sourceItemGo, GameObject interactableGo, Intent intent)
-        {
-            Item.Item sourceItem = sourceItemGo?.GetComponent<Item.Item>();
-            IPlayerApplicable interactable = interactableGo.GetComponent<IPlayerApplicable>();
-
-            interactable?.ApplyItemServer(sourceItem, intent);
-        }
+        
 
         [Command]
         private void CmdPickItem(GameObject itemObject, SlotEnum slot)
@@ -257,6 +260,44 @@ namespace Assets.Scripts.Objects.Mob.Humanoids
         protected override void CreateHealthData()
         {
             HealthData = new HumanoidHealth();
+        }
+
+        public void OnImpact(IPlayerImpactable target, Intent intent, ImpactLimb impactTarget)
+        {
+            Mob mob = target as Mob;
+            if (mob == null)
+            {
+                Debug.Log("Humanoid can only impact on mobs");
+                return;
+            }
+
+            switch (intent)
+            {
+                case Intent.Help:
+                    // TODO Help intent with no item
+                    break;
+                case Intent.Disarm:
+                    // TODO Disarm intent with no item
+                    break;
+                case Intent.Grab:
+                    // TODO Grab intent with no item
+                    break;
+                case Intent.Harm:
+                    float mean = GlobalPreferences.Instance.DefaultFistDamage;
+                    float dispersion = GlobalPreferences.Instance.DefaultFistDamageDispersion;
+                    float damage = Utils.NextGaussian(mean, dispersion);
+                    DamageBuffer fistDamage = new DamageBuffer(damage, 0, 0, 0);
+
+                    mob.Health.ModifyDamage(fistDamage, impactTarget);
+                    AudioClip clip = Utils.GetRandom(GlobalPreferences.Instance.FistAttackClips);
+                    mob.PlaySoundOn(clip);
+
+                    Debug.Log("Hit!");
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(intent), intent, null);
+            }
         }
     }
 }

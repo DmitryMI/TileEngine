@@ -10,7 +10,7 @@
             HeadDamage += damage;
         }
 
-        public override bool ModifyDamage(DamageBuffer damage, ImpactTarget target)
+        public override bool ModifyDamage(DamageBuffer damage, ImpactLimb target)
         {
             bool ok = base.ModifyDamage(damage, target);
 
@@ -19,7 +19,7 @@
 
             switch (target)
             {
-                case ImpactTarget.Head:
+                case ImpactLimb.Head:
                     ModifyHeadDamage(damage);
                     return true;
             }
@@ -27,7 +27,7 @@
             return false;
         }
 
-        public override bool SupportsImpactTarget(ImpactTarget impactTarget)
+        public override bool SupportsImpactTarget(ImpactLimb impactTarget)
         {
             bool hasBase = base.SupportsImpactTarget(impactTarget);
 
@@ -36,7 +36,7 @@
 
             switch (impactTarget)
             {
-                case ImpactTarget.Head:
+                case ImpactLimb.Head:
                     return true;
             }
 
