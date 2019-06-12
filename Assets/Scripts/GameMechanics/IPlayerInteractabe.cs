@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.GameMechanics
 {
-    public interface IPlayerInteractable
+    public interface IPlayerApplicable
     {
         // ReSharper disable once InconsistentNaming
         GameObject gameObject { get; }

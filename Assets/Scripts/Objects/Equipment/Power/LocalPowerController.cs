@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 
 namespace Assets.Scripts.Objects.Equipment.Power
 {
-    public class LocalPowerController : Equipment, IPowerConsumer, IWallPlaceable, IPlayerInteractable, INetworkDataReceiver
+    public class LocalPowerController : Equipment, IPowerConsumer, IWallPlaceable, IPlayerApplicable, INetworkDataReceiver
     {
         [SerializeField] [SyncVar] private Direction _wallPressDirection;
         [SerializeField] private float _pressedOffset;

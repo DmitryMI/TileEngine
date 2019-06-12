@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Objects.Equipment.Doors
 {
-    public abstract class Door : Equipment, IPlayerInteractable, IWirelessPowerable
+    public abstract class Door : Equipment, IPlayerApplicable, IWirelessPowerable
     {
         protected bool Electrified = false;
         protected int PrevElectrificationFrame;

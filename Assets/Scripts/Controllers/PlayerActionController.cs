@@ -362,7 +362,7 @@ namespace Assets.Scripts.Controllers
             {
                 if (CheckVisibilityUnderCursor())
                 {
-                    if (to is IPlayerInteractable item && to.IsNeighbour(_localPlayerMob))
+                    if (to is IPlayerApplicable item && to.IsNeighbour(_localPlayerMob))
                     {
                         item.ApplyItemClient(playerHumanoid.GetItemBySlot(ActiveHand), _intent);
                     }

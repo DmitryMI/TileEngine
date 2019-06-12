@@ -11,7 +11,7 @@ using UnityEngine.Networking;
 namespace Assets.Scripts.Objects.Item
 {
     [RequireComponent(typeof(Collider2D))]
-    public class Item : TileObject, IPlayerInteractable, IDisplayable
+    public class Item : TileObject, IPlayerApplicable, IDisplayable
     {
         [SerializeField] private string _descriptiveName;
 

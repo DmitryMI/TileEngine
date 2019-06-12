@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Objects.Equipment
 {
-    public class Table : Equipment, IPlayerInteractable
+    public class Table : Equipment, IPlayerApplicable
     {
         public void ApplyItemClient(Item.Item item, Intent intent)
         {

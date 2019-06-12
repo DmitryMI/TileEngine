@@ -142,12 +142,12 @@ namespace Assets.Scripts.Objects.Mob.Humanoids
             CmdExchangeItem(source, destination);
         }
 
-        public void ApplyItem(SlotEnum activeHand, IPlayerInteractable interactable,  Intent intent)
+        public void ApplyItem(SlotEnum activeHand, IPlayerApplicable interactable,  Intent intent)
         {
             CmdApplyItemSlot(activeHand, interactable.gameObject, intent);
         }
 
-        public void ApplyItem(Item.Item sourceItem, IPlayerInteractable interactable, Intent intent)
+        public void ApplyItem(Item.Item sourceItem, IPlayerApplicable interactable, Intent intent)
         {
             GameObject sourceGo = sourceItem?.gameObject;
             CmdApplyItem(sourceGo, interactable.gameObject, intent);
@@ -175,14 +175,14 @@ namespace Assets.Scripts.Objects.Mob.Humanoids
         private void CmdApplyItemSlot(SlotEnum activeHand, GameObject interactableGo, Intent intent)
         {
             Item.Item activeItem = GetItemBySlot(activeHand);
-            interactableGo.GetComponent<IPlayerInteractable>().ApplyItemServer(activeItem, intent);
+            interactableGo.GetComponent<IPlayerApplicable>().ApplyItemServer(activeItem, intent);
         }
 
         [Command]
         private void CmdApplyItem(GameObject sourceItemGo, GameObject interactableGo, Intent intent)
         {
             Item.Item sourceItem = sourceItemGo?.GetComponent<Item.Item>();
-            IPlayerInteractable interactable = interactableGo.GetComponent<IPlayerInteractable>();
+            IPlayerApplicable interactable = interactableGo.GetComponent<IPlayerApplicable>();
 
             interactable?.ApplyItemServer(sourceItem, intent);
         }
