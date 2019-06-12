@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.GameMechanics.Health
 {
-    class HumanoidHealth : AnimalHealth
+    abstract class HumanoidHealth : AnimalHealth
     {
         protected DamageBuffer LeftWrist;
         protected DamageBuffer RightWrist;

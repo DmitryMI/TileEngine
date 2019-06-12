@@ -256,11 +256,7 @@ namespace Assets.Scripts.Objects.Mob.Humanoids
         [Obsolete("Consider removing this property. What's it's purpose?")]
         public bool Spawned { get; set; }
 
-        [Server]
-        protected override void CreateHealthData()
-        {
-            HealthData = new HumanoidHealth();
-        }
+        
 
         public void OnImpact(IPlayerImpactable target, Intent intent, ImpactLimb impactTarget)
         {

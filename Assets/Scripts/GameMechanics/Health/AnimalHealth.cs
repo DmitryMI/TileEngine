@@ -1,6 +1,6 @@
 ﻿namespace Assets.Scripts.GameMechanics.Health
 {
-    class AnimalHealth : VertebrateHealth
+    abstract class AnimalHealth : VertebrateHealth
     {
         protected DamageBuffer LeftArm;
         protected DamageBuffer RightArm;

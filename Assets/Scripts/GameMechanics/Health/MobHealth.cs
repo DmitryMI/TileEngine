@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Assets.Scripts.GameMechanics.Health
 {
     [Serializable]
-    public class MobHealth
+    public abstract class MobHealth
     {
         // Network syncables
         [Serializable]
@@ -80,6 +80,10 @@ namespace Assets.Scripts.GameMechanics.Health
         {
 
         }
+
+        public abstract bool IsCritical { get; }
+
+        public abstract bool CanStandOnLegs { get; }
 
         protected virtual float GetDamagePercentageByFeelings() => 1.0f - OverallDamage.Summ / 100.0f;
         protected virtual float GetNutritionPercentageByFeelings() => NutritionCurrent / NutritionMax;

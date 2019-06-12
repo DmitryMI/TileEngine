@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.GameMechanics.Health;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Assets.Scripts.Objects.Mob.Critters
@@ -21,7 +22,12 @@ namespace Assets.Scripts.Objects.Mob.Critters
 
         public override string DescriptiveName => DogName;
 
-        
+
+        protected override void CreateHealthData()
+        {
+            HealthData = new DogHealth();
+        }
+
         public override void DoTargetAction(TileObject to)
         {
             if(isLocalPlayer)

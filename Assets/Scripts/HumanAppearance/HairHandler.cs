@@ -135,6 +135,8 @@ namespace Assets.Scripts.HumanAppearance
         {
             HairSet set = _currentHairSet;
 
+            //Debug.Log("Direction: " + _player.SpriteOrientation);
+
             if (set != null)
             {
                 switch (_player.SpriteOrientation)

@@ -194,10 +194,10 @@ MonoBehaviour:
   _backSprite: {fileID: 21300000, guid: 666f11ab41016cb42b8cc6b7d4367887, type: 3}
   _leftSprite: {fileID: 21300000, guid: b2ad5a00e59f5894692c220115781898, type: 3}
   _rightSprite: {fileID: 21300000, guid: a6622eef98385ac42a0ad38efaefbc5a, type: 3}
-  _frontOffset: {x: 0, y: -0.0348}
-  _backOffset: {x: 0, y: -0.0348}
-  _leftOffset: {x: 0.0152, y: -0.0347}
-  _rightOffset: {x: -0.0152, y: -0.0347}
+  _frontOffset: {x: 0, y: 0}
+  _backOffset: {x: 0, y: 0}
+  _leftOffset: {x: 0, y: 0}
+  _rightOffset: {x: 0, y: 0}
 --- !u!114 &114961910750055504
 MonoBehaviour:
   m_ObjectHideFlags: 0

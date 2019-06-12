@@ -14,5 +14,8 @@ namespace Assets.Scripts.GameMechanics.Health
             NutritionDecrement = GlobalPreferences.Instance.HumanNutritionDecrement;
             NutritionCurrent = GlobalPreferences.Instance.HumanNutritionInitial;
         }
+
+        public override bool IsCritical => OverallDamage.Summ >= GlobalPreferences.Instance.HumanMaxHp - GlobalPreferences.Instance.CriticalHealthPointsBorder;
+        public override bool CanStandOnLegs => !IsCritical;
     }
 }

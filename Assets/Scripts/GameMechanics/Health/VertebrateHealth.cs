@@ -1,6 +1,6 @@
 ﻿namespace Assets.Scripts.GameMechanics.Health
 {
-    class VertebrateHealth : MobHealth
+    abstract class VertebrateHealth : MobHealth
     {
         protected DamageBuffer HeadDamage;
 

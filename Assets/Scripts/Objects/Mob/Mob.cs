@@ -30,7 +30,7 @@ namespace Assets.Scripts.Objects.Mob
         private bool _movementFinished = true;
         protected SpriteRenderer Renderer;
 
-        public virtual bool IsLying => IsMobLying;
+        public bool IsLying => IsMobLying;
 
         public MobHealth Health => HealthData;
 
@@ -55,6 +55,7 @@ namespace Assets.Scripts.Objects.Mob
             if (isServer)
             {
                 HealthData.OnUpdate();
+                HealthProcess();
                 SendHealthDataToClients();
             }
         }
@@ -187,12 +188,24 @@ namespace Assets.Scripts.Objects.Mob
 
         protected virtual void UpdateSprite()
         {
-            if (IsLying)
+            if (isServer)
+            {
+                Debug.Log("On server mob lies: " + IsMobLying);
+            }
+
+            if (isClient)
+            {
+                Debug.Log("On client mob lies: " + IsMobLying);
+            }
+
+            if (IsMobLying)
             {
                 Renderer.sprite = FrontSprite;
+                transform.rotation = Quaternion.Euler(0, 0, 90);
             }
             else
             {
+                transform.rotation = Quaternion.identity;
                 switch (Rotation)
                 {
                     case Direction.Forward:
@@ -278,6 +291,11 @@ namespace Assets.Scripts.Objects.Mob
                 IImpactHandler itemAsHandler = item as IImpactHandler;
                 itemAsHandler?.OnImpact(this, intent, impactTarget);
             }
+        }
+
+        protected virtual void HealthProcess()
+        {
+            IsMobLying = !Health.CanStandOnLegs;
         }
     }
 }
