@@ -22,6 +22,8 @@ namespace Assets.Scripts.Ui
         [SerializeField] private Color _harmColorEnabled;
         [SerializeField] private Color _harmColorDisabled;
 
+        private Intent _prevIntent;
+
         void Start()
         {
         
@@ -35,6 +37,14 @@ namespace Assets.Scripts.Ui
             
             Intent currentIntent = PlayerActionController.Current.Intent;
 
+            if (currentIntent != _prevIntent) 
+                OnIntentChange(currentIntent);
+
+            _prevIntent = currentIntent;
+        }
+
+        private void OnIntentChange(Intent currentIntent)
+        {
             switch (currentIntent)
             {
                 case Intent.Help:
