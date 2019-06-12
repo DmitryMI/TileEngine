@@ -263,7 +263,7 @@ namespace Assets.Scripts.Objects.Mob.Humanoids
             Mob mob = target as Mob;
             if (mob == null)
             {
-                Debug.Log("Humanoid can only impact on mobs");
+                Debug.Log("Humanoid can only impact mobs");
                 return;
             }
 

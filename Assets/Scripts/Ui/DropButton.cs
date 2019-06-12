@@ -18,7 +18,7 @@ namespace Assets.Scripts.Ui
                 Item item = humanoid.GetItemBySlot(slot);
                 if (item != null)
                 {
-                    humanoid.DropItem(slot, LocalPlayer.Cell, Vector2.zero);
+                    humanoid.DropItem(slot, humanoid.Cell, Vector2.zero);
                 }
             }
         }

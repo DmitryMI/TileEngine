@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Assets.Scripts.Objects.Mob;
 
 namespace Assets.Scripts.GameMechanics.Health
 {
@@ -84,6 +85,10 @@ namespace Assets.Scripts.GameMechanics.Health
             }
 
             return false;
+        }
+
+        protected HumanoidHealth(Mob owner) : base(owner)
+        {
         }
     }
 }

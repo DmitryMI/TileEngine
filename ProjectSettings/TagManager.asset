@@ -53,6 +53,9 @@ TagManager:
   - name: Turf
     uniqueID: 2834020523
     locked: 0
+  - name: FloorEffects
+    uniqueID: 3764655179
+    locked: 0
   - name: Doors
     uniqueID: 3961818491
     locked: 0
@@ -61,6 +64,9 @@ TagManager:
     locked: 0
   - name: Equipment
     uniqueID: 897063405
+    locked: 0
+  - name: MobLying
+    uniqueID: 2643520341
     locked: 0
   - name: Item
     uniqueID: 1109985509

@@ -8,7 +8,7 @@ namespace Assets.Scripts.Objects.Mob.Humanoids
 
         protected override void CreateHealthData()
         {
-            HealthData = new HumanHealth();
+            HealthData = new HumanHealth(this);
         }
     }
 }

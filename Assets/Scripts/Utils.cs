@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Assets.Scripts.GameMechanics;
+using Assets.Scripts.Objects;
 using UnityEngine;
 using Random = System.Random;
 using UnityRandom = UnityEngine.Random;
@@ -70,6 +72,21 @@ namespace Assets.Scripts
             return new Color(vector2.x, vector2.y, 0);
         }
 
+        public static float GetIntensity(Color c)
+        {
+            return (c.r + c.g + c.b) / 3.0f;
+        }
+
+        public static Color ModifyIntensity(Color c, float modifier)
+        {
+            return new Color(c.r - modifier, c.g - modifier, c.b - modifier);
+        }
+
+        public static Color SetIntensity(Color baseColor, float value)
+        {
+            return new Color(baseColor.r * value, baseColor.g * value, baseColor.b * value);
+        }
+
         public static float NextGaussian(float mu = 0, float sigma = 1)
         {
             if (sigma <= 0)
@@ -114,6 +131,52 @@ namespace Assets.Scripts
             
             // return second deviate
             return v1 * polar * sigma + mu;
+        }
+
+        public static Direction GetDirection(int xSource, int ySource, int xDest, int yDest)
+        {
+            // Right
+            int dx = xDest - xSource;
+            int dy = yDest - ySource;
+
+            int absDx = Mathf.Abs(dx);
+            int absDy = Mathf.Abs(dy);
+
+            if (dx >= 0)
+            {
+                if (absDx > absDy)
+                    return Direction.Right;
+                else
+                    if (dy > 0)
+                        return Direction.Forward;
+                    else
+                        return Direction.Backward;
+            }
+            else
+            {
+                if (absDx > absDy)
+                    return Direction.Left;
+                else
+                {
+                    if (dy > 0)
+                        return Direction.Forward;
+                    else
+                        return Direction.Backward;
+                }
+            }
+        }
+
+        public static T GetTopMost<T>(IList<T> objs) where T : TileObject
+        {
+            T top = null;
+
+            foreach (var obj in objs)
+            {
+                if (top == null || top.SortingOrder < obj.SortingOrder)
+                    top = obj;
+            }
+
+            return top;
         }
     }
 }

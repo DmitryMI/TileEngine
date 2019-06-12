@@ -25,7 +25,7 @@ namespace Assets.Scripts.Objects.Mob.Critters
 
         protected override void CreateHealthData()
         {
-            HealthData = new DogHealth();
+            HealthData = new DogHealth(this);
         }
 
         public override void DoTargetAction(TileObject to)

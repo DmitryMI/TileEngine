@@ -1,44 +1,24 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Objects.FloorSplashes;
+using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts.Objects.Turf
 {
-    public class Turf : TileObject
+    public abstract class Turf : TileObject
     {
-        [SerializeField]
-        private bool _transperent;
-        [SerializeField]
-        private bool _canWalkThrough;
-        [SerializeField]
-        private bool _canContainGas;
+        public override string DescriptiveName => "N/A";
 
-        [SerializeField]
-        private string _descriptiveName;
+        protected FloorSplash _splash;
 
-        // Use this for initialization
-        protected override bool Transparent
+        public void AddSplash(FloorSplash splash)
         {
-            get { return _transperent; }
+            _splash = splash;
         }
 
-        protected override bool CanWalkThrough
+        protected virtual void OnDestroy()
         {
-            get { return _canWalkThrough; }
+            if(_splash != null)
+                NetworkServer.Destroy(_splash.gameObject);
         }
-
-        protected override bool PassesGas
-        {
-            get { return _canContainGas; }
-        }
-
-        public override string DescriptiveName
-        {
-            get { return _descriptiveName; }
-        }
-
-        protected override void Update()
-        {
-            base.Update();
-        }
-
     }
 }

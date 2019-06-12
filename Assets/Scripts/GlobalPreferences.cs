@@ -47,6 +47,8 @@ namespace Assets.Scripts
 
         [SerializeField] private float _defaultFistDamageDispersion = 0.5f;
         [SerializeField] private AudioClip[] _fistAttackClips;
+        [SerializeField] private AudioClip[] _bodyAttackClips;
+        [SerializeField] private GameObject _bloodSplashPrefab;
 
 
         public float HumanMaxNutrition
@@ -97,6 +99,16 @@ namespace Assets.Scripts
         public AudioClip[] FistAttackClips
         {
             get { return _fistAttackClips; }
+        }
+
+        public AudioClip[] BodyAttackClips
+        {
+            get { return _bodyAttackClips; }
+        }
+
+        public GameObject BloodSplashPrefab
+        {
+            get { return _bloodSplashPrefab; }
         }
     }
 }

@@ -28,7 +28,6 @@ namespace Assets.Scripts.Objects.Mob
         [SerializeField] protected MobHealth HealthData;
 
         private bool _movementFinished = true;
-        protected SpriteRenderer Renderer;
 
         public bool IsLying => IsMobLying;
 
@@ -37,7 +36,7 @@ namespace Assets.Scripts.Objects.Mob
         protected override void Start()
         {
             base.Start();
-            Renderer = GetComponent<SpriteRenderer>();
+            SpriteRenderer = GetComponent<SpriteRenderer>();
 
             CreateHealthData();
 
@@ -69,6 +68,12 @@ namespace Assets.Scripts.Objects.Mob
         [ClientRpc]
         protected void RpcReceiveHealthData(MobHealth.ClientData data)
         {
+            if (HealthData == null)
+            {
+                CreateHealthData();
+                HealthData.OnStart();
+            }
+
             HealthData.NetHealthData = data;
         }
 
@@ -200,28 +205,31 @@ namespace Assets.Scripts.Objects.Mob
 
             if (IsMobLying)
             {
-                Renderer.sprite = FrontSprite;
+                SpriteRenderer.sprite = FrontSprite;
                 transform.rotation = Quaternion.Euler(0, 0, 90);
+                //SpriteRenderer.sortingOrder = SortingLayer.GetLayerValueFromName("MobLying");
             }
             else
             {
+                //SpriteRenderer.sortingOrder = SortingLayer.GetLayerValueFromName("Mob");
+
                 transform.rotation = Quaternion.identity;
                 switch (Rotation)
                 {
                     case Direction.Forward:
-                        Renderer.sprite = BackSprite;
+                        SpriteRenderer.sprite = BackSprite;
                         break;
 
                     case Direction.Backward:
-                        Renderer.sprite = FrontSprite;
+                        SpriteRenderer.sprite = FrontSprite;
                         break;
 
                     case Direction.Left:
-                        Renderer.sprite = LeftSprite;
+                        SpriteRenderer.sprite = LeftSprite;
                         break;
 
                     case Direction.Right:
-                        Renderer.sprite = RightSprite;
+                        SpriteRenderer.sprite = RightSprite;
                         break;
                 }
             }

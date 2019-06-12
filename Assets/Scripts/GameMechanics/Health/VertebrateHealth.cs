@@ -1,4 +1,6 @@
-﻿namespace Assets.Scripts.GameMechanics.Health
+﻿using Assets.Scripts.Objects.Mob;
+
+namespace Assets.Scripts.GameMechanics.Health
 {
     abstract class VertebrateHealth : MobHealth
     {
@@ -41,6 +43,10 @@
             }
 
             return false;
+        }
+
+        protected VertebrateHealth(Mob owner) : base(owner)
+        {
         }
     }
 }

@@ -24,6 +24,10 @@ namespace Assets.Scripts.Objects.Turf
 
         [SyncVar] private bool _isLighting;
 
+        protected override bool Transparent => true;
+        protected override bool CanWalkThrough => true;
+        protected override bool PassesGas => true;
+
         protected override void Update ()
         {
             base.Update();

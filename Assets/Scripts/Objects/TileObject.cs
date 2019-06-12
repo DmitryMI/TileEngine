@@ -35,6 +35,7 @@ namespace Assets.Scripts.Objects
         protected TileController TileController;
         protected ICellPositionProvider PositionProvider;
         protected AudioSource AudioSource;
+        protected SpriteRenderer SpriteRenderer;
 
         public WalkController GetWalkController()
         {
@@ -93,6 +94,7 @@ namespace Assets.Scripts.Objects
         protected virtual void Start()
         {
             AudioSource = GetComponent<AudioSource>();
+            SpriteRenderer = GetComponent<SpriteRenderer>();
 
             Grid = FindObjectOfType<Grid>();
             EnsureControllers();
@@ -262,13 +264,20 @@ namespace Assets.Scripts.Objects
             }
         }
 
-        public Direction Flip
+        public virtual void SetRotation(Direction rotation)
         {
-            get { return Rotation; }
-            set
+            Rotation = rotation;
+            _transformChanged = true;
+        }
+
+        public int SortingOrder
+        {
+            get
             {
-                Rotation = value;
-                _transformChanged = true;
+                if (SpriteRenderer != null)
+                    return SpriteRenderer.sortingOrder;
+                else
+                    return 0;
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using Assets.Scripts.Objects.Mob;
 using UnityEngine;
 
 namespace Assets.Scripts.GameMechanics.Health
@@ -27,6 +28,8 @@ namespace Assets.Scripts.GameMechanics.Health
         protected float NutritionCurrent;
 
         protected float NutritionDecrement;
+
+        protected Mob Owner;
 
 
         protected virtual void ModifyChestDamage(DamageBuffer damage)
@@ -79,6 +82,11 @@ namespace Assets.Scripts.GameMechanics.Health
         public virtual void OnStart()
         {
 
+        }
+
+        public MobHealth(Mob owner)
+        {
+            Owner = owner;
         }
 
         public abstract bool IsCritical { get; }

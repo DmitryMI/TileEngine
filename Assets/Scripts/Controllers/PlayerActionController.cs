@@ -356,6 +356,9 @@ namespace Assets.Scripts.Controllers
 
         private void ClickOnTileObject()
         {
+            Direction wantRotation = Utils.GetDirection(LocalPlayerMob.X, LocalPlayerMob.Y, _mouseCell.x, _mouseCell.y);
+            LocalPlayerMob.SetRotation(wantRotation);
+
             TileObject to = _objectUnderCursor;
             if(to == null)
                 return;
