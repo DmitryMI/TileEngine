@@ -8,7 +8,7 @@ namespace Assets.Scripts.Objects.Equipment
 {
     public class Table : Equipment, IPlayerInteractable
     {
-        public void ApplyItemClient(Item.Item item)
+        public void ApplyItemClient(Item.Item item, Intent intent)
         {
             //Debug.Log("Table was clicked!");
 
@@ -31,7 +31,7 @@ namespace Assets.Scripts.Objects.Equipment
             }
         }
 
-        public void ApplyItemServer(Item.Item item)
+        public void ApplyItemServer(Item.Item item, Intent intent)
         {
             
         }

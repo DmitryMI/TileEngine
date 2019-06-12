@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Assets.Scripts.Controllers;
+using Assets.Scripts.GameMechanics;
 using Assets.Scripts.Objects.Equipment.Power;
 using Assets.Scripts.Objects.Mob;
 using Assets.Scripts.Objects.Mob.Humanoids;
@@ -171,21 +172,21 @@ namespace Assets.Scripts.Objects.Equipment.Doors
         private void CallServerNoItem()
         {
             Humanoid humanoid = PlayerActionController.Current.LocalPlayerMob as Humanoid;
-
-            humanoid?.ApplyItem(null, this);
+            Intent intent = PlayerActionController.Current.Intent;
+            humanoid?.ApplyItem(null, this, intent);
         }
 
-        public override void ApplyItemClient(Item.Item item)
+        public override void ApplyItemClient(Item.Item item, Intent intent)
         {
             Humanoid humanoid = PlayerActionController.Current.LocalPlayerMob as Humanoid;
             if (humanoid != null)
             {
                 Debug.Log("Door was pushed");
-                humanoid.ApplyItem(item, this);
+                humanoid.ApplyItem(item, this, intent);
             }
         }
 
-        public override void ApplyItemServer(Item.Item item)
+        public override void ApplyItemServer(Item.Item item, Intent intent)
         {
             if (item == null)
             {

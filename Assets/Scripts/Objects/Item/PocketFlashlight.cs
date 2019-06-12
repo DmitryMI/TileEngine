@@ -76,7 +76,7 @@ namespace Assets.Scripts.Objects.Item
             VisionController?.RemoveLightById(_lightSourceId);
         }
 
-        public override void ApplyItemServer(Item item)
+        public override void ApplyItemServer(Item item, Intent intent)
         {
             if (item == this)
             {
@@ -85,7 +85,7 @@ namespace Assets.Scripts.Objects.Item
             }
         }
 
-        public override void ApplyItemClient(Item item)
+        public override void ApplyItemClient(Item item, Intent intent)
         {
             Humanoid local = PlayerActionController.Current.LocalPlayerMob as Humanoid;
             if (item == null)
@@ -95,7 +95,7 @@ namespace Assets.Scripts.Objects.Item
             }
             else
             {
-                local.ApplyItem(this, item);
+                local?.ApplyItem(this, item, intent);
             }
         }
 

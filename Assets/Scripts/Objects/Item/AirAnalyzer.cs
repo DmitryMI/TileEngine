@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Controllers.Atmos;
+using Assets.Scripts.GameMechanics;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -104,10 +105,10 @@ namespace Assets.Scripts.Objects.Item
             _animator.SetBool("Ok", _isOk);
         }
 
-        public override void ApplyItemClient(Item item)
+        public override void ApplyItemClient(Item item, Intent intent)
         {
             // Item pick
-            base.ApplyItemClient(item);
+            base.ApplyItemClient(item, intent);
 
             if (item == this)
             {

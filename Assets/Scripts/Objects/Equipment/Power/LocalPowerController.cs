@@ -179,7 +179,7 @@ namespace Assets.Scripts.Objects.Equipment.Power
         public float PowerStored => _powerStored;
         public bool ChargeState => _charging;
 
-        public void ApplyItemClient(Item.Item item)
+        public void ApplyItemClient(Item.Item item, Intent intent)
         {
             if (item == null)
             {
@@ -194,14 +194,13 @@ namespace Assets.Scripts.Objects.Equipment.Power
             }
             else
             {
-
-                // TODO Tool interaction
-                ApplyItemServer(item);
+                ApplyItemServer(item, intent);
             }
         }
 
-        public void ApplyItemServer(Item.Item item)
+        public void ApplyItemServer(Item.Item item, Intent intent)
         {
+            // TODO Tool interaction
             throw new NotImplementedException();
         }
 

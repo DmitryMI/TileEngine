@@ -142,15 +142,15 @@ namespace Assets.Scripts.Objects.Mob.Humanoids
             CmdExchangeItem(source, destination);
         }
 
-        public void ApplyItem(SlotEnum activeHand, IPlayerInteractable interactable)
+        public void ApplyItem(SlotEnum activeHand, IPlayerInteractable interactable,  Intent intent)
         {
-            CmdApplyItemSlot(activeHand, interactable.gameObject);
+            CmdApplyItemSlot(activeHand, interactable.gameObject, intent);
         }
 
-        public void ApplyItem(Item.Item sourceItem, IPlayerInteractable interactable)
+        public void ApplyItem(Item.Item sourceItem, IPlayerInteractable interactable, Intent intent)
         {
             GameObject sourceGo = sourceItem?.gameObject;
-            CmdApplyItem(sourceGo, interactable.gameObject);
+            CmdApplyItem(sourceGo, interactable.gameObject, intent);
         }
 
         // TODO Act on equipment
@@ -172,19 +172,19 @@ namespace Assets.Scripts.Objects.Mob.Humanoids
         }
 
         [Command]
-        private void CmdApplyItemSlot(SlotEnum activeHand, GameObject interactableGo)
+        private void CmdApplyItemSlot(SlotEnum activeHand, GameObject interactableGo, Intent intent)
         {
             Item.Item activeItem = GetItemBySlot(activeHand);
-            interactableGo.GetComponent<IPlayerInteractable>().ApplyItemServer(activeItem);
+            interactableGo.GetComponent<IPlayerInteractable>().ApplyItemServer(activeItem, intent);
         }
 
         [Command]
-        private void CmdApplyItem(GameObject sourceItemGo, GameObject interactableGo)
+        private void CmdApplyItem(GameObject sourceItemGo, GameObject interactableGo, Intent intent)
         {
             Item.Item sourceItem = sourceItemGo?.GetComponent<Item.Item>();
             IPlayerInteractable interactable = interactableGo.GetComponent<IPlayerInteractable>();
 
-            interactable?.ApplyItemServer(sourceItem);
+            interactable?.ApplyItemServer(sourceItem, intent);
         }
 
         [Command]

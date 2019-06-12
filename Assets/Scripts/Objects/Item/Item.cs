@@ -140,14 +140,14 @@ namespace Assets.Scripts.Objects.Item
             return Renderer.sprite; // TODO Fix stupid variant
         }
 
-        public virtual void ApplyItemClient(Item item)
+        public virtual void ApplyItemClient(Item item, Intent intent)
         {
             Humanoid humanoid = PlayerActionController.Current.LocalPlayerMob as Humanoid;
             if (ItemHolder == null && item == null && humanoid != null)
                 humanoid.PickItem(this, PlayerActionController.Current.ActiveHand);            
         }
 
-        public virtual void ApplyItemServer(Item item)
+        public virtual void ApplyItemServer(Item item, Intent intent)
         {
             if(item != null)
                 Debug.Log("Item " + item.DescriptiveName + " was used on item " + _descriptiveName);

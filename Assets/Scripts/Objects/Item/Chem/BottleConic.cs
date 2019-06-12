@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets.Scripts.Controllers;
+using Assets.Scripts.GameMechanics;
 using Assets.Scripts.GameMechanics.Chemistry;
 using Assets.Scripts.GameMechanics.Chemistry.Reactions;
 using Assets.Scripts.Objects.Mob;
@@ -76,7 +77,7 @@ namespace Assets.Scripts.Objects.Item.Chem
             _volume = _mixture.Volume;
         }
 
-        public override void ApplyItemClient(Item item)
+        public override void ApplyItemClient(Item item, Intent intent)
         {
             Humanoid playerHumanoid = PlayerActionController.Current.LocalPlayerMob as Humanoid;
 
@@ -91,11 +92,11 @@ namespace Assets.Scripts.Objects.Item.Chem
             else
             {
                 //.ApplyItemClient(item);
-                playerHumanoid.ApplyItem(item, this);
+                playerHumanoid.ApplyItem(item, this, intent);
             }
         }
 
-        public override void ApplyItemServer(Item item)
+        public override void ApplyItemServer(Item item, Intent intent)
         {
             ISubstanceContainer container = item as ISubstanceContainer;
             

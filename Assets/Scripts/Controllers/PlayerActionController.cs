@@ -32,6 +32,8 @@ namespace Assets.Scripts.Controllers
         [SerializeField]
         private SlotEnum _activeHand;
 
+        [SerializeField] private Intent _intent = Intent.Help;
+
         private bool _prevLmbPressed;
 
         private static PlayerActionController _currentController;
@@ -228,6 +230,12 @@ namespace Assets.Scripts.Controllers
             set { _activeHand = value; }
         }
 
+        public Intent Intent
+        {
+            get => _intent;
+            set => _intent = value;
+        }
+
         private void PrintDescriptiveText()
         {
             if(_descriptiveText == null)
@@ -256,6 +264,7 @@ namespace Assets.Scripts.Controllers
 
         private void Start()
         {
+            _intent = Intent.Help;
             if(_descriptiveText == null)
                 Debug.LogWarning("Descriptive text is not attached!");
         }
@@ -355,7 +364,7 @@ namespace Assets.Scripts.Controllers
                 {
                     if (to is IPlayerInteractable item && to.IsNeighbour(_localPlayerMob))
                     {
-                        item.ApplyItemClient(playerHumanoid.GetItemBySlot(ActiveHand));
+                        item.ApplyItemClient(playerHumanoid.GetItemBySlot(ActiveHand), _intent);
                     }
                 }
             }

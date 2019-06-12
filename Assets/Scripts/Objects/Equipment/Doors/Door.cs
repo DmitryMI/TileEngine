@@ -15,9 +15,9 @@ namespace Assets.Scripts.Objects.Equipment.Doors
         protected bool Electrified = false;
         protected int PrevElectrificationFrame;
 
-        public abstract void ApplyItemClient(Item.Item item);
+        public abstract void ApplyItemClient(Item.Item item, Intent intent);
 
-        public abstract void ApplyItemServer(Item.Item item);
+        public abstract void ApplyItemServer(Item.Item item, Intent intent);
 
         public abstract void TryToPass();
 

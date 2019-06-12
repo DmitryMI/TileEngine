@@ -8,8 +8,8 @@ namespace Assets.Scripts.GameMechanics
         // ReSharper disable once InconsistentNaming
         GameObject gameObject { get; }
 
-        void ApplyItemClient(Item item);
+        void ApplyItemClient(Item item, Intent intent);
 
-        void ApplyItemServer(Item item);
+        void ApplyItemServer(Item item, Intent intent);
     }
 }

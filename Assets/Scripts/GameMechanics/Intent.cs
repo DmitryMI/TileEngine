@@ -8,9 +8,9 @@ namespace Assets.Scripts.GameMechanics
 {
     public enum Intent
     {
-        Help,
-        Disarm,
-        Grab,
-        Harm
+        Help = 1,
+        Disarm = 2,
+        Grab = 3,
+        Harm = 4
     }
 }
