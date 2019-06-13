@@ -46113,6 +46113,7 @@ MonoBehaviour:
   _cell: {x: 0, y: 0}
   _cellOffset: {x: 0, y: 0}
   Rotation: 0
+  LayersNeededCount: 1
 --- !u!114 &1680880069
 MonoBehaviour:
   m_ObjectHideFlags: 0

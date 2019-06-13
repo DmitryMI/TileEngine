@@ -44,6 +44,7 @@ namespace Assets.Scripts.HumanAppearance
 
         private void UpdateSprite()
         {
+            _spriteRenderer.sortingOrder = _player.SortingOrder + 1;
             if (_clothing != null)
             {
                 switch (_player.SpriteOrientation)

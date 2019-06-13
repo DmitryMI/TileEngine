@@ -23,6 +23,7 @@ namespace Assets.Scripts.Objects.Mob.Humanoids
         [SerializeField]
         [SyncVar]
         protected GameObject CostumeItem;
+        
 
         public int HairSetId => HumanoidHairSetId;
         
@@ -42,6 +43,14 @@ namespace Assets.Scripts.Objects.Mob.Humanoids
             {
                 transform.localRotation = Quaternion.identity;
             }
+        }
+
+        protected override void OnSortingOrderChange()
+        {
+            if (SpriteRenderer == null)
+                return;
+
+            Renderer.sortingOrder = SortingStartIndex + 1;
         }
 
         public Direction SpriteOrientation

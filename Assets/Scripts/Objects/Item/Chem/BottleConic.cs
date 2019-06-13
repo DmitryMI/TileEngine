@@ -41,8 +41,14 @@ namespace Assets.Scripts.Objects.Item.Chem
             }
 
             UpdateFiller();
-            
-            
+        }
+
+        protected override void OnSortingOrderChange()
+        {
+            if (SpriteRenderer == null)
+                return;
+
+            Renderer.sortingOrder = SortingStartIndex + 1;
         }
 
         [Server]
@@ -56,6 +62,8 @@ namespace Assets.Scripts.Objects.Item.Chem
             _filler.FillValue = _volume / _maxVolume;
 
             _filler.ReagentsColor = _color;
+            
+            _filler.SetSortingOrder(SpriteRenderer.sortingOrder - 1);
 
             if (Holder != null)
             {

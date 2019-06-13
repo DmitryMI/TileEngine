@@ -37,6 +37,8 @@ namespace Assets.Scripts.Controllers
 
         private bool _prevLmbPressed;
 
+        private RaycastHit2D[] _raycastBuffer = new RaycastHit2D[32];
+
         private static PlayerActionController _currentController;
 
         public static PlayerActionController Current
@@ -140,15 +142,24 @@ namespace Assets.Scripts.Controllers
         {
             Vector2 mousePos =_mouseWorldPosition;
 
-            RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos, Vector2.zero, 0);
+            //RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos, Vector2.zero, 0);
+            
+            int count = Physics2D.RaycastNonAlloc(mousePos, Vector2.zero, _raycastBuffer, 0, -1);
 
+            
             TileObject result = null;
             int maxSortingLayer = 0;
             int maxSortingOrder = 0;
 
-            foreach (RaycastHit2D hit in hits)
+            //foreach (RaycastHit2D hit in hits)
+            for(int i = 0; i < count; i++)
             {
-                GameObject go = hit.transform.gameObject;
+                RaycastHit2D hit = _raycastBuffer[i];
+                
+                GameObject go = hit.collider.gameObject;
+
+                //Debug.Log("Raycast hit: " + go.name);
+
                 TileObject to = go.GetComponent<TileObject>();
 
                 if (to == null)
@@ -158,7 +169,9 @@ namespace Assets.Scripts.Controllers
                     to = parentGo?.GetComponent<TileObject>();
                 }
 
-                SpriteRenderer spriteRenderer = go.GetComponent<SpriteRenderer>();
+                SpriteRenderer spriteRenderer = to?.Renderer;
+                if (spriteRenderer == null)
+                    spriteRenderer = go.GetComponent<SpriteRenderer>();
 
                 if (spriteRenderer == null)
                     continue;
@@ -171,7 +184,7 @@ namespace Assets.Scripts.Controllers
                     maxSortingLayer = layerValue;
                     maxSortingOrder = 0;
                 }
-                else if (spriteRenderer.sortingOrder > maxSortingOrder)
+                else if (layerValue == maxSortingLayer && spriteRenderer.sortingOrder > maxSortingOrder)
                 {
                     maxSortingOrder = spriteRenderer.sortingOrder;
                     result = to;

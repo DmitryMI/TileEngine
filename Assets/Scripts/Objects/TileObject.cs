@@ -28,6 +28,10 @@ namespace Assets.Scripts.Objects
 
         [SerializeField] protected Direction Rotation;
 
+        [SerializeField] protected int LayersNeededCount = 1;
+
+        public virtual int LayersNeeded => LayersNeededCount;
+
         protected WalkController WalkController;
         protected VisionController VisionController;
         protected ServerController ServerController;
@@ -36,6 +40,21 @@ namespace Assets.Scripts.Objects
         protected ICellPositionProvider PositionProvider;
         protected AudioSource AudioSource;
         protected SpriteRenderer SpriteRenderer;
+
+        [SyncVar]
+        [SerializeField]
+        protected int SortingStartIndex;
+
+        private int _prevSortingStartIndex;
+
+        protected virtual void OnSortingOrderChange()
+        {
+            if(SpriteRenderer == null)
+                return;
+
+            //if(Renderer.sortingOrder != SortingStartIndex)
+                Renderer.sortingOrder = SortingStartIndex;
+        }
 
         public WalkController GetWalkController()
         {
@@ -54,6 +73,8 @@ namespace Assets.Scripts.Objects
             EnsureControllers();
             return ServerController;
         }
+
+        public SpriteRenderer Renderer => SpriteRenderer;
 
         public AtmosController GetAtmosController()
         {
@@ -104,6 +125,12 @@ namespace Assets.Scripts.Objects
             StartCoroutine(WaitForServerController());
 
             PositionProvider = new CellPositionProvider(this);
+
+            if (LayersNeededCount == 0)
+            {
+                LayersNeededCount = 1;
+                Debug.LogWarning(name + "LayersNeededCount must be greater than zero.");
+            }
         }
 
         IEnumerator WaitForServerController()
@@ -123,6 +150,14 @@ namespace Assets.Scripts.Objects
 
             UpdateTransfrom();
             UpdateControllers();
+
+            if (_prevSortingStartIndex != SortingStartIndex)
+            {
+                Debug.Log("Sorting order changed: " + name);
+                OnSortingOrderChange();
+            }
+
+            _prevSortingStartIndex = SortingStartIndex;
         }
 
         protected virtual void Sync()
@@ -284,6 +319,12 @@ namespace Assets.Scripts.Objects
         public int Id
         {
             get { return TypeId; }
+        }
+
+        public int SortingStart
+        {
+            get { return SortingStartIndex; }
+            set { SortingStartIndex = value; }
         }
 
         public virtual string ToMap()

@@ -17,6 +17,14 @@ namespace Assets.Scripts.Objects.Item.Chem
 
         public override int LayersNeeded => 2;
 
+        protected override void OnSortingOrderChange()
+        {
+            if (SpriteRenderer == null)
+                return;
+
+            Renderer.sortingOrder = SortingStartIndex + 1;
+        }
+
         protected override void Update()
         {
             base.Update();

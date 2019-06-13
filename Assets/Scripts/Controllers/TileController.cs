@@ -17,7 +17,7 @@ namespace Assets.Scripts.Controllers
 
         private List<TileObject>[,] _objects;
 
-        private ItemStackCollection _itemStackCollection;
+        private StackCollection _stackCollection;
 
         private Vector2Int _mapSize;
         private bool _allocationFinished;
@@ -51,9 +51,9 @@ namespace Assets.Scripts.Controllers
                 _objects[x, y].Add(obj);
                 if (isServer)
                 {
-                    Item item = obj as Item;
-                    if (item)
-                        _itemStackCollection.Add(item, new Vector2Int(x, y));
+                    //Item item = obj as Item;
+                    //if (item)
+                        _stackCollection.Add(obj, new Vector2Int(x, y));
                 }
             }
 
@@ -71,9 +71,9 @@ namespace Assets.Scripts.Controllers
             {
                 _objects[x, y].Remove(obj);
 
-                Item item = obj as Item;
-                if (item)
-                    _itemStackCollection.Remove(item, new Vector2Int(x, y));
+                //Item item = obj as Item;
+                //if (item)
+                    _stackCollection.Remove(obj, new Vector2Int(x, y));
             }
         }
 
@@ -134,7 +134,7 @@ namespace Assets.Scripts.Controllers
         {
             if (isServer)
             {
-                _itemStackCollection = new ItemStackCollection();
+                _stackCollection = new StackCollection();
             }
             _allocationTask = new Task(AllocateMemoryAsync, TaskCreationOptions.LongRunning);
             _allocationTask.Start();
@@ -168,11 +168,12 @@ namespace Assets.Scripts.Controllers
 #pragma warning restore 618
         private void SortItemStacks()
         {
-            if (_itemStackCollection.Length > 0)
+            if (_stackCollection.Length > 0)
             {
-                foreach (var stack in _itemStackCollection)
+                for (int i = 0; i < _stackCollection.Length; i++)
                 {
-                    SortItemStack(stack);
+                    if(_stackCollection[i].IsSortDirty)
+                        SortItemStack(_stackCollection[i]);
                 }
             }
         }
@@ -180,7 +181,7 @@ namespace Assets.Scripts.Controllers
 #pragma warning disable 618
         [Server]
 #pragma warning restore 618
-        private void SortItemStack(ItemStack stack)
+        private void SortItemStack(TileObjectStack stack)
         {
             stack.SortStack();
 
@@ -189,7 +190,7 @@ namespace Assets.Scripts.Controllers
             for (int i = 0; i < stack.Length; i++)
             {
                 currentSortingOrder += stack[i].LayersNeeded;
-                stack[i].SpriteRenderer.sortingOrder = currentSortingOrder;
+                stack[i].SortingStart = currentSortingOrder;
             }
         }
     }

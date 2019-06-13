@@ -135,6 +135,8 @@ namespace Assets.Scripts.HumanAppearance
         {
             HairSet set = _currentHairSet;
 
+            _spriteRenderer.sortingOrder = _player.SortingOrder + 1;
+
             //Debug.Log("Direction: " + _player.SpriteOrientation);
 
             if (set != null)

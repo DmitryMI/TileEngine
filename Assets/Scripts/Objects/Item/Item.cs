@@ -17,20 +17,14 @@ namespace Assets.Scripts.Objects.Item
 
         [SerializeField]
         protected GameObject ItemHolder;
-
-        [SerializeField] private int _layersNeeded = 1;
-        [SerializeField] private int _sortingOrder = 0;
+        
 
         protected SpriteRenderer Renderer;
         protected Collider2D Collider;
 
-        public SpriteRenderer SpriteRenderer => Renderer;
-        public virtual int LayersNeeded => _layersNeeded;
+        
 
-        public int SortingOrder => _sortingOrder;
-
-        [SyncVar]
-        private int _spriteRendererSortingOrder;
+        
 
         protected override bool Transparent
         {
@@ -52,7 +46,7 @@ namespace Assets.Scripts.Objects.Item
             base.Update();
 
             UpdateState();
-            UpdateSpriteRenderer();
+            
         }
 
         protected override void Sync()
@@ -101,17 +95,7 @@ namespace Assets.Scripts.Objects.Item
             }
         }
 
-        private void UpdateSpriteRenderer()
-        {
-            if (isServer)
-            {
-                _spriteRendererSortingOrder = SpriteRenderer.sortingOrder;
-            }
-            else
-            {
-                SpriteRenderer.sortingOrder = _spriteRendererSortingOrder;
-            }
-        }
+        
 
         public override string DescriptiveName
         {
