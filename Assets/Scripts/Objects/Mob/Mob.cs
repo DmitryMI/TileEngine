@@ -190,16 +190,6 @@ namespace Assets.Scripts.Objects.Mob
 
         protected virtual void UpdateSprite()
         {
-            if (isServer)
-            {
-                Debug.Log("On server mob lies: " + IsMobLying);
-            }
-
-            if (isClient)
-            {
-                Debug.Log("On client mob lies: " + IsMobLying);
-            }
-
             if (IsMobLying)
             {
                 SpriteRenderer.sprite = FrontSprite;
