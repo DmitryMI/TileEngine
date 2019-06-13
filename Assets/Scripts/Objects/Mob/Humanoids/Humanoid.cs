@@ -297,7 +297,7 @@ namespace Assets.Scripts.Objects.Mob.Humanoids
                     AudioClip clip = Utils.GetRandom(GlobalPreferences.Instance.FistAttackClips);
                     mob.PlaySoundOn(clip);
 
-                    Debug.Log("Hit!");
+                    //Debug.Log("Hit!");
 
                     break;
                 default:

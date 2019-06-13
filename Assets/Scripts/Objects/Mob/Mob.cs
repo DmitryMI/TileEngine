@@ -195,9 +195,11 @@ namespace Assets.Scripts.Objects.Mob
                 SpriteRenderer.sprite = FrontSprite;
                 transform.rotation = Quaternion.Euler(0, 0, 90);
                 //SpriteRenderer.sortingOrder = SortingLayer.GetLayerValueFromName("MobLying");
+                Renderer.sortingLayerName = "MobLying";
             }
             else
             {
+                Renderer.sortingLayerName = "Mob";
                 //SpriteRenderer.sortingOrder = SortingLayer.GetLayerValueFromName("Mob");
 
                 transform.rotation = Quaternion.identity;

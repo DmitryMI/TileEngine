@@ -153,7 +153,7 @@ namespace Assets.Scripts.Objects
 
             if (_prevSortingStartIndex != SortingStartIndex)
             {
-                Debug.Log("Sorting order changed: " + name);
+                //Debug.Log("Sorting order changed: " + name);
                 OnSortingOrderChange();
             }
 

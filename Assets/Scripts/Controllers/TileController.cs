@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Assets.Scripts.GameMechanics;
 using Assets.Scripts.Objects;
 using Assets.Scripts.Objects.Item;
+using Assets.Scripts.Objects.Mob;
+using Assets.Scripts.Objects.Mob.Humanoids;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -17,7 +19,8 @@ namespace Assets.Scripts.Controllers
 
         private List<TileObject>[,] _objects;
 
-        private StackCollection _stackCollection;
+        private StackCollection _itemStackCollection;
+        private StackCollection _mobStackCollection;
 
         private Vector2Int _mapSize;
         private bool _allocationFinished;
@@ -51,9 +54,11 @@ namespace Assets.Scripts.Controllers
                 _objects[x, y].Add(obj);
                 if (isServer)
                 {
-                    //Item item = obj as Item;
-                    //if (item)
-                        _stackCollection.Add(obj, new Vector2Int(x, y));
+                    if (obj is Item item)
+                        _itemStackCollection.Add(item, new Vector2Int(x, y));
+                    else if (obj is Mob mob)
+                        _mobStackCollection.Add(mob, new Vector2Int(x, y));
+                    
                 }
             }
 
@@ -73,7 +78,11 @@ namespace Assets.Scripts.Controllers
 
                 //Item item = obj as Item;
                 //if (item)
-                    _stackCollection.Remove(obj, new Vector2Int(x, y));
+                //_itemStackCollection.Remove(obj, new Vector2Int(x, y));
+                if (obj is Item item)
+                    _itemStackCollection.Remove(item, new Vector2Int(x, y));
+                else if (obj is Mob mob)
+                    _mobStackCollection.Remove(mob, new Vector2Int(x, y));
             }
         }
 
@@ -134,7 +143,8 @@ namespace Assets.Scripts.Controllers
         {
             if (isServer)
             {
-                _stackCollection = new StackCollection();
+                _itemStackCollection = new StackCollection();
+                _mobStackCollection = new StackCollection();
             }
             _allocationTask = new Task(AllocateMemoryAsync, TaskCreationOptions.LongRunning);
             _allocationTask.Start();
@@ -160,6 +170,7 @@ namespace Assets.Scripts.Controllers
             if (WasLoaded && ServerController.Ready && isServer)
             {
                 SortItemStacks();
+                SortMobStacks();
             }
         }
 
@@ -168,12 +179,27 @@ namespace Assets.Scripts.Controllers
 #pragma warning restore 618
         private void SortItemStacks()
         {
-            if (_stackCollection.Length > 0)
+            if (_itemStackCollection.Length > 0)
             {
-                for (int i = 0; i < _stackCollection.Length; i++)
+                for (int i = 0; i < _itemStackCollection.Length; i++)
                 {
-                    if(_stackCollection[i].IsSortDirty)
-                        SortItemStack(_stackCollection[i]);
+                    if(_itemStackCollection[i].IsSortDirty)
+                        SortItemStack(_itemStackCollection[i]);
+                }
+            }
+        }
+
+#pragma warning disable 618
+        [Server]
+#pragma warning restore 618
+        private void SortMobStacks()
+        {
+            if (_mobStackCollection.Length > 0)
+            {
+                for (int i = 0; i < _mobStackCollection.Length; i++)
+                {
+                    if (_mobStackCollection[i].IsSortDirty)
+                        SortItemStack(_mobStackCollection[i]);
                 }
             }
         }
