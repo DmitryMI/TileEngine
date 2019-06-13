@@ -12,243 +12,243 @@ namespace Assets.Scripts.HumanAppearance
     class BodyEffectHandler : MonoBehaviour
     {
         [Header("Effect sprites")]
-        [SerializeField] private SpriteSet _forwardSprite;
-        [SerializeField] private SpriteSet _backwardSprite;
-        [SerializeField] private SpriteSet _leftSideSprite;
-        [SerializeField] private SpriteSet _rightSideSprite;
+        [SerializeField] protected SpriteSet ForwardSprite;
+        [SerializeField] protected SpriteSet BackwardSprite;
+        [SerializeField] protected SpriteSet LeftSideSprite;
+        [SerializeField] protected SpriteSet RightSideSprite;
 
-        [Header("Masks for forward and backward directions")] [SerializeField]
-        private Sprite _headMaskStraightSprite;
+        [Header("Masks for forward and backward directions")]
+        [SerializeField] protected Sprite HeadMaskStraightSprite;
+        [SerializeField] protected Sprite ChestMaskStraightSprite;
+        [SerializeField] protected Sprite LeftArmMaskStraightSprite;
+        [SerializeField] protected Sprite RightArmMaskStraightSprite;
+        [SerializeField] protected Sprite LeftLegMaskStraightSprite;
+        [SerializeField] protected Sprite RightLegMaskStraightSprite;
 
-        [SerializeField] private Sprite _chestMaskStraightSprite;
-        [SerializeField] private Sprite _leftArmMaskStraightSprite;
-        [SerializeField] private Sprite _rightArmMaskStraightSprite;
-        [SerializeField] private Sprite _leftLegMaskStraightSprite;
-        [SerializeField] private Sprite _rightLegMaskStraightSprite;
-
-        [Header("Masks for left and right directions")] [SerializeField]
-        private Sprite _headMaskLeftSprite;
-
-        [SerializeField] private Sprite _headMaskRightSprite;
-        [SerializeField] private Sprite _chestMaskLeftSprite;
-        [SerializeField] private Sprite _chestMaskRightSprite;
-        [SerializeField] private Sprite _armMaskLeftSprite;
-        [SerializeField] private Sprite _armMaskRightSprite;
-        [SerializeField] private Sprite _legMaskLeftSprite;
-        [SerializeField] private Sprite _legMaskRightSprite;
+        [Header("Masks for left and right directions")]
+        [SerializeField] protected Sprite HeadMaskLeftSprite;
+        [SerializeField] protected Sprite HeadMaskRightSprite;
+        [SerializeField] protected Sprite ChestMaskLeftSprite;
+        [SerializeField] protected Sprite ChestMaskRightSprite;
+        [SerializeField] protected Sprite ArmMaskLeftSprite;
+        [SerializeField] protected Sprite ArmMaskRightSprite;
+        [SerializeField] protected Sprite LegMaskLeftSprite;
+        [SerializeField] protected Sprite LegMaskRightSprite;
 
 
-        [Header("SpriteMasks")] [SerializeField]
-        private SpriteMask _headMask;
+        [Header("SpriteMasks")]
+        [SerializeField] protected SpriteMask HeadMask;
+        [SerializeField] protected SpriteMask ChestMask;
+        [SerializeField] protected SpriteMask LeftHandMask;
+        [SerializeField] protected SpriteMask RightHandMask;
+        [SerializeField] protected SpriteMask LeftLegMask;
+        [SerializeField] protected SpriteMask RightLegMask;
 
-        [SerializeField] private SpriteMask _chestMask;
-        [SerializeField] private SpriteMask _leftHandMask;
-        [SerializeField] private SpriteMask _rightHandMask;
-        [SerializeField] private SpriteMask _leftLegMask;
-        [SerializeField] private SpriteMask _rightLegMask;
+        [Header("Debug. Should be removed")]
+        [SerializeField] protected bool HeadEffect;
+        [SerializeField] protected bool ChestEffect;
+        [SerializeField] protected bool LeftArmEffect;
+        [SerializeField] protected bool RightArmEffect;
+        [SerializeField] protected bool LeftLegEffect;
+        [SerializeField] protected bool RightLegEffect;
 
-        [Header("Debug. Should be removed")] [SerializeField]
-        private bool _headBloody;
+        protected Humanoid Humanoid;
+        protected SpriteRenderer SpriteRenderer;
 
-        [SerializeField] private bool _chestBloody;
-        [SerializeField] private bool _leftArmBloody;
-        [SerializeField] private bool _rightArmBloody;
-        [SerializeField] private bool _leftLegBloody;
-        [SerializeField] private bool _rightLegBloody;
-
-        private Humanoid _humanoid;
-        private SpriteRenderer _spriteRenderer;
-
-        private void Start()
+        protected virtual void Start()
         {
             //_spriteRenderer = GetComponent<SpriteRenderer>();
-            _spriteRenderer = GetComponentInParent<SpriteRenderer>();
-            _humanoid = GetComponentInParent<Humanoid>();
+            SpriteRenderer = GetComponentInParent<SpriteRenderer>();
+            Humanoid = GetComponentInParent<Humanoid>();
         }
 
 
-        private void Update()
+        protected virtual void Update()
         {
-            _spriteRenderer.sortingOrder = _humanoid.SortingOrder + 1;
+            UpdateEffect();
+        }
 
-            _headMask.frontSortingOrder = _spriteRenderer.sortingOrder;
-            _chestMask.frontSortingOrder = _spriteRenderer.sortingOrder;
-            _leftLegMask.frontSortingOrder = _spriteRenderer.sortingOrder;
-            _rightLegMask.frontSortingOrder = _spriteRenderer.sortingOrder;
-            _leftHandMask.frontSortingOrder = _spriteRenderer.sortingOrder;
-            _rightHandMask.frontSortingOrder = _spriteRenderer.sortingOrder;
+        protected virtual void UpdateEffect()
+        {
+            SpriteRenderer.sortingOrder = Humanoid.SortingOrder + 1;
 
-            Direction direction = _humanoid.SpriteOrientation;
+            HeadMask.frontSortingOrder = SpriteRenderer.sortingOrder;
+            ChestMask.frontSortingOrder = SpriteRenderer.sortingOrder;
+            LeftLegMask.frontSortingOrder = SpriteRenderer.sortingOrder;
+            RightLegMask.frontSortingOrder = SpriteRenderer.sortingOrder;
+            LeftHandMask.frontSortingOrder = SpriteRenderer.sortingOrder;
+            RightHandMask.frontSortingOrder = SpriteRenderer.sortingOrder;
+
+            Direction direction = Humanoid.SpriteOrientation;
 
             switch (direction)
             {
                 case Direction.Forward:
-                    _spriteRenderer.sprite = _forwardSprite.CurrentSprite;
+                    SpriteRenderer.sprite = ForwardSprite.CurrentSprite;
                     break;
                 case Direction.Backward:
-                    _spriteRenderer.sprite = _backwardSprite.CurrentSprite;
+                    SpriteRenderer.sprite = BackwardSprite.CurrentSprite;
                     break;
                 case Direction.Left:
-                    _spriteRenderer.sprite = _leftSideSprite.CurrentSprite;
+                    SpriteRenderer.sprite = LeftSideSprite.CurrentSprite;
                     break;
                 case Direction.Right:
-                    _spriteRenderer.sprite = _rightSideSprite.CurrentSprite;
+                    SpriteRenderer.sprite = RightSideSprite.CurrentSprite;
                     break;
             }
 
-            if (_headBloody)
+            if (HeadEffect)
             {
-                _headMask.enabled = true;
+                HeadMask.enabled = true;
                 switch (direction)
                 {
                     case Direction.Forward:
                     case Direction.Backward:
-                        _headMask.sprite = _headMaskStraightSprite;
+                        HeadMask.sprite = HeadMaskStraightSprite;
                         break;
                     case Direction.Left:
-                        _headMask.sprite = _headMaskLeftSprite;
+                        HeadMask.sprite = HeadMaskLeftSprite;
                         break;
                     case Direction.Right:
-                        _headMask.sprite = _headMaskLeftSprite;
+                        HeadMask.sprite = HeadMaskRightSprite;
                         break;
                 }
             }
             else
             {
-                _headMask.enabled = false;
+                HeadMask.enabled = false;
             }
 
 
-            if (_chestBloody)
+            if (ChestEffect)
             {
-                _chestMask.enabled = true;
+                ChestMask.enabled = true;
                 switch (direction)
                 {
                     case Direction.Forward:
                     case Direction.Backward:
-                        _chestMask.sprite = _chestMaskStraightSprite;
+                        ChestMask.sprite = ChestMaskStraightSprite;
                         break;
                     case Direction.Left:
-                        _chestMask.sprite = _chestMaskLeftSprite;
+                        ChestMask.sprite = ChestMaskLeftSprite;
                         break;
                     case Direction.Right:
-                        _chestMask.sprite = _chestMaskRightSprite;
+                        ChestMask.sprite = ChestMaskRightSprite;
                         break;
                 }
             }
             else
             {
-                _chestMask.enabled = false;
+                ChestMask.enabled = false;
             }
 
-            if (_leftArmBloody)
-            {
-                
-                switch (direction)
-                {
-                    case Direction.Forward:
-                        _leftHandMask.enabled = true;
-                        _leftHandMask.sprite = _leftArmMaskStraightSprite;
-                        break;
-                    case Direction.Backward:
-                        _leftHandMask.enabled = true;
-                        _leftHandMask.sprite = _rightArmMaskStraightSprite;
-                        break;
-                    case Direction.Left:
-                        _leftHandMask.enabled = true;
-                        _leftHandMask.sprite = _armMaskLeftSprite;
-                        break;
-                    case Direction.Right:
-                        _leftHandMask.enabled = false;
-                        break;
-                }
-            }
-            else
-            {
-                _leftHandMask.enabled = false;
-            }
-
-            if (_rightArmBloody)
+            if (LeftArmEffect)
             {
 
                 switch (direction)
                 {
                     case Direction.Forward:
-                        _rightHandMask.enabled = true;
-                        _rightHandMask.sprite = _rightArmMaskStraightSprite;
+                        LeftHandMask.enabled = true;
+                        LeftHandMask.sprite = LeftArmMaskStraightSprite;
                         break;
                     case Direction.Backward:
-                        _rightHandMask.enabled = true;
-                        _rightHandMask.sprite = _leftArmMaskStraightSprite;
+                        LeftHandMask.enabled = true;
+                        LeftHandMask.sprite = RightArmMaskStraightSprite;
                         break;
                     case Direction.Left:
-                        _rightHandMask.enabled = false;
+                        LeftHandMask.enabled = true;
+                        LeftHandMask.sprite = ArmMaskLeftSprite;
                         break;
                     case Direction.Right:
-                        _rightHandMask.enabled = true;
-                        _rightHandMask.sprite = _armMaskRightSprite;
+                        LeftHandMask.enabled = false;
                         break;
                 }
             }
             else
             {
-                _rightHandMask.enabled = false;
+                LeftHandMask.enabled = false;
             }
 
-            if (_leftLegBloody)
+            if (RightArmEffect)
             {
 
                 switch (direction)
                 {
                     case Direction.Forward:
-                        _leftLegMask.enabled = true;
-                        _leftLegMask.sprite = _leftLegMaskStraightSprite;
+                        RightHandMask.enabled = true;
+                        RightHandMask.sprite = RightArmMaskStraightSprite;
                         break;
                     case Direction.Backward:
-                        _leftLegMask.enabled = true;
-                        _leftLegMask.sprite = _leftLegMaskStraightSprite;
+                        RightHandMask.enabled = true;
+                        RightHandMask.sprite = LeftArmMaskStraightSprite;
                         break;
                     case Direction.Left:
-                        _leftLegMask.enabled = true;
-                        _leftLegMask.sprite = _legMaskLeftSprite;
+                        RightHandMask.enabled = false;
                         break;
                     case Direction.Right:
-                        _leftLegMask.enabled = false;
+                        RightHandMask.enabled = true;
+                        RightHandMask.sprite = ArmMaskRightSprite;
                         break;
                 }
             }
             else
             {
-                _leftLegMask.enabled = false;
+                RightHandMask.enabled = false;
             }
 
-            if (_rightLegBloody)
+            if (LeftLegEffect)
             {
 
                 switch (direction)
                 {
                     case Direction.Forward:
-                        _rightLegMask.enabled = true;
-                        _rightLegMask.sprite = _rightLegMaskStraightSprite;
+                        LeftLegMask.enabled = true;
+                        LeftLegMask.sprite = LeftLegMaskStraightSprite;
                         break;
                     case Direction.Backward:
-                        _rightLegMask.enabled = true;
-                        _rightLegMask.sprite = _rightLegMaskStraightSprite;
+                        LeftLegMask.enabled = true;
+                        LeftLegMask.sprite = LeftLegMaskStraightSprite;
                         break;
                     case Direction.Left:
-                        _rightLegMask.enabled = false;
+                        LeftLegMask.enabled = true;
+                        LeftLegMask.sprite = LegMaskLeftSprite;
                         break;
                     case Direction.Right:
-                        _rightLegMask.enabled = true;
-                        _rightLegMask.sprite = _armMaskRightSprite;
+                        LeftLegMask.enabled = false;
                         break;
                 }
             }
             else
             {
-                _rightLegMask.enabled = false;
+                LeftLegMask.enabled = false;
             }
 
+            if (RightLegEffect)
+            {
+
+                switch (direction)
+                {
+                    case Direction.Forward:
+                        RightLegMask.enabled = true;
+                        RightLegMask.sprite = RightLegMaskStraightSprite;
+                        break;
+                    case Direction.Backward:
+                        RightLegMask.enabled = true;
+                        RightLegMask.sprite = RightLegMaskStraightSprite;
+                        break;
+                    case Direction.Left:
+                        RightLegMask.enabled = false;
+                        break;
+                    case Direction.Right:
+                        RightLegMask.enabled = true;
+                        RightLegMask.sprite = LegMaskRightSprite;
+                        break;
+                }
+            }
+            else
+            {
+                RightLegMask.enabled = false;
+            }
         }
 
 

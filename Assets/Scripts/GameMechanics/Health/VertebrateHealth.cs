@@ -12,7 +12,7 @@ namespace Assets.Scripts.GameMechanics.Health
             HeadDamage += damage;
         }
 
-        public override bool ModifyDamage(DamageBuffer damage, ImpactLimb target)
+        protected override bool ModifyDamage(DamageBuffer damage, ImpactLimb target)
         {
             bool ok = base.ModifyDamage(damage, target);
 

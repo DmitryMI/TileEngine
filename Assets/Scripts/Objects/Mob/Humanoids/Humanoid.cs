@@ -291,9 +291,9 @@ namespace Assets.Scripts.Objects.Mob.Humanoids
                     float mean = GlobalPreferences.Instance.DefaultFistDamage;
                     float dispersion = GlobalPreferences.Instance.DefaultFistDamageDispersion;
                     float damage = Utils.NextGaussian(mean, dispersion);
-                    DamageBuffer fistDamage = new DamageBuffer(damage, 0, 0, 0);
-
-                    mob.Health.ModifyDamage(fistDamage, impactTarget);
+                    
+                    //mob.Health.ModifyDamage(fistDamage, impactTarget);
+                    mob.Health.DoBruteDamage(damage, impactTarget, BruteAttackType.Blunt);
                     AudioClip clip = Utils.GetRandom(GlobalPreferences.Instance.FistAttackClips);
                     mob.PlaySoundOn(clip);
 

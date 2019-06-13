@@ -37,7 +37,7 @@ namespace Assets.Scripts.GameMechanics.Health
             Groin += damage;
         }
 
-        public override bool ModifyDamage(DamageBuffer damage, ImpactLimb impactTarget)
+        protected override bool ModifyDamage(DamageBuffer damage, ImpactLimb impactTarget)
         {
             bool ok = base.ModifyDamage(damage, impactTarget);
 

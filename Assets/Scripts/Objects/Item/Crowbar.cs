@@ -36,9 +36,9 @@ namespace Assets.Scripts.Objects.Item
                     float mean = CrowbarDamage;
                     float dispersion = GlobalPreferences.Instance.DefaultFistDamageDispersion;
                     float damage = Utils.NextGaussian(mean, dispersion);
-                    DamageBuffer fistDamage = new DamageBuffer(damage, 0, 0, 0);
+                    
+                    mob.Health.DoBruteDamage(damage, impactTarget, BruteAttackType.Chopping);
 
-                    mob.Health.ModifyDamage(fistDamage, impactTarget);
                     AudioClip clip = Utils.GetRandom(GlobalPreferences.Instance.BodyAttackClips);
                     mob.PlaySoundOn(clip);
 

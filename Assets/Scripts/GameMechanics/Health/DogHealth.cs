@@ -21,7 +21,7 @@ namespace Assets.Scripts.GameMechanics.Health
         {
         }
 
-        public override bool ModifyDamage(DamageBuffer damage, ImpactLimb impactTarget)
+        protected override bool ModifyDamage(DamageBuffer damage, ImpactLimb impactTarget)
         {
             if (OverallDamage.Summ > 30.0f)
             {

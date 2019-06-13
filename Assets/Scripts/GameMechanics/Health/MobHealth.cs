@@ -13,6 +13,13 @@ namespace Assets.Scripts.GameMechanics.Health
         {
             [SerializeField] public float DamagePercentagePerception;
             [SerializeField] public float NutritionPercentagePerception;
+            [SerializeField] public int HeadSkinDamage;
+            [SerializeField] public int ChestSkinDamage;
+            [SerializeField] public int LeftArmSkinDamage;
+            [SerializeField] public int RightArmSkinDamage;
+            [SerializeField] public int LeftLegSkinDamage;
+            [SerializeField] public int RightLegSkinDamage;
+
         }
 
         public ClientData NetHealthData;
@@ -44,7 +51,7 @@ namespace Assets.Scripts.GameMechanics.Health
         /// <param name="damage">Modifying damage buffer</param>
         /// <param name="impactTarget">Impact target</param>
         /// <returns>Returns true, if this MobHealth supports requested impact target</returns>
-        public virtual bool ModifyDamage(DamageBuffer damage, ImpactLimb impactTarget)
+        protected virtual bool ModifyDamage(DamageBuffer damage, ImpactLimb impactTarget)
         {
             switch (impactTarget)
             {
@@ -54,6 +61,12 @@ namespace Assets.Scripts.GameMechanics.Health
             }
 
             return false;
+        }
+
+        public virtual bool DoBruteDamage(float amount, ImpactLimb impactLimb, BruteAttackType attackType)
+        {
+            DamageBuffer damage = new DamageBuffer(amount, 0, 0, 0);
+            return ModifyDamage(damage, impactLimb);
         }
 
         public virtual bool SupportsImpactTarget(ImpactLimb impactTarget)

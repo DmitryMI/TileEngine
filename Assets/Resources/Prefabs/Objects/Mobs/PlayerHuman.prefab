@@ -841,7 +841,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5717245420602440371}
   - component: {fileID: 5806724130729711422}
-  - component: {fileID: 8948269473592721157}
+  - component: {fileID: 4480772082044665567}
   m_Layer: 0
   m_Name: BloodEffectHandler
   m_TagString: Untagged
@@ -917,7 +917,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 1
   m_SpriteSortPoint: 0
---- !u!114 &8948269473592721157
+--- !u!114 &4480772082044665567
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -926,69 +926,67 @@ MonoBehaviour:
   m_GameObject: {fileID: 7144114303068836197}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c413fd184a499894b81c10f867269c1a, type: 3}
+  m_Script: {fileID: 11500000, guid: b80c6944e6354d644a1f7dd3580475eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _forwardSprite:
+  ForwardSprite:
     _currentSpriteIndex: 0
     _sprites:
     - {fileID: 21300000, guid: e26ef3bd1bc5d3e43b3dfb39ece8dbfd, type: 3}
     _animationEnabled: 0
     _spriteDuration: 0
-  _backwardSprite:
+  BackwardSprite:
     _currentSpriteIndex: 0
     _sprites:
     - {fileID: 21300000, guid: 2e300db85f3c8b346b1e5c5bbbf2bbff, type: 3}
     _animationEnabled: 0
     _spriteDuration: 0
-  _leftSideSprite:
+  LeftSideSprite:
     _currentSpriteIndex: 0
     _sprites:
     - {fileID: 21300000, guid: 558e07afd6bc0cf43bfe1597d02c4438, type: 3}
     _animationEnabled: 0
     _spriteDuration: 0
-  _rightSideSprite:
+  RightSideSprite:
     _currentSpriteIndex: 0
     _sprites:
     - {fileID: 21300000, guid: c7a7a4239fc4cfe4ea9931b9108ccd98, type: 3}
     _animationEnabled: 0
     _spriteDuration: 0
-  _headMaskStraightSprite: {fileID: 21300000, guid: 909a5cabc1ec2c24298980cb98a51f8e,
+  HeadMaskStraightSprite: {fileID: 21300000, guid: 909a5cabc1ec2c24298980cb98a51f8e,
     type: 3}
-  _chestMaskStraightSprite: {fileID: 21300000, guid: 88248217dc92e42429030332130d2846,
+  ChestMaskStraightSprite: {fileID: 21300000, guid: 88248217dc92e42429030332130d2846,
     type: 3}
-  _leftArmMaskStraightSprite: {fileID: 21300000, guid: ca482bf474a4030429c52de6eb9602bf,
+  LeftArmMaskStraightSprite: {fileID: 21300000, guid: ca482bf474a4030429c52de6eb9602bf,
     type: 3}
-  _rightArmMaskStraightSprite: {fileID: 21300000, guid: 0e93ed2149b31e246a6d090719989897,
+  RightArmMaskStraightSprite: {fileID: 21300000, guid: 0e93ed2149b31e246a6d090719989897,
     type: 3}
-  _leftLegMaskStraightSprite: {fileID: 21300000, guid: fcfc3d781036e4845929049618a67483,
+  LeftLegMaskStraightSprite: {fileID: 21300000, guid: fcfc3d781036e4845929049618a67483,
     type: 3}
-  _rightLegMaskStraightSprite: {fileID: 21300000, guid: 75c82a7db286afa47a09bf7257744806,
+  RightLegMaskStraightSprite: {fileID: 21300000, guid: 75c82a7db286afa47a09bf7257744806,
     type: 3}
-  _headMaskLeftSprite: {fileID: 0}
-  _headMaskRightSprite: {fileID: 0}
-  _chestMaskLeftSprite: {fileID: 21300000, guid: ac9094e1953650a47973f156af66b7c8,
+  HeadMaskLeftSprite: {fileID: 0}
+  HeadMaskRightSprite: {fileID: 0}
+  ChestMaskLeftSprite: {fileID: 21300000, guid: ac9094e1953650a47973f156af66b7c8,
     type: 3}
-  _chestMaskRightSprite: {fileID: 21300000, guid: f5fc6527d3d86b742b8b8d9e416cfa1e,
+  ChestMaskRightSprite: {fileID: 21300000, guid: f5fc6527d3d86b742b8b8d9e416cfa1e,
     type: 3}
-  _armMaskLeftSprite: {fileID: 21300000, guid: e28e59629cb63974ea02a7551b180e5f, type: 3}
-  _armMaskRightSprite: {fileID: 21300000, guid: f34635e5ac7b81448a1f6f1187cd4989,
-    type: 3}
-  _legMaskLeftSprite: {fileID: 21300000, guid: 888fcb3f05c7ef040925569602f3af05, type: 3}
-  _legMaskRightSprite: {fileID: 21300000, guid: fe076393a0a93ec4cbd3afeefef3de3e,
-    type: 3}
-  _headMask: {fileID: 6017513439428308747}
-  _chestMask: {fileID: 402025198504681517}
-  _leftHandMask: {fileID: 411830342367914481}
-  _rightHandMask: {fileID: 7873721210024567809}
-  _leftLegMask: {fileID: 1862929564411315497}
-  _rightLegMask: {fileID: 3589376792849162872}
-  _headBloody: 0
-  _chestBloody: 0
-  _leftArmBloody: 0
-  _rightArmBloody: 0
-  _leftLegBloody: 0
-  _rightLegBloody: 0
+  ArmMaskLeftSprite: {fileID: 21300000, guid: e28e59629cb63974ea02a7551b180e5f, type: 3}
+  ArmMaskRightSprite: {fileID: 21300000, guid: f34635e5ac7b81448a1f6f1187cd4989, type: 3}
+  LegMaskLeftSprite: {fileID: 21300000, guid: 888fcb3f05c7ef040925569602f3af05, type: 3}
+  LegMaskRightSprite: {fileID: 21300000, guid: fe076393a0a93ec4cbd3afeefef3de3e, type: 3}
+  HeadMask: {fileID: 6017513439428308747}
+  ChestMask: {fileID: 402025198504681517}
+  LeftHandMask: {fileID: 411830342367914481}
+  RightHandMask: {fileID: 7873721210024567809}
+  LeftLegMask: {fileID: 1862929564411315497}
+  RightLegMask: {fileID: 3589376792849162872}
+  HeadEffect: 0
+  ChestEffect: 0
+  LeftArmEffect: 0
+  RightArmEffect: 0
+  LeftLegEffect: 0
+  RightLegEffect: 0
 --- !u!1 &7777527672450033067
 GameObject:
   m_ObjectHideFlags: 0
