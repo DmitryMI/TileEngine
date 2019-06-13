@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Assets.Scripts.Controllers;
+using Assets.Scripts.Objects;
 using Assets.Scripts.Objects.Mob;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -20,6 +21,18 @@ namespace Assets.Scripts
         private void Start()
         {
             _serverController = FindObjectOfType<ServerController>();
+
+            LoadPrefabs();
+        }
+
+        private void LoadPrefabs()
+        {
+            TileObject[] tileObjects = Resources.FindObjectsOfTypeAll<TileObject>();
+
+            foreach (TileObject tileObject in tileObjects)
+            {
+                spawnPrefabs.Add(tileObject.gameObject);
+            }
         }
 
 #pragma warning disable 618
