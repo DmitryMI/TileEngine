@@ -90,10 +90,7 @@ namespace Assets.Scripts.Objects.Mob
 
         }
 
-        public virtual void SetRotation(Direction rotation)
-        {
-            Rotation = rotation;
-        }
+        
 
         public void DoMove(Direction direction)
         {
