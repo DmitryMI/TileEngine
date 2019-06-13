@@ -27,11 +27,16 @@ namespace Assets.Scripts
 
         private void LoadPrefabs()
         {
-            TileObject[] tileObjects = Resources.FindObjectsOfTypeAll<TileObject>();
+            //TileObject[] tileObjects = Resources.FindObjectsOfTypeAll<TileObject>();
+            TileObject[] tileObjects = Resources.LoadAll<TileObject>("Prefabs");
 
             foreach (TileObject tileObject in tileObjects)
             {
-                spawnPrefabs.Add(tileObject.gameObject);
+                if (!spawnPrefabs.Contains(tileObject.gameObject))
+                {
+                    spawnPrefabs.Add(tileObject.gameObject);
+                    Debug.Log("Spawnable prefab added: " +tileObject.gameObject.name);
+                }
             }
         }
 
