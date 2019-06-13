@@ -21,6 +21,8 @@ namespace Assets.Scripts.Objects.Equipment.Doors
             _effectsRenderer.color = EffectColor;
         }
 
+        public SpriteRenderer SpriteRenderer => _effectsRenderer;
+
         public GameObject Parent => transform.parent.gameObject;
     }
 }

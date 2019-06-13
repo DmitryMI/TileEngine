@@ -36,6 +36,8 @@ namespace Assets.Scripts.Objects.Equipment.Doors
         protected DoorState PrevDoorState;
         protected bool AnimationSwitchingBlocked = false;
 
+        protected SpriteMask _spriteMask;
+
         [SyncVar]
         private bool _isPowered;
 
@@ -57,6 +59,9 @@ namespace Assets.Scripts.Objects.Equipment.Doors
         protected override void Start()
         {
             base.Start();
+
+            _spriteMask = GetComponent<SpriteMask>();
+            _spriteMask.backSortingOrder = _leftPart.SpriteRenderer.sortingOrder;
 
             _animator = GetComponent<Animator>();
             PrevDoorState = State;
