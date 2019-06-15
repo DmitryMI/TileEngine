@@ -45,7 +45,7 @@ namespace Assets.Scripts.GameMechanics.Chemistry
             WasLoaded = true;
         }
 
-        public Substance GetSubstance(int id)
+        public Substance GetSubstance(SubstanceId id)
         {
             foreach (var substance in _registeredSubstances)
             {

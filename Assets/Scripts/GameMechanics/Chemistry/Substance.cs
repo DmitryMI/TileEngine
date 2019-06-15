@@ -6,9 +6,9 @@ namespace Assets.Scripts.GameMechanics.Chemistry
     [Serializable]
     public struct Substance
     {
-        public static Substance IncorrectSubstance = new Substance(){Id = -1};
+        public static Substance IncorrectSubstance = new Substance(){Id = SubstanceId.IncorrectSubstance};
 
-        public int Id;
+        public SubstanceId Id;
         public string Name;
         public Color Color;
     }

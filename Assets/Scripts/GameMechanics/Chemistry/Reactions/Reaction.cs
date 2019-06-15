@@ -54,8 +54,8 @@ namespace Assets.Scripts.GameMechanics.Chemistry.Reactions
 
             for (int i = 0; i < reaction.Results.Length; i++)
             {
-                int id = ChemistryController.Current.GetSubstance(reaction.Results[i].SubstanceName).Id;
-                if (id != -1) 
+                SubstanceId id = ChemistryController.Current.GetSubstance(reaction.Results[i].SubstanceName).Id;
+                if (id != SubstanceId.IncorrectSubstance) 
                     additions.Add(new SubstanceInfo(id, factor * reaction.Results[i].Mole));
             }
 
@@ -116,7 +116,7 @@ namespace Assets.Scripts.GameMechanics.Chemistry.Reactions
             for (int i = 0; i < reagentIndexes.Length && ok; i++)
             {
                 //string reagentName = reaction.Reagents[i].SubstanceName;
-                int reagentId = ChemistryController.Current.GetSubstance(reaction.Reagents[i].SubstanceName).Id;
+                SubstanceId reagentId = ChemistryController.Current.GetSubstance(reaction.Reagents[i].SubstanceName).Id;
                 int index = FindSubstanceIndex(mixture, reagentId);
 
                 if (index != -1)
@@ -143,7 +143,7 @@ namespace Assets.Scripts.GameMechanics.Chemistry.Reactions
             return -1;
         }
 
-        private static int FindSubstanceIndex(SubstanceMixture mixture, int id)
+        private static int FindSubstanceIndex(SubstanceMixture mixture, SubstanceId id)
         {
             for (int i = 0; i < mixture.Count; i++)
             {

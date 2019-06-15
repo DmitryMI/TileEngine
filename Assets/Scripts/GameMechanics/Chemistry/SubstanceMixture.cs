@@ -116,7 +116,7 @@ namespace Assets.Scripts.GameMechanics.Chemistry
             _wasModified = true;
         }
 
-        public int IndexOfSubstance(int substanceId)
+        public int IndexOfSubstance(SubstanceId substanceId)
         {
             for(int i = 0; i < _listImplementation.Count; i++)
             {

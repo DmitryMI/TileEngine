@@ -13,15 +13,15 @@ namespace Assets.Scripts.GameMechanics.Chemistry
         [SerializeField]
         private float _volume;
         [SerializeField]
-        private int _substanceId;
+        private SubstanceId _substanceId;
 
-        public SubstanceInfo(int id, float volume)
+        public SubstanceInfo(SubstanceId id, float volume)
         {
             _substanceId = id;
             _volume = volume;
         }
 
-        public int SubstanceId => _substanceId;
+        public SubstanceId SubstanceId => _substanceId;
 
         public float Volume
         {

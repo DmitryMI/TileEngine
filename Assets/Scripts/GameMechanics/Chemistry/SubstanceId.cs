@@ -8,6 +8,8 @@ namespace Assets.Scripts.GameMechanics.Chemistry
 {
     public enum SubstanceId
     {
+        IncorrectSubstance = -1,
+
         Water = 1,
         CocaCola = 2,
         Hydrogen = 3,
