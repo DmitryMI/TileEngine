@@ -20,12 +20,7 @@ namespace Assets.Scripts.GameMechanics.Actions
 
         public IDelayedAction StartAction(Action<object> action, Func<bool> abortConditionChecker, Action<object> abortHandler, object args, object abortHandlerArgs, float delay)
         {
-            if (_delayedAction != null)
-            {
-                _delayedAction.Abort();
-                _abortHandler?.Invoke(_abortHandlerArgs);
-                _delayedAction = null;
-            }
+            AbortAction();
 
             _abortHandlerArgs = abortHandlerArgs;
             _abortHandler = abortHandler;
