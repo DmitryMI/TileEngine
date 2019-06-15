@@ -79,7 +79,7 @@ namespace Assets.Scripts.Objects.Equipment.Power
 
         private bool CheckRotation(LocalPowerController lpc)
         {
-            return lpc.WallPressDirection == _connectionDirection;
+            return lpc?.WallPressDirection == _connectionDirection;
         }
     }
 }

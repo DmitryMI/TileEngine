@@ -27,6 +27,7 @@ namespace Assets.Scripts.Controllers
         private UiElement _uiElementUnderCursor;
         private Vector2 _mouseWorldPosition;
         private Vector2Int _mouseCell;
+        private Vector2 _mouseCellOffset = new Vector2();
         private Mob _localPlayerMob;
         private Vector2 _mousePrevScreenPosition;
         private ExclusiveActionManager _actionManager = new ExclusiveActionManager();
@@ -111,7 +112,12 @@ namespace Assets.Scripts.Controllers
             Debug.DrawRay(Vector2.zero, mousePos, Color.blue);
             Debug.DrawRay(Vector2.zero, _grid.CellToWorld(new Vector3Int(cellX, cellY, 0)), Color.red);
 
+            
             _mouseCell =  new Vector2Int(cellX, cellY);
+
+            // TODO Check if is correct
+            _mouseCellOffset.x = _mouseWorldPosition.x - (cellX * _grid.cellSize.x);
+            _mouseCellOffset.y = _mouseWorldPosition.y - (cellY * _grid.cellSize.y);
         }
 
         private void FindLocalPlayer()
@@ -387,16 +393,26 @@ namespace Assets.Scripts.Controllers
             Humanoid playerHumanoid = _localPlayerMob as Humanoid;
             if (playerHumanoid != null)
             {
-                if (CheckVisibilityUnderCursor() && to.IsNeighbour(_localPlayerMob))
+                Item activeItem = ActiveHandItem;
+
+                bool neighbour = to.IsNeighbour(_localPlayerMob);
+                if (neighbour)
                 {
-                    if (to is IPlayerApplicable applicable)
+                    if (CheckVisibilityUnderCursor())
                     {
-                        applicable.ApplyItemClient(playerHumanoid.GetItemBySlot(ActiveHand), _intent);
+                        if (to is IPlayerApplicable applicable)
+                        {
+                            applicable.ApplyItemClient(activeItem, _intent);
+                        }
+                        else if (to is IPlayerImpactable impactable)
+                        {
+                            impactable.ImpactItemClient(playerHumanoid, activeItem, _intent, _impactTarget);
+                        }
                     }
-                    else if (to is IPlayerImpactable impactable)
-                    {
-                        impactable.ImpactItemClient(playerHumanoid, playerHumanoid.GetItemBySlot(ActiveHand), _intent, _impactTarget);
-                    }
+                }
+                else
+                {
+                    activeItem.ItemTargetPointClient(_mouseCell, _mouseCellOffset);
                 }
             }
             else

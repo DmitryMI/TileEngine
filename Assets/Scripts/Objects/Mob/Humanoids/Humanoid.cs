@@ -162,6 +162,20 @@ namespace Assets.Scripts.Objects.Mob.Humanoids
             CmdApplyItem(sourceGo, interactable.gameObject, intent);
         }
 
+        public void TargetPointItem(Item.Item sourceItem, Vector2Int cell, Vector2 offset)
+        {
+            GameObject sourceGo = sourceItem?.gameObject;
+            CmdTargetPointItem(sourceGo, cell.x, cell.y, offset);
+        }
+
+        [Command]
+        private void CmdTargetPointItem(GameObject sourceItemGo, int cellX, int cellY, Vector2 offset)
+        {
+            Item.Item sourceItem = sourceItemGo?.GetComponent<Item.Item>();
+           
+            sourceItem?.ItemTargetPointServer(new Vector2Int(cellX, cellY), offset);
+        }
+
         [Command]
         private void CmdApplyItemSlot(SlotEnum activeHand, GameObject interactableGo, Intent intent)
         {

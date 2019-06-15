@@ -24,8 +24,6 @@ namespace Assets.Scripts.Objects.Item
 
         
 
-        
-
         protected override bool Transparent
         {
             get { return true; }
@@ -137,6 +135,17 @@ namespace Assets.Scripts.Objects.Item
                 Debug.Log("Item " + item.DescriptiveName + " was used on item " + _descriptiveName);
             else
                 Debug.Log("Empty hand was used on item " + _descriptiveName);
+        }
+
+        public virtual void ItemTargetPointClient(Vector2Int cell, Vector2 offset)
+        {
+            Humanoid humanoid = PlayerActionController.Current.LocalPlayerMob as Humanoid;
+            humanoid?.TargetPointItem(this, cell, offset);
+        }
+
+        public virtual void ItemTargetPointServer(Vector2Int cell, Vector2 offset)
+        {
+            Debug.Log("Item " + DescriptiveName + " was used on cell. Pew pew!");
         }
 
         public override bool IsNeighbour(TileObject other)
