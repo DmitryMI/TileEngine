@@ -285,8 +285,12 @@ namespace Assets.Scripts.Objects
                 {
                     _cellChanged = true;
                     _transformChanged = true;
-                    TileController.Current.RemoveObject(oldCell.x, oldCell.y, this);
-                    TileController.Current.AddObject(_cell.x, _cell.y, this);
+
+                    if (isServer)
+                    {
+                        TileController.Current.RemoveObject(oldCell.x, oldCell.y, this);
+                        TileController.Current.AddObject(_cell.x, _cell.y, this);
+                    }
 
                     OnCellChanged?.Invoke();
                 }

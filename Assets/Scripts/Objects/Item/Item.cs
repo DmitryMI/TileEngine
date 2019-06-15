@@ -69,7 +69,7 @@ namespace Assets.Scripts.Objects.Item
         private void RpcReceiveState(GameObject container)
         {
             if(!isServer)
-                ItemHolder = container.GetComponent<TileObject>();
+                ItemHolder = container?.GetComponent<TileObject>();
         }
 
         private void UpdateState()
