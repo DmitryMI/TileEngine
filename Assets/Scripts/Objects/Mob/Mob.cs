@@ -69,6 +69,9 @@ namespace Assets.Scripts.Objects.Mob
         [ClientRpc]
         protected void RpcReceiveHealthData(MobHealth.ClientData data)
         {
+            if(isServer)
+                return;
+            
             if (HealthData == null)
             {
                 CreateHealthData();

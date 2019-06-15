@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets
@@ -38,6 +39,32 @@ namespace Assets
         {
             AudioClip[] clips = Resources.FindObjectsOfTypeAll<AudioClip>();
             _registeredClips.AddRange(clips);
+            _registeredClips.Sort(new AudioClipsComparer());
+
+            PrintClipsCollection();
+        }
+
+        private class AudioClipsComparer : IComparer<AudioClip>
+        {
+            public int Compare(AudioClip x, AudioClip y)
+            {
+                /*if (y != null && x != null)
+                        return x.GetHashCode() - y.GetHashCode();
+                else
+                {
+                    return 0;
+                }*/
+
+                return String.Compare(x.name, y.name, StringComparison.Ordinal);
+            }
+        }
+
+        private void PrintClipsCollection()
+        {
+            foreach (var clip in _registeredClips)
+            {
+                Debug.Log(clip.name);
+            }
         }
     }
 }
