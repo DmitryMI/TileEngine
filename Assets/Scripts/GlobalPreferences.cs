@@ -42,6 +42,9 @@ namespace Assets.Scripts
         [SerializeField]
         private float _humanDeathHp = -100.0f;
 
+        [SerializeField] private float _humanSeverInjuryBorder = 50.0f;
+
+
         [Header("Fighting and damage settings")] [SerializeField]
         private float _defaultFistDamage = 5.0f;
 
@@ -109,6 +112,11 @@ namespace Assets.Scripts
         public GameObject BloodSplashPrefab
         {
             get { return _bloodSplashPrefab; }
+        }
+
+        public float HumanSeverInjuryBorder
+        {
+            get { return _humanSeverInjuryBorder; }
         }
     }
 }

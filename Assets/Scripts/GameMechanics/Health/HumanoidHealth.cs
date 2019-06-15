@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Assets.Scripts.Objects.Mob;
+using UnityEngine;
 
 namespace Assets.Scripts.GameMechanics.Health
 {
@@ -62,6 +63,42 @@ namespace Assets.Scripts.GameMechanics.Health
             }
 
             return false;
+        }
+
+        public override void OnUpdate()
+        {
+            base.OnUpdate();
+
+            // Blackout caused by damages
+            // Color must be red
+
+            float m = GlobalPreferences.Instance.HumanMaxHp;
+            float l = GlobalPreferences.Instance.HumanSeverInjuryBorder;
+            float a = 1 / (m - l);
+            float b = -a * l;
+
+            float x = OverallDamage.Summ;
+
+            float damagePercentage = a * x + b;
+
+            if (damagePercentage < 0)
+                damagePercentage = 0;
+            if (damagePercentage > 1)
+                damagePercentage = 1;
+
+            
+            if (damagePercentage > 0)
+            {
+                NetHealthData.BlackoutColor = new Color(0.4f, 0, 0);
+                int stage = (int) (BlackoutMasksNumber * damagePercentage);//Mathf.RoundToInt(BlackoutMasksNumber * damagePercentage);
+
+                NetHealthData.BlackoutStage = stage;
+            }
+            else
+            {
+                NetHealthData.BlackoutStage = 0;
+                NetHealthData.BlackoutColor = Color.white;
+            }
         }
 
 

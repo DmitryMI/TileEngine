@@ -83,3 +83,6 @@ TagManager:
   - name: Vision mask
     uniqueID: 1268185651
     locked: 0
+  - name: BlackoutMask
+    uniqueID: 2629970647
+    locked: 0

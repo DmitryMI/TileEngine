@@ -7,6 +7,11 @@ namespace Assets.Scripts.GameMechanics.Health
     [Serializable]
     public abstract class MobHealth
     {
+        // Mask number BlackoutMasksNumber is the worst vision (crit and total blindness)
+        // Mask number 1 is the best vision (minor damages)
+        // Mask number 0 is no mask at all
+        public const int BlackoutMasksNumber = 8;
+
         // Network syncables
         [Serializable]
         public struct ClientData
@@ -19,7 +24,8 @@ namespace Assets.Scripts.GameMechanics.Health
             [SerializeField] public int RightArmSkinDamage;
             [SerializeField] public int LeftLegSkinDamage;
             [SerializeField] public int RightLegSkinDamage;
-
+            [SerializeField] public int BlackoutStage;
+            [SerializeField] public Color BlackoutColor;
         }
 
         public ClientData NetHealthData;
@@ -108,5 +114,7 @@ namespace Assets.Scripts.GameMechanics.Health
 
         protected virtual float GetDamagePercentageByFeelings() => 1.0f - OverallDamage.Summ / 100.0f;
         protected virtual float GetNutritionPercentageByFeelings() => NutritionCurrent / NutritionMax;
+
+        public virtual float SpeedMultiplier => 1.0f;
     }
 }

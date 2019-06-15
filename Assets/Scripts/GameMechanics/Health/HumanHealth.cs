@@ -60,5 +60,16 @@ namespace Assets.Scripts.GameMechanics.Health
 
             return ok;
         }
+
+        public override float SpeedMultiplier
+        {
+            get
+            {
+                if (OverallDamage.Summ > GlobalPreferences.Instance.HumanSeverInjuryBorder)
+                    return 0.5f;
+
+                return 1.0f;
+            }
+        }
     }
 }

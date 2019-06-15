@@ -21,6 +21,7 @@ namespace Assets.Scripts.Objects.Mob
         [SerializeField] protected Sprite LyingSprite;
 
         [SerializeField] [SyncVar] protected bool IsMobLying;
+        [SyncVar] protected float ActualMoveSpeed;
 
         [SerializeField]
         protected float DefaultMoveSpeed;
@@ -97,7 +98,7 @@ namespace Assets.Scripts.Objects.Mob
             if (!EnsureControllers())
                 return;
 
-            float ms = DefaultMoveSpeed;
+            float ms = ActualMoveSpeed;
 
             if(IsLying)
                 return;
@@ -293,6 +294,7 @@ namespace Assets.Scripts.Objects.Mob
         protected virtual void HealthProcess()
         {
             IsMobLying = !Health.CanStandOnLegs;
+            ActualMoveSpeed = DefaultMoveSpeed * Health.SpeedMultiplier;
         }
     }
 }
