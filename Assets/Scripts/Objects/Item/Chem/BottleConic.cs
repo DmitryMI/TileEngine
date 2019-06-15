@@ -164,5 +164,7 @@ namespace Assets.Scripts.Objects.Item.Chem
                 _mixture.Concatinate(subtractedMixture);
             }
         }
+
+        public SubstanceMixture Contents => _mixture;
     }
 }

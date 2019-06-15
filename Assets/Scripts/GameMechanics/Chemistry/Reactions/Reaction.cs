@@ -54,7 +54,8 @@ namespace Assets.Scripts.GameMechanics.Chemistry.Reactions
 
             for (int i = 0; i < reaction.Results.Length; i++)
             {
-                SubstanceId id = ChemistryController.Current.GetSubstance(reaction.Results[i].SubstanceName).Id;
+                //SubstanceId id = ChemistryController.Current.GetSubstance(reaction.Results[i].SubstanceName).Id;
+                SubstanceId id = reaction.Results[i].SubstanceId;
                 if (id != SubstanceId.IncorrectSubstance) 
                     additions.Add(new SubstanceInfo(id, factor * reaction.Results[i].Mole));
             }
@@ -116,7 +117,8 @@ namespace Assets.Scripts.GameMechanics.Chemistry.Reactions
             for (int i = 0; i < reagentIndexes.Length && ok; i++)
             {
                 //string reagentName = reaction.Reagents[i].SubstanceName;
-                SubstanceId reagentId = ChemistryController.Current.GetSubstance(reaction.Reagents[i].SubstanceName).Id;
+                //SubstanceId reagentId = ChemistryController.Current.GetSubstance(reaction.Reagents[i].SubstanceName).Id;
+                SubstanceId reagentId = reaction.Reagents[i].SubstanceId;
                 int index = FindSubstanceIndex(mixture, reagentId);
 
                 if (index != -1)
@@ -159,21 +161,21 @@ namespace Assets.Scripts.GameMechanics.Chemistry.Reactions
             new Reaction(
                 new[]
                 {
-                    new Reagent("Water", 1), new Reagent("Calcium Oxide", 1) // Source reagents
+                    new Reagent(SubstanceId.Water, 1), new Reagent(SubstanceId.CalciumOxide, 1) // Source reagents
                 }, 
                 new[]
                 {
-                    new Reagent("Calcium Hydroxide", 2) // Resulting reagents
+                    new Reagent(SubstanceId.CalciumHydroxide, 2) // Resulting reagents
                 }),
 
             new Reaction(
                 new[]
                 {
-                    new Reagent("Hydrogen", 3), new Reagent("Nitrogen", 1) // Source reagents
+                    new Reagent(SubstanceId.Hydrogen, 3), new Reagent(SubstanceId.Nitrogen, 1) // Source reagents
                 },
                 new[]
                 {
-                    new Reagent("Ammonia", 3) // Resulting reagents
+                    new Reagent(SubstanceId.Ammonia, 3) // Resulting reagents
                 }),
         };
 

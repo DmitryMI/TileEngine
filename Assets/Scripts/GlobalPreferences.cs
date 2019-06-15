@@ -28,6 +28,15 @@ namespace Assets.Scripts
         [SerializeField]
         private float _humanNutritionInitial = 100.0f;
 
+        [SerializeField]
+        private float _humanWaterMax = 100.0f;
+
+        [SerializeField]
+        private float _humanWaterDecrement = 0.5f;
+
+        [SerializeField]
+        private float _humanWaterInitial = 100.0f;
+
 
         [Header("Health settings")]
         [SerializeField]
@@ -42,7 +51,11 @@ namespace Assets.Scripts
         [SerializeField]
         private float _humanDeathHp = -100.0f;
 
-        [SerializeField] private float _humanSeverInjuryBorder = 50.0f;
+        [SerializeField]
+        private float _humanSeverInjuryBorder = 50.0f;
+
+        [SerializeField] private float _humanBloodVolume = 4600;
+        [SerializeField] private float _humanStomachVolume = 1000;
 
 
         [Header("Fighting and damage settings")] [SerializeField]
@@ -117,6 +130,31 @@ namespace Assets.Scripts
         public float HumanSeverInjuryBorder
         {
             get { return _humanSeverInjuryBorder; }
+        }
+
+        public float HumanWaterMax
+        {
+            get { return _humanWaterMax; }
+        }
+
+        public float HumanWaterDecrement
+        {
+            get { return _humanWaterDecrement; }
+        }
+
+        public float HumanWaterInitial
+        {
+            get { return _humanWaterInitial; }
+        }
+
+        public float HumanBloodVolume
+        {
+            get { return _humanBloodVolume; }
+        }
+
+        public float HumanStomachVolume
+        {
+            get { return _humanStomachVolume; }
         }
     }
 }

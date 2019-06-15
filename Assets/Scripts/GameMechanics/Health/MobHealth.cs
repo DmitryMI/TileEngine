@@ -1,4 +1,5 @@
 ﻿using System;
+using Assets.Scripts.GameMechanics.Chemistry;
 using Assets.Scripts.Objects.Mob;
 using UnityEngine;
 
@@ -18,6 +19,7 @@ namespace Assets.Scripts.GameMechanics.Health
         {
             [SerializeField] public float DamagePercentagePerception;
             [SerializeField] public float NutritionPercentagePerception;
+            [SerializeField] public float WaterPercentagePerception;
             [SerializeField] public int HeadSkinDamage;
             [SerializeField] public int ChestSkinDamage;
             [SerializeField] public int LeftArmSkinDamage;
@@ -28,6 +30,7 @@ namespace Assets.Scripts.GameMechanics.Health
             [SerializeField] public Color BlackoutColor;
         }
 
+        [SerializeField]
         public ClientData NetHealthData;
 
 
@@ -37,13 +40,19 @@ namespace Assets.Scripts.GameMechanics.Health
 
 
         protected float NutritionMax;
-
         protected float NutritionCurrent;
-
         protected float NutritionDecrement;
+
+        protected float WaterMax;
+        protected float WaterCurrent;
+        protected float WaterDecrement;
 
         protected Mob Owner;
 
+        public virtual void ModifyNutrition(float deltaNutrition)
+        {
+            NutritionCurrent += deltaNutrition;
+        }
 
         protected virtual void ModifyChestDamage(DamageBuffer damage)
         {
@@ -96,11 +105,12 @@ namespace Assets.Scripts.GameMechanics.Health
 
             NetHealthData.DamagePercentagePerception = GetDamagePercentageByFeelings();
             NetHealthData.NutritionPercentagePerception = GetNutritionPercentageByFeelings();
+            NetHealthData.WaterPercentagePerception = GetWaterPercentageByFeelings();
         }
 
         public virtual void OnStart()
         {
-
+            
         }
 
         public MobHealth(Mob owner)
@@ -115,6 +125,11 @@ namespace Assets.Scripts.GameMechanics.Health
         protected virtual float GetDamagePercentageByFeelings() => 1.0f - OverallDamage.Summ / 100.0f;
         protected virtual float GetNutritionPercentageByFeelings() => NutritionCurrent / NutritionMax;
 
+        protected virtual float GetWaterPercentageByFeelings() => WaterCurrent / WaterMax;
+
         public virtual float SpeedMultiplier => 1.0f;
+
+        public abstract ISubstanceContainer BloodStream { get; }
+        public abstract ISubstanceContainer DigestiveSystem { get; }
     }
 }

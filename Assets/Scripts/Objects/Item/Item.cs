@@ -16,7 +16,7 @@ namespace Assets.Scripts.Objects.Item
         [SerializeField] private string _descriptiveName;
 
         [SerializeField]
-        protected GameObject ItemHolder;
+        protected TileObject ItemHolder;
         
 
         protected SpriteRenderer Renderer;
@@ -55,7 +55,7 @@ namespace Assets.Scripts.Objects.Item
 
             if (isServer)
             {
-                RpcReceiveState(ItemHolder);
+                RpcReceiveState(ItemHolder != null ? ItemHolder.gameObject : null);
             }
         }
 
@@ -69,7 +69,7 @@ namespace Assets.Scripts.Objects.Item
         private void RpcReceiveState(GameObject container)
         {
             if(!isServer)
-                ItemHolder = container;
+                ItemHolder = container.GetComponent<TileObject>();
         }
 
         private void UpdateState()
@@ -104,8 +104,8 @@ namespace Assets.Scripts.Objects.Item
 
         public GameObject Holder
         {
-            get { return ItemHolder; }
-            set { ItemHolder = value; }
+            get { return ItemHolder?.gameObject; }
+            set { ItemHolder = value?.GetComponent<TileObject>(); }
         }
 
         

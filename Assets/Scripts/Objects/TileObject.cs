@@ -41,11 +41,14 @@ namespace Assets.Scripts.Objects
         protected AudioSource AudioSource;
         protected SpriteRenderer SpriteRenderer;
 
+        public event Action OnCellChanged;
+
         [SyncVar]
         [SerializeField]
         protected int SortingStartIndex;
 
         private int _prevSortingStartIndex;
+        private bool _cellChanged;
 
         protected virtual void OnSortingOrderChange()
         {
@@ -160,6 +163,11 @@ namespace Assets.Scripts.Objects
             _prevSortingStartIndex = SortingStartIndex;
         }
 
+        protected virtual void LateUpdate()
+        {
+            _cellChanged = false;
+        }
+
         protected virtual void Sync()
         {
             if (isLocalPlayer || (!isLocalPlayer && isServer))
@@ -272,10 +280,16 @@ namespace Assets.Scripts.Objects
             {
                 Vector2Int oldCell = _cell;
                 _cell = value;
-                _transformChanged = true;
+                
+                if (!oldCell.Equals(_cell))
+                {
+                    _cellChanged = true;
+                    _transformChanged = true;
+                    TileController.Current.RemoveObject(oldCell.x, oldCell.y, this);
+                    TileController.Current.AddObject(_cell.x, _cell.y, this);
 
-                TileController.Current.RemoveObject(oldCell.x, oldCell.y, this);
-                TileController.Current.AddObject(_cell.x, _cell.y, this);
+                    OnCellChanged?.Invoke();
+                }
             }
         }
 

@@ -8,12 +8,12 @@ namespace Assets.Scripts.GameMechanics.Chemistry.Reactions
 {
     struct Reagent
     {
-        public string SubstanceName;
+        public SubstanceId SubstanceId;
         public int Mole;
 
-        public Reagent(string name, int mole)
+        public Reagent(SubstanceId id, int mole)
         {
-            SubstanceName = name;
+            SubstanceId = id;
             Mole = mole;
         }
     }

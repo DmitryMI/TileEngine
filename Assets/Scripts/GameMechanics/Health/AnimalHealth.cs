@@ -9,6 +9,7 @@ namespace Assets.Scripts.GameMechanics.Health
         protected DamageBuffer LeftLeg;
         protected DamageBuffer RightLeg;
         protected DamageBuffer Groin;
+        
 
         protected void ModifyLeftArmDamage(DamageBuffer damage)
         {

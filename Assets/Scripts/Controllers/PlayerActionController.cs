@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.GameMechanics;
+using Assets.Scripts.GameMechanics.Actions;
 using Assets.Scripts.Objects;
 using Assets.Scripts.Objects.Item;
 using Assets.Scripts.Objects.Mob;
@@ -14,7 +15,7 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.Controllers
 {
-    public class PlayerActionController : Controller, IPointerDataProvider
+    public class PlayerActionController : Controller, IPointerDataProvider, IExclusiveActionManager
     {
         [SerializeField] private Text _descriptiveText;
         [SerializeField] private float _maxClickDelta = 0.1f;
@@ -28,6 +29,7 @@ namespace Assets.Scripts.Controllers
         private Vector2Int _mouseCell;
         private Mob _localPlayerMob;
         private Vector2 _mousePrevScreenPosition;
+        private ExclusiveActionManager _actionManager = new ExclusiveActionManager();
 
         [SerializeField]
         private SlotEnum _activeHand;
@@ -41,10 +43,13 @@ namespace Assets.Scripts.Controllers
 
         private static PlayerActionController _currentController;
 
+        private Func<bool> _abortConditionChecker;
+
         public static PlayerActionController Current
         {
             get { return _currentController; }
         }
+
 
         public override void OnGameLoaded(IServerDataProvider controller)
         {
@@ -244,6 +249,8 @@ namespace Assets.Scripts.Controllers
             set { _activeHand = value; }
         }
 
+        public Item ActiveHandItem => (LocalPlayerMob as Humanoid)?.GetItemBySlot(ActiveHand);
+
         public Intent Intent
         {
             get => _intent;
@@ -406,6 +413,27 @@ namespace Assets.Scripts.Controllers
             if(_uiElementUnderCursor != null)
                 _uiElementUnderCursor.Click();
         }
-        
+
+        public IDelayedAction StartAction(Action<object> action, Func<bool> abortConditionChecker, Action<object> abortHandler, object args,
+            object abortHandlerArgs, float delay)
+        {
+            // TODO Draw progress bar
+            _abortConditionChecker = abortConditionChecker;
+            return _actionManager.StartAction(action, AbortConditionChecker, abortHandler, args, abortHandlerArgs, delay);
+        }
+
+        public void AbortAction()
+        {
+            // TODO Remove progress bar
+            _actionManager.AbortAction();
+        }
+
+        private bool AbortConditionChecker()
+        {
+            // TODO Update progress bar
+            return _abortConditionChecker();
+        }
+
+        public bool IsActionPending => _actionManager.IsActionPending;
     }
 }

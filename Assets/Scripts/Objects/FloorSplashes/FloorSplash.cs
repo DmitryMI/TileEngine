@@ -11,5 +11,6 @@ namespace Assets.Scripts.Objects.FloorSplashes
         public abstract float MaximumVolume { get; }
         public abstract void TransferInto(SubstanceMixture mixture);
         public abstract void TransferToAnother(ISubstanceContainer container);
+        public abstract SubstanceMixture Contents { get; }
     }
 }

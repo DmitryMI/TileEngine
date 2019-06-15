@@ -14,6 +14,8 @@ namespace Assets.Scripts.GameMechanics.Chemistry
         CocaCola = 2,
         Hydrogen = 3,
         Nitrogen = 4,
-        Ammonia = 5
+        Ammonia = 5,
+        CalciumOxide = 6,
+        CalciumHydroxide = 7,
     }
 }

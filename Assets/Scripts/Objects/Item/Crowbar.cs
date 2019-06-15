@@ -1,14 +1,18 @@
 ﻿using System;
+using Assets.Scripts.Controllers;
 using Assets.Scripts.GameMechanics;
 using Assets.Scripts.GameMechanics.Health;
+using Assets.Scripts.Objects.Mob.Humanoids;
 using UnityEngine;
 
 namespace Assets.Scripts.Objects.Item
 {
-    public class Crowbar : Item, IImpactHandler
+    public class Crowbar : Item, IImpactHandler, IApplicationHandler
     {
         [SerializeField] private float CrowbarDamage = 20.0f;
         [SerializeField] private float CrowbarDamageDispersion = 5.0f;
+
+        private bool _cellChanged;
 
         public override string DescriptiveName
         {
@@ -47,6 +51,55 @@ namespace Assets.Scripts.Objects.Item
                 default:
                     throw new ArgumentOutOfRangeException(nameof(intent), intent, null);
             }
+        }
+
+        public bool OnApplicationClient(IPlayerApplicable target, Intent intent)
+        {
+            var action = PlayerActionController.Current.StartAction(ApplyCrowbarDelayedAction,
+                AbortConditionChecker, AbortHandler, target, null, 3.0f);
+
+            _cellChanged = false;
+            ItemHolder.OnCellChanged += CellChangedHandler;
+
+            StartCoroutine(action.Coroutine);
+
+            return true;
+        }
+
+        private void ApplyCrowbarDelayedAction(object args)
+        {
+            (PlayerActionController.Current.LocalPlayerMob as Humanoid)?.ApplyItem(this, (IPlayerApplicable)args, Intent.Help);
+        }
+
+        private void AbortHandler(object args)
+        {
+            Debug.Log("Aborted!");
+        }
+
+        private bool AbortConditionChecker()
+        {
+            Debug.Log("Checking conditions...");
+
+            if (ItemHolder == null)
+                return true;
+
+            if (PlayerActionController.Current.ActiveHandItem != this)
+                return true;
+
+            if (_cellChanged)
+                return true;
+
+            return false;
+        }
+
+        private void CellChangedHandler()
+        {
+            _cellChanged = true;
+        }
+
+        public bool OnApplicationServer(IPlayerApplicable target, Intent intent)
+        {
+            return false;
         }
     }
 }

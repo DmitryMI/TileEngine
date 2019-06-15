@@ -73,6 +73,8 @@ namespace Assets.Scripts.Objects.FloorSplashes
             }
         }
 
+        public override SubstanceMixture Contents => _mixture;
+
         [Server]
         public void CreateFromBody(Mob.Mob mob)
         {

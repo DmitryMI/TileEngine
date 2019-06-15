@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Assets.Scripts.GameMechanics.Chemistry;
 using Assets.Scripts.Objects.Mob;
 using UnityEngine.Networking;
 
@@ -11,6 +12,9 @@ namespace Assets.Scripts.GameMechanics.Health
 {
     class HumanHealth : HumanoidHealth
     {
+        private ISubstanceContainer _bloodStream;
+        private ISubstanceContainer _digestiveSystem;
+
         public override void OnStart()
         {
             NutritionMax = GlobalPreferences.Instance.HumanMaxNutrition;
@@ -23,6 +27,8 @@ namespace Assets.Scripts.GameMechanics.Health
 
         public HumanHealth(Mob owner) : base(owner)
         {
+            _bloodStream = new SimpleSubstanceContainer(GlobalPreferences.Instance.HumanBloodVolume, 10.0f);
+            _digestiveSystem = new SimpleSubstanceContainer(GlobalPreferences.Instance.HumanStomachVolume, 10.0f);
         }
 
         public override bool DoBruteDamage(float amount, ImpactLimb impactLimb, BruteAttackType attackType)
@@ -71,5 +77,8 @@ namespace Assets.Scripts.GameMechanics.Health
                 return 1.0f;
             }
         }
+
+        public override ISubstanceContainer BloodStream => _bloodStream;
+        public override ISubstanceContainer DigestiveSystem => _digestiveSystem;
     }
 }

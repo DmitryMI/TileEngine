@@ -1,10 +1,15 @@
 ﻿using System;
+using Assets.Scripts.Controllers;
+using Assets.Scripts.GameMechanics;
+using Assets.Scripts.Objects.Item;
+using Assets.Scripts.Objects.Mob.Humanoids;
 using UnityEngine;
+using UnityEngine.Networking;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Objects.Turf
 {
-    public class MetalFloor : Turf
+    public class MetalFloor : Turf, IPlayerApplicable
     {
         [SerializeField] private Sprite[] _variationList;
 
@@ -76,5 +81,38 @@ namespace Assets.Scripts.Objects.Turf
 
             return ok;
         }
+
+        public void ApplyItemClient(Item.Item item, Intent intent)
+        {
+            bool handled = false;
+            if (item is IApplicationHandler handler)
+            {
+                handled = handler.OnApplicationClient(this, intent);
+            }
+
+            if (!handled)
+            {
+                (PlayerActionController.Current.LocalPlayerMob as Humanoid)?.ApplyItem(item, this, intent);
+            }
+        }
+
+        public void ApplyItemServer(Item.Item item, Intent intent)
+        {
+            // Check if item has any custom behaviour
+            bool handled = false;
+            if (item is IApplicationHandler handler)
+            {
+                handled = handler.OnApplicationServer(this, intent);
+            }
+
+            if (!handled)
+                // We need to process application by ourselves
+                if (item is Crowbar)
+                {
+                    NetworkServer.Destroy(this.gameObject);
+                    Destroy(this.gameObject);
+                }
+        }
     }
 }
+
